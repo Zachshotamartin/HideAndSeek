@@ -1,0 +1,9 @@
+node_modules/
+dist/
+test-results/
+.DS_Store
+
+training/runs/
+training/__pycache__/
+
+.venv/
