@@ -7,34 +7,57 @@ import argparse
 import copy
 import json
 import os
-from pathlib import Path
 import shutil
 import signal
 import time
+from pathlib import Path
+
 import numpy as np
 import torch
+
 from central_critic import FEATURES, batch_states
-from residual_critic import ResidualCentralCritic, SCHEMA
-from entity_actor import FORMAT, ENTITY, LEGACY, load_pair
-from persistent_train import file_hash
-from protocol import environment_config, assign_for_variant, archive_indices
 from central_persistent_train import advantages_and_returns, critic_update
-from fit_central_value import REWARD_SCALE
-from league_ppo import assign_roles, active_masks, act_grouped, actor_update
+from entity_actor import ENTITY, FORMAT, LEGACY, load_pair
 from env_pool import PhysicsEnvPool
+from fit_central_value import REWARD_SCALE
+from league_ppo import act_grouped, active_masks, actor_update
+from persistent_train import file_hash
+from protocol import archive_indices, assign_for_variant, environment_config
+from residual_critic import ResidualCentralCritic, SCHEMA
 
 torch.set_num_threads(1)
+OBSERVATION_SIZE = 210
+PHYSICAL_OBSERVATION_SIZE = 208
+ACTIONS = 6
+DESCRIPTOR_SIZE = 10            # mean |action| (6), path per step (2), grabs per step (2)
+RECENT_EPISODES = 256
+NEWEST_SNAPSHOTS = 8
+MINIMUM_ARCHIVE = 13            # anchors, eight newest and at least one diverse pick
+SEED_LIMIT = 2 ** 30
+CRITIC_STATE_OFFSET = 228
+SEEKER_ACTIVE_FRACTION = .8
+RESUME_FIELDS = ['encoder', 'arm', 'envs', 'horizon', 'sequence_length', 'burn_in', 'snapshot_every', 'archive_limit',
+                 'sequence_batch', 'critic_batch_size', 'epochs', 'learning_rate', 'critic_learning_rate', 'entropy',
+                 'kl_limit', 'seed', 'variant']
+SOURCE_NAMES = ['train_entity.py', 'entity_actor.py', 'actor.py', 'league_ppo.py', 'central_persistent_train.py',
+                'residual_critic.py', 'central_critic.py', 'persistent_actor.py', 'persistent_train.py',
+                'fit_central_value.py', 'env_pool.py', 'physics.py', 'protocol.py', 'snapshots.py']
+RECENT_ONLY_VARIANTS = ('baseline', 'recent-only')
 
 
 def load_actors(saved, frozen=False):
     return load_pair(saved, frozen=frozen)[0]
 
 
+def load_checkpoint(path):
+    return torch.load(path, map_location='cpu', weights_only=False)
+
+
 def initialize_critic(source, learning_rate, resumed=None):
     if source.get('centralCriticSchema') != SCHEMA:
         raise ValueError('Expected our frozen residual-critic checkpoint')
     critic_state = (resumed or source)['centralCritic']
-    memory_size = (critic_state['correction.value.0.weight'].shape[1] - 228) // 2
+    memory_size = (critic_state['correction.value.0.weight'].shape[1] - CRITIC_STATE_OFFSET) // 2
     critic = ResidualCentralCritic(.1, memory_size=memory_size)
     critic.load_state_dict((resumed or source)['centralCritic'])
     optimizer = torch.optim.AdamW(critic.parameters(), lr=learning_rate)
@@ -44,34 +67,29 @@ def initialize_critic(source, learning_rate, resumed=None):
     return critic, optimizer
 
 
-
-def train(args, *, stop_requested=None, on_checkpoint=None):
-    if not hasattr(args,'variant'):args.variant='full'
+# --------------------------------------------------------------- validation
+def validate_shape(args):
     if args.horizon % args.sequence_length or args.envs < 1:
         raise ValueError('Positive environment count and complete recurrent sequences required')
-    if args.burn_in < 0 or args.burn_in > args.horizon or args.snapshot_every < 1 or args.archive_limit < 13:
+    if args.burn_in < 0 or args.burn_in > args.horizon or args.snapshot_every < 1 or args.archive_limit < MINIMUM_ARCHIVE:
         raise ValueError('Burn-in must fit the horizon; the archive limit must leave room beyond anchors and the eight newest snapshots')
-    block = args.envs * args.horizon * 2
-    target_updates = args.target_interactions // block
-    if not target_updates:
-        raise ValueError('Interaction target is smaller than one complete rollout')
-    protocol = json.loads(Path(args.protocol).read_text())
+
+
+def validate_protocol(args, protocol):
+    """Every predeclared comparison setting and asset must match the command line."""
     for field, expected in protocol['training'].items():
         if getattr(args, field) != expected:
             raise ValueError(f'Predeclared comparison setting changed: {field}')
     for field, asset in [('parent', args.encoder), ('critic', 'critic'), ('initial', 'initial')]:
         if file_hash(getattr(args, field)) != protocol['assets'][asset]['sha256']:
             raise ValueError(f'Predeclared comparison asset changed: {field}')
-    if [file_hash(path) for path in args.history] != [
-            protocol['assets'][name]['sha256'] for name in protocol['history']]:
+    if [file_hash(path) for path in args.history] != [protocol['assets'][name]['sha256'] for name in protocol['history']]:
         raise ValueError('Predeclared frozen opponent pool changed')
-    parent = torch.load(args.parent, map_location='cpu', weights_only=False)
-    critic_source = torch.load(args.critic, map_location='cpu', weights_only=False)
-    initial = torch.load(args.initial, map_location='cpu', weights_only=False)
+
+
+def validate_assets(args, protocol, parent, critic_source, initial, physics_hash):
     if initial['decisions'] != 0:
         raise ValueError('The fixed initial comparison must be a compatible zero-experience policy')
-    parent_hash = file_hash(args.parent)
-    physics_hash = file_hash(Path(__file__).with_name('physics.py'))
     if physics_hash != protocol['physicsSHA256']:
         raise ValueError('Predeclared physics changed')
     expected_type = ENTITY if args.encoder == 'entity' else LEGACY
@@ -85,58 +103,26 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
         raise ValueError('Both encoder arms use the same frozen-opponent league B')
     if parent['provenance']['physicsSHA256'] != physics_hash:
         raise ValueError('Versioned physics identity changed')
-    history_paths = [Path(path) for path in args.history]
-    history_records = [torch.load(path, map_location='cpu', weights_only=False) for path in history_paths]
-    if not history_records or any(record['provenance']['physicsSHA256'] != physics_hash for record in history_records):
-        raise ValueError('Historical opponents must use this unchanged physical game')
-    histories = [load_actors(record, frozen=True) for record in history_records]
-    history_hashes = [file_hash(path) for path in history_paths]
-    frozen_before = [[copy.deepcopy(model.state_dict()) for model in pair] for pair in histories]
-    resumed = torch.load(args.resume, map_location='cpu', weights_only=False) if args.resume else None
-    if resumed and (resumed['provenance']['parentSHA256'] != parent_hash or resumed['arguments']['encoder'] != args.encoder):
+
+
+def validate_resume(args, resumed, parent_hash, history_hashes):
+    if resumed['provenance']['parentSHA256'] != parent_hash or resumed['arguments']['encoder'] != args.encoder:
         raise ValueError('Resume requires the same parent and trial arm')
-    if resumed:
-        if resumed['provenance']['protocolSHA256'] != file_hash(args.protocol):
-            raise ValueError('Resume requires the identical predeclared protocol')
-        if [entry['sha256'] for entry in resumed['provenance']['history']] != history_hashes:
-            raise ValueError('Resume requires the identical ordered frozen opponent pool')
-        if resumed['provenance']['criticSourceSHA256'] != file_hash(args.critic):
-            raise ValueError('Resume requires the identical initial critic asset')
-        if resumed['provenance']['initialSHA256'] != file_hash(args.initial):
-            raise ValueError('Resume requires the identical fixed initial comparison')
-        for field in ['encoder','arm','envs','horizon','sequence_length','burn_in','snapshot_every','archive_limit','sequence_batch','critic_batch_size','epochs','learning_rate','critic_learning_rate','entropy','kl_limit','seed','variant']:
-            if resumed['arguments'][field] != getattr(args, field):
-                raise ValueError(f'Cannot silently change resumed setting: {field}')
-    if resumed and 'leagueModels' in resumed:
-        histories = [load_actors({'format':FORMAT,'models': pair, 'encoderTypes': parent['encoderTypes']}, frozen=True) for pair in resumed['leagueModels']]
-        frozen_before = [[copy.deepcopy(m.state_dict()) for m in pair] for pair in histories]
-    models = load_actors(resumed or parent)
-    hidden_size = models[0].hidden_size
-    if models[1].hidden_size != hidden_size or any(m.hidden_size > hidden_size for pair in histories for m in pair):
-        raise ValueError('Current actors need equal memory capacity, no smaller than historical opponents')
-    optimizers = [torch.optim.Adam(model.parameters(), lr=args.learning_rate, eps=1e-5) for model in models]
-    if resumed:
-        for optimizer, state in zip(optimizers, resumed['optimizers']):
-            optimizer.load_state_dict(state)
-    critic, critic_optimizer = initialize_critic(critic_source, args.critic_learning_rate, resumed)
-    world_generator = np.random.default_rng(args.seed)
-    opponent_generator = np.random.default_rng(args.seed + 1)
-    torch.set_rng_state((resumed or parent)['torchRNG'])
-    if resumed:
-        world_generator.bit_generator.state = resumed['worldRNG']
-        opponent_generator.bit_generator.state = resumed['opponentRNG']
-    destination = Path(args.output)
-    destination.mkdir(parents=True, exist_ok=True)
-    if (destination / 'latest.pt').exists() and not resumed:
-        raise ValueError('Do not overwrite an existing comparison arm')
-    if not resumed:
-        shutil.copyfile(args.parent, destination / 'parent.pt')
-        shutil.copyfile(args.initial, destination / 'initial.pt')
-    source_names = ['train_entity.py','entity_actor.py','actor.py','league_ppo.py','central_persistent_train.py','residual_critic.py',
-                    'central_critic.py','persistent_actor.py','persistent_train.py','fit_central_value.py',
-                    'env_pool.py','physics.py','protocol.py','snapshots.py']
-    sources = {name: file_hash(Path(__file__).with_name(name)) for name in source_names}
-    provenance = copy.deepcopy(resumed['provenance']) if resumed else dict(
+    if resumed['provenance']['protocolSHA256'] != file_hash(args.protocol):
+        raise ValueError('Resume requires the identical predeclared protocol')
+    if [entry['sha256'] for entry in resumed['provenance']['history']] != history_hashes:
+        raise ValueError('Resume requires the identical ordered frozen opponent pool')
+    if resumed['provenance']['criticSourceSHA256'] != file_hash(args.critic):
+        raise ValueError('Resume requires the identical initial critic asset')
+    if resumed['provenance']['initialSHA256'] != file_hash(args.initial):
+        raise ValueError('Resume requires the identical fixed initial comparison')
+    for field in RESUME_FIELDS:
+        if resumed['arguments'][field] != getattr(args, field):
+            raise ValueError(f'Cannot silently change resumed setting: {field}')
+
+
+def fresh_provenance(args, protocol, parent, parent_hash, physics_hash, history_paths, history_records, models):
+    return dict(
         parentSHA256=parent_hash, parentDecisions=parent['decisions'], protocolSHA256=file_hash(args.protocol),
         sourceSelectedPairSHA256=parent['provenance']['sourceSelectedPairSHA256'],
         inheritedRoleSources=parent['provenance']['roleSources'],
@@ -145,201 +131,376 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
         initialSHA256=file_hash(args.initial), criticWarmupDecisions=0,
         criticInitialization='Same inherited residual critic weights in both arms; new AdamW state. No claim of calibration to the projected actor.',
         optimizerInitialization='Both actor Adam states and central critic AdamW state start empty in both arms.',
-        history=[dict(file=str(path.resolve()),sha256=file_hash(path),decisions=record['decisions'])
-                 for path,record in zip(history_paths,history_records)],
+        history=[dict(file=str(path.resolve()), sha256=file_hash(path), decisions=record['decisions'])
+                 for path, record in zip(history_paths, history_records)],
         actorInput='Restricted 210 observations; all ten object slots and thirty range sensors; no opponent identity or central state',
         rule='Only original zero-sum visibility reward; physical grab/lock semantics; no distance-only hiding',
         comparisons=protocol.get('comparisons', 'Same league B and unchanged visibility reward.'),
-        architecture=[dict(memory=m.hidden_size, encoder=m.encoder_size, parameters=sum(p.numel() for p in m.parameters())) for m in models],
+        architecture=[dict(memory=m.hidden_size, encoder=m.encoder_size, parameters=sum(p.numel() for p in m.parameters()))
+                      for m in models],
         recurrence=dict(sequenceLength=args.sequence_length, burnIn=args.burn_in,
-            description='Truncated backpropagation over complete sequences; burn-in re-runs the recurrence through the previous rollout tail without gradients.'),
+                        description='Truncated backpropagation over complete sequences; burn-in re-runs the recurrence through the previous rollout tail without gradients.'),
         archive=dict(snapshotEvery=args.snapshot_every, limit=args.archive_limit),
         sourceHistory=[], resumes=[])
-    if resumed and resumed['provenance']['sourceHistory'][-1]!=sources:
-        raise ValueError('Training source changed; exact resume refused. Create an explicit new protocol instead.')
-    provenance['sourceHistory'].append(sources)
-    if resumed:
-        provenance['resumes'].append(dict(afterInteractions=resumed['totalPolicyInteractions'],
-            worldsRestarted=0 if 'rolloutState' in resumed else args.envs, reason='Full physical/weld/RNG/memory restoration when rolloutState is present; legacy checkpoints explicitly reset worlds.'))
-    source_dir = destination / 'source' / str(len(provenance['sourceHistory']))
-    source_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(args.protocol, source_dir / 'PROTOCOL.json')
-    for name in source_names:
-        shutil.copyfile(Path(__file__).with_name(name), source_dir / name)
-    (source_dir / 'SHA256.json').write_text(json.dumps(sources, indent=2) + '\n')
-    first_update = resumed['pilotUpdates'] if resumed else 0
-    interactions = resumed['totalPolicyInteractions'] if resumed else 0
-    current_counts = np.array(resumed['currentPolicyDecisions'] if resumed else [0,0], np.int64)
-    historical_counts = np.array(resumed['historicalPolicyDecisions'] if resumed else [0,0], np.int64)
-    active_counts = np.array(resumed['activePolicySamples'] if resumed else [0,0], np.int64)
-    episodes = resumed['pilotEpisodes'] if resumed else 0
-    previous_seconds = resumed['seconds'] if resumed else 0
-    log = list(resumed['log']) if resumed else []
-    recent = []
-    configs = [dict(seed=int(world_generator.integers(1,2**30)),
-                    **environment_config(world_generator,index,args.variant)) for index in range(args.envs)]
-    descriptors = list(resumed.get('leagueDescriptors', [])) if resumed else []
-    if len(descriptors)!=len(histories): descriptors=[[0.]*10 for _ in histories]
-    role_ids = assign_for_variant(opponent_generator,args.envs,len(histories),.8,args.variant)
-    burn_in = int(args.burn_in)
-    prefixes = [None, None]
-    if resumed and 'rolloutState' in resumed:configs=resumed['rolloutState']['pool']['configs']
-    with PhysicsEnvPool(configs,workers=args.workers,with_central_state=True,
-                        ignore_parent_signals=getattr(args,'graceful_worker_signals',False)) as pool:
-        physical = pool.observations.copy()
-        buttons = np.zeros((args.envs,2,2),np.float32)
-        memories = [torch.zeros(args.envs,hidden_size),torch.zeros(args.envs,hidden_size)]
-        starts = torch.ones(args.envs)
-        if resumed and 'rolloutState' in resumed:
-            rs=resumed['rolloutState'];physical=pool.restore(rs['pool']);buttons=rs['buttons'];memories=rs['memories'];starts=rs['starts'];role_ids=rs['roleIds']
-            prefixes=list(rs.get('burnInPrefix',[None,None]));recent=list(rs.get('recent',[]))
-            world_generator.bit_generator.state=resumed['worldRNG'];opponent_generator.bit_generator.state=resumed['opponentRNG'];torch.set_rng_state(resumed['torchRNG'])
+
+
+class Trainer:
+    """One league self-play run: validated inputs, live rollout state and the update loop."""
+
+    def __init__(self, args, stop_requested=None, on_checkpoint=None):
+        if not hasattr(args, 'variant'):
+            args.variant = 'full'
+        self.args = args
+        self.stop_requested = stop_requested
+        self.on_checkpoint = on_checkpoint
+        validate_shape(args)
+        self.block = args.envs * args.horizon * 2
+        self.target_updates = args.target_interactions // self.block
+        if not self.target_updates:
+            raise ValueError('Interaction target is smaller than one complete rollout')
+        self.protocol = json.loads(Path(args.protocol).read_text())
+        validate_protocol(args, self.protocol)
+        self.parent = load_checkpoint(args.parent)
+        self.critic_source = load_checkpoint(args.critic)
+        self.initial = load_checkpoint(args.initial)
+        self.parent_hash = file_hash(args.parent)
+        self.physics_hash = file_hash(Path(__file__).with_name('physics.py'))
+        validate_assets(args, self.protocol, self.parent, self.critic_source, self.initial, self.physics_hash)
+        self.load_league()
+        self.resumed = load_checkpoint(args.resume) if args.resume else None
+        if self.resumed:
+            validate_resume(args, self.resumed, self.parent_hash, self.history_hashes)
+        if self.resumed and 'leagueModels' in self.resumed:
+            self.histories = [load_actors({'format': FORMAT, 'models': pair, 'encoderTypes': self.parent['encoderTypes']}, frozen=True)
+                              for pair in self.resumed['leagueModels']]
+            self.frozen_before = [[copy.deepcopy(m.state_dict()) for m in pair] for pair in self.histories]
+        self.load_learners()
+        self.world_generator = np.random.default_rng(args.seed)
+        self.opponent_generator = np.random.default_rng(args.seed + 1)
+        torch.set_rng_state((self.resumed or self.parent)['torchRNG'])
+        if self.resumed:
+            self.world_generator.bit_generator.state = self.resumed['worldRNG']
+            self.opponent_generator.bit_generator.state = self.resumed['opponentRNG']
+        self.prepare_destination()
+        self.restore_counters()
+        self.configs = [dict(seed=int(self.world_generator.integers(1, SEED_LIMIT)),
+                             **environment_config(self.world_generator, index, args.variant)) for index in range(args.envs)]
+        self.descriptors = list(self.resumed.get('leagueDescriptors', [])) if self.resumed else []
+        if len(self.descriptors) != len(self.histories):
+            self.descriptors = [[0.] * DESCRIPTOR_SIZE for _ in self.histories]
+        self.role_ids = assign_for_variant(self.opponent_generator, args.envs, len(self.histories), SEEKER_ACTIVE_FRACTION, args.variant)
+        self.burn_in = int(args.burn_in)
+        self.prefixes = [None, None]
+        if self.resumed and 'rolloutState' in self.resumed:
+            self.configs = self.resumed['rolloutState']['pool']['configs']
+        self.retained = {int(value) for value in args.retain_updates.split(',') if value}
+        self.pool = None
+
+    # ----------------------------------------------------------------- setup
+    def load_league(self):
+        self.history_paths = [Path(path) for path in self.args.history]
+        self.history_records = [load_checkpoint(path) for path in self.history_paths]
+        if not self.history_records or any(record['provenance']['physicsSHA256'] != self.physics_hash for record in self.history_records):
+            raise ValueError('Historical opponents must use this unchanged physical game')
+        self.histories = [load_actors(record, frozen=True) for record in self.history_records]
+        self.history_hashes = [file_hash(path) for path in self.history_paths]
+        self.frozen_before = [[copy.deepcopy(model.state_dict()) for model in pair] for pair in self.histories]
+
+    def load_learners(self):
+        args, resumed = self.args, self.resumed
+        self.models = load_actors(resumed or self.parent)
+        self.hidden_size = self.models[0].hidden_size
+        if self.models[1].hidden_size != self.hidden_size or any(m.hidden_size > self.hidden_size for pair in self.histories for m in pair):
+            raise ValueError('Current actors need equal memory capacity, no smaller than historical opponents')
+        self.optimizers = [torch.optim.Adam(model.parameters(), lr=args.learning_rate, eps=1e-5) for model in self.models]
+        if resumed:
+            for optimizer, state in zip(self.optimizers, resumed['optimizers']):
+                optimizer.load_state_dict(state)
+        self.critic, self.critic_optimizer = initialize_critic(self.critic_source, args.critic_learning_rate, resumed)
+
+    def prepare_destination(self):
+        """Create the output folder, record provenance and copy every training source into it."""
+        args, resumed = self.args, self.resumed
+        self.destination = Path(args.output)
+        self.destination.mkdir(parents=True, exist_ok=True)
+        if (self.destination / 'latest.pt').exists() and not resumed:
+            raise ValueError('Do not overwrite an existing comparison arm')
+        if not resumed:
+            shutil.copyfile(args.parent, self.destination / 'parent.pt')
+            shutil.copyfile(args.initial, self.destination / 'initial.pt')
+        sources = {name: file_hash(Path(__file__).with_name(name)) for name in SOURCE_NAMES}
+        if resumed:
+            self.provenance = copy.deepcopy(resumed['provenance'])
+        else:
+            self.provenance = fresh_provenance(args, self.protocol, self.parent, self.parent_hash, self.physics_hash,
+                                               self.history_paths, self.history_records, self.models)
+        if resumed and resumed['provenance']['sourceHistory'][-1] != sources:
+            raise ValueError('Training source changed; exact resume refused. Create an explicit new protocol instead.')
+        self.provenance['sourceHistory'].append(sources)
+        if resumed:
+            self.provenance['resumes'].append(dict(
+                afterInteractions=resumed['totalPolicyInteractions'],
+                worldsRestarted=0 if 'rolloutState' in resumed else args.envs,
+                reason='Full physical/weld/RNG/memory restoration when rolloutState is present; legacy checkpoints explicitly reset worlds.'))
+        source_dir = self.destination / 'source' / str(len(self.provenance['sourceHistory']))
+        source_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(args.protocol, source_dir / 'PROTOCOL.json')
+        for name in SOURCE_NAMES:
+            shutil.copyfile(Path(__file__).with_name(name), source_dir / name)
+        (source_dir / 'SHA256.json').write_text(json.dumps(sources, indent=2) + '\n')
+
+    def restore_counters(self):
+        resumed = self.resumed
+        self.first_update = resumed['pilotUpdates'] if resumed else 0
+        self.interactions = resumed['totalPolicyInteractions'] if resumed else 0
+        self.current_counts = np.array(resumed['currentPolicyDecisions'] if resumed else [0, 0], np.int64)
+        self.historical_counts = np.array(resumed['historicalPolicyDecisions'] if resumed else [0, 0], np.int64)
+        self.active_counts = np.array(resumed['activePolicySamples'] if resumed else [0, 0], np.int64)
+        self.episodes = resumed['pilotEpisodes'] if resumed else 0
+        self.previous_seconds = resumed['seconds'] if resumed else 0
+        self.log = list(resumed['log']) if resumed else []
+        self.recent = []
+
+    def restore_rollout_state(self, resumed):
+        rs = resumed['rolloutState']
+        self.physical = self.pool.restore(rs['pool'])
+        self.buttons = rs['buttons']
+        self.memories = rs['memories']
+        self.starts = rs['starts']
+        self.role_ids = rs['roleIds']
+        self.prefixes = list(rs.get('burnInPrefix', [None, None]))
+        self.recent = list(rs.get('recent', []))
+        self.world_generator.bit_generator.state = resumed['worldRNG']
+        self.opponent_generator.bit_generator.state = resumed['opponentRNG']
+        torch.set_rng_state(resumed['torchRNG'])
+
+    # ------------------------------------------------------------------ run
+    def train(self):
+        args = self.args
+        with PhysicsEnvPool(self.configs, workers=args.workers, with_central_state=True,
+                            ignore_parent_signals=getattr(args, 'graceful_worker_signals', False)) as pool:
+            self.pool = pool
+            self.physical = pool.observations.copy()
+            self.buttons = np.zeros((args.envs, 2, 2), np.float32)
+            self.memories = [torch.zeros(args.envs, self.hidden_size), torch.zeros(args.envs, self.hidden_size)]
+            self.starts = torch.ones(args.envs)
+            if self.resumed and 'rolloutState' in self.resumed:
+                self.restore_rollout_state(self.resumed)
+            self.started = time.monotonic()
+            for update in range(self.first_update, self.target_updates):
+                if self.update(update):
+                    break
+
+    def update(self, update):
+        """One rollout, both actor updates, the critic update and league upkeep; True when stopping."""
+        args = self.args
+        self.critic.eval()
+        batch, stats = self.rollout()
+        bootstrap = self.bootstrap()
+        actor_stats, value_stats, optimizer_seconds = self.optimize(batch, bootstrap)
+        self.interactions += self.block
+        assert int(self.current_counts.sum() + self.historical_counts.sum()) == self.interactions
+        row = dict(encoder=args.encoder, arm=args.arm, update=update + 1, totalPolicyInteractions=self.interactions,
+                   currentPolicyDecisions=self.current_counts.tolist(), historicalPolicyDecisions=self.historical_counts.tolist(),
+                   activePolicySamples=self.active_counts.tolist(), episodes=self.episodes,
+                   seconds=self.previous_seconds + time.monotonic() - self.started,
+                   rolloutSeconds=stats['seconds'], optimizerSeconds=optimizer_seconds,
+                   hider=actor_stats[0], seeker=actor_stats[1], critic=value_stats,
+                   meanHiddenFraction=float(np.mean(self.recent)) if self.recent else None,
+                   unscaledRewardSum=stats['unscaled'].tolist(), divergedEpisodes=stats['diverged'])
+        if (update + 1) % args.snapshot_every == 0:
+            self.snapshot_league(stats)
+        self.prune_league()
+        row['leagueSize'] = len(self.histories)
+        self.log.append(row)
+        print(json.dumps(row), flush=True)
+        stopping = bool(args.stop_after_updates and update + 1 >= args.stop_after_updates)
+        stopping |= bool(self.stop_requested and self.stop_requested())
+        if (update + 1) % args.save_every == 0 or update + 1 in self.retained or stopping or update + 1 == self.target_updates:
+            self.checkpoint(update, row)
+        return stopping
+
+    # -------------------------------------------------------------- rollout
+    def rollout(self):
+        """Collect one horizon from every environment under the current actors and league."""
+        h, n, hidden = self.args.horizon, self.args.envs, self.hidden_size
+        batch = dict(
+            actor_buffers=[[torch.zeros(h, n, OBSERVATION_SIZE), torch.zeros(h, n, hidden), torch.zeros(h, n),
+                            torch.zeros(h, n, ACTIONS), torch.zeros(h, n)] for _ in range(2)],
+            current_rows=torch.zeros(h, n, 2, dtype=torch.bool),
+            central={key: torch.zeros(h, n, *shape) for key, shape in FEATURES.items()},
+            before_memories=torch.zeros(h, n, 2, hidden), partial_values=torch.zeros(h, n, 2),
+            values=torch.zeros(h, n), rewards=torch.zeros(h, n), dones=torch.zeros(h, n))
+        stats = dict(unscaled=np.zeros(2), behavior=np.zeros(DESCRIPTOR_SIZE), behavior_count=0, diverged=0)
         started = time.monotonic()
-        retained = {int(value) for value in args.retain_updates.split(',') if value}
-        for update in range(first_update,target_updates):
-            critic.eval()
-            h,n = args.horizon,args.envs
-            actor_buffers = [[torch.zeros(h,n,210),torch.zeros(h,n,hidden_size),torch.zeros(h,n),
-                              torch.zeros(h,n,6),torch.zeros(h,n)] for _ in range(2)]
-            current_rows = torch.zeros(h,n,2,dtype=torch.bool)
-            central = {key:torch.zeros(h,n,*shape) for key,shape in FEATURES.items()}
-            before_memories = torch.zeros(h,n,2,hidden_size)
-            partial_values = torch.zeros(h,n,2)
-            values = torch.zeros(h,n)
-            rewards = torch.zeros(h,n)
-            dones = torch.zeros(h,n)
-            rollout_started = time.monotonic()
-            unscaled = np.zeros(2)
-            behavior = np.zeros(10); behavior_count=0; diverged=0
-            for step in range(h):
-                for role in range(2):
-                    memories[role] *= 1 - starts[:,None]
-                before = torch.stack(memories,dim=1).clone()
-                state = batch_states(pool.central_states)
-                for key in FEATURES:
-                    central[key][step] = state[key]
-                before_memories[step] = before
-                current,active = active_masks(physical,role_ids)
-                current_rows[step] = torch.from_numpy(current)
-                current_counts += current.sum(0)
-                historical_counts += (~current).sum(0)
-                active_counts += active.sum(0)
-                with torch.no_grad():
-                    actions,next_memories,next_buttons,records = act_grouped(
-                        models,histories,physical,memories,buttons,role_ids)
-                    partial_values[step] = torch.stack([record[3] for record in records],dim=-1)
-                    values[step] = critic(state,before,partial_values[step])
-                for role in range(2):
-                    observed,raw,logp,_ = records[role]
-                    actor_buffers[role][0][step] = observed
-                    actor_buffers[role][1][step] = memories[role]
-                    actor_buffers[role][2][step] = starts
-                    actor_buffers[role][3][step] = raw
-                    actor_buffers[role][4][step] = logp
-                behavior[:6] += np.mean(np.abs(actions),axis=(0,1)); behavior_count+=1
-                physical,returned,done,infos = pool.step(actions)
-                np.testing.assert_array_equal(returned.sum(1),np.zeros(n))
-                rewards[step] = torch.from_numpy(returned[:,0].copy()) * REWARD_SCALE
-                dones[step] = torch.from_numpy(done.astype(np.float32))
-                unscaled += returned.sum(0)
-                buttons,memories = next_buttons,next_memories
-                finished = np.flatnonzero(done).tolist()
-                if finished:
-                    recent.extend(infos[index]['hidden']/infos[index]['play_steps'] for index in finished)
-                    recent = recent[-256:]
-                    episodes += len(finished)
-                    diverged += sum(1 for index in finished if infos[index].get('diverged'))
-                    for index in finished:
-                        r=infos[index]; behavior[6:8]+=np.asarray(r['path'])/max(1,r['play_steps']); behavior[8:]+=np.asarray(r['grabs'])/max(1,r['play_steps'])
-                    seeds = [int(world_generator.integers(1,2**30)) for _ in finished]
-                    changes = [environment_config(world_generator,index,args.variant) for index in finished]
-                    physical[finished] = pool.reset_at(finished,seeds,changes)
-                    buttons[finished] = 0
-                    role_ids[finished] = assign_for_variant(opponent_generator,len(finished),len(histories),active_counts[1]/max(1,current_counts[1]),args.variant)
-                starts = torch.from_numpy(done.astype(np.float32))
-            rollout_seconds = time.monotonic()-rollout_started
-            with torch.no_grad():
-                bootstrap_memories = [memory*(1-starts[:,None]) for memory in memories]
-                _,_,_,records = act_grouped(models,histories,physical,bootstrap_memories,buttons,role_ids,sample=False)
-                bootstrap_partial = torch.stack([record[3] for record in records],dim=-1)
-                bootstrap = critic(batch_states(pool.central_states),torch.stack(bootstrap_memories,dim=1),bootstrap_partial)
-            advantages,returns = advantages_and_returns(rewards,values,dones,bootstrap)
-            optimizer_started = time.monotonic()
-            actor_stats = []
-            for role,model in enumerate(models):
-                actor_stats.append(actor_update(model,optimizers[role],actor_buffers[role],
-                    advantages if role==0 else -advantages,current_rows[:,:,role],role,
-                    epochs=args.epochs,sequence_length=args.sequence_length,sequence_batch=args.sequence_batch,
-                    entropy_weight=args.entropy,kl_limit=args.kl_limit,burn_in=burn_in,prefix=prefixes[role]))
-            # The tail of this rollout warms up the first sequence of the next one.
-            prefixes=[(actor_buffers[role][0][-burn_in:].clone(),actor_buffers[role][1][-burn_in:].clone(),actor_buffers[role][2][-burn_in:].clone()) for role in range(2)] if burn_in else [None,None]
-            value_stats = critic_update(critic,critic_optimizer,central,before_memories,values,returns,
-                epochs=args.epochs,batch_size=args.critic_batch_size,partial_values=partial_values)
-            optimizer_seconds = time.monotonic()-optimizer_started
-            interactions += block
-            assert int(current_counts.sum()+historical_counts.sum()) == interactions
-            row = dict(encoder=args.encoder,arm=args.arm,update=update+1,totalPolicyInteractions=interactions,
-                currentPolicyDecisions=current_counts.tolist(),historicalPolicyDecisions=historical_counts.tolist(),
-                activePolicySamples=active_counts.tolist(),episodes=episodes,
-                seconds=previous_seconds+time.monotonic()-started,
-                rolloutSeconds=rollout_seconds,optimizerSeconds=optimizer_seconds,
-                hider=actor_stats[0],seeker=actor_stats[1],critic=value_stats,
-                meanHiddenFraction=float(np.mean(recent)) if recent else None,
-                unscaledRewardSum=unscaled.tolist(),divergedEpisodes=diverged)
-            if (update + 1) % args.snapshot_every == 0:
-                pair = [copy.deepcopy(m).eval().requires_grad_(False) for m in models]
-                histories.append(pair)
-                frozen_before.append([copy.deepcopy(m.state_dict()) for m in pair])
-                descriptors.append((behavior/max(1,behavior_count)).tolist())
-            # Retain the latest eight plus any opponent still serving an episode.
-            keep=sorted(set(range(max(0,len(histories)-8),len(histories)))|{int(x) for x in role_ids.ravel() if x>=0}) if args.variant in ('baseline','recent-only') else archive_indices(descriptors,role_ids,limit=args.archive_limit)
-            remap={old:new for new,old in enumerate(keep)}
-            for role in range(2):
-                role_ids[:,role]=np.array([remap[int(x)] if x>=0 else -1 for x in role_ids[:,role]])
-            histories=[histories[i] for i in keep];frozen_before=[frozen_before[i] for i in keep];descriptors=[descriptors[i] for i in keep]
-            row['leagueSize'] = len(histories)
-            log.append(row)
-            print(json.dumps(row),flush=True)
-            stopping = bool(args.stop_after_updates and update+1>=args.stop_after_updates)
-            stopping |= bool(stop_requested and stop_requested())
-            if (update+1)%args.save_every==0 or update+1 in retained or stopping or update+1==target_updates:
-                for before,pair in zip(frozen_before,histories):
-                    for old,model in zip(before,pair):
-                        for name,value in model.state_dict().items():
-                            torch.testing.assert_close(old[name],value,atol=0,rtol=0)
-                        assert all(parameter.grad is None for parameter in model.parameters())
-                saved = dict(format=FORMAT,encoderTypes=parent['encoderTypes'],observationSize=210,physicsObservationSize=208,
-                    trainingMethod=getattr(args, 'training_description', f'Matched encoder comparison: {args.encoder}, league B; original visibility-only rewards'),
-                    rolloutState=dict(pool=pool.snapshot(),buttons=buttons.copy(),memories=[x.clone() for x in memories],starts=starts.clone(),roleIds=role_ids.copy(),
-                        burnInPrefix=[None if x is None else tuple(t.clone() for t in x) for x in prefixes],recent=list(recent)),leagueDescriptors=descriptors,leagueModels=[[m.state_dict() for m in pair] for pair in histories],models=[model.state_dict() for model in models],optimizers=[optimizer.state_dict() for optimizer in optimizers],
-                    centralCritic=critic.state_dict(),centralCriticOptimizer=critic_optimizer.state_dict(),
-                    centralCriticSchema=SCHEMA,parentDecisions=parent['decisions'],
-                    criticWarmupDecisions=provenance['criticWarmupDecisions'],
-                    pilotDecisions=interactions,totalPolicyInteractions=interactions,
-                    actorUpdateDecisions=int(current_counts.sum()),currentPolicyDecisions=current_counts.tolist(),
-                    historicalPolicyDecisions=historical_counts.tolist(),activePolicySamples=active_counts.tolist(),
-                    decisions=parent['decisions']+interactions,
-                    decisionsDefinition='Inherited selected-pair resource lineage plus this arm total current/historical policy interactions; not a per-role count.',
-                    newActorUpdates=update+1,
-                    pilotUpdates=update+1,pilotEpisodes=episodes,seconds=row['seconds'],
-                    provenance=provenance,arguments=vars(args),log=log,
-                    torchRNG=torch.get_rng_state(),worldRNG=world_generator.bit_generator.state,
-                    opponentRNG=opponent_generator.bit_generator.state)
-                torch.save(saved,destination/'latest.tmp')
-                os.replace(destination/'latest.tmp',destination/'latest.pt')
-                if update+1 in retained:
-                    torch.save(saved,destination/f'checkpoint-{interactions}.pt')
-                (destination/'training-log.json').write_text(json.dumps(log,indent=2)+'\n')
-                (destination/'provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
-                if on_checkpoint is not None:
-                    on_checkpoint(saved, destination)
-            if stopping:
-                break
+        for step in range(h):
+            self.rollout_step(step, batch, stats)
+        stats['seconds'] = time.monotonic() - started
+        return batch, stats
+
+    def rollout_step(self, step, batch, stats):
+        pool = self.pool
+        for role in range(2):
+            self.memories[role] *= 1 - self.starts[:, None]
+        before = torch.stack(self.memories, dim=1).clone()
+        state = batch_states(pool.central_states)
+        for key in FEATURES:
+            batch['central'][key][step] = state[key]
+        batch['before_memories'][step] = before
+        current, active = active_masks(self.physical, self.role_ids)
+        batch['current_rows'][step] = torch.from_numpy(current)
+        self.current_counts += current.sum(0)
+        self.historical_counts += (~current).sum(0)
+        self.active_counts += active.sum(0)
+        with torch.no_grad():
+            actions, next_memories, next_buttons, records = act_grouped(
+                self.models, self.histories, self.physical, self.memories, self.buttons, self.role_ids)
+            batch['partial_values'][step] = torch.stack([record[3] for record in records], dim=-1)
+            batch['values'][step] = self.critic(state, before, batch['partial_values'][step])
+        for role in range(2):
+            observed, raw, logp, _ = records[role]
+            buffers = batch['actor_buffers'][role]
+            buffers[0][step] = observed
+            buffers[1][step] = self.memories[role]
+            buffers[2][step] = self.starts
+            buffers[3][step] = raw
+            buffers[4][step] = logp
+        stats['behavior'][:6] += np.mean(np.abs(actions), axis=(0, 1))
+        stats['behavior_count'] += 1
+        self.physical, returned, done, infos = pool.step(actions)
+        np.testing.assert_array_equal(returned.sum(1), np.zeros(self.args.envs))
+        batch['rewards'][step] = torch.from_numpy(returned[:, 0].copy()) * REWARD_SCALE
+        batch['dones'][step] = torch.from_numpy(done.astype(np.float32))
+        stats['unscaled'] += returned.sum(0)
+        self.buttons, self.memories = next_buttons, next_memories
+        finished = np.flatnonzero(done).tolist()
+        if finished:
+            self.finish_episodes(finished, infos, stats)
+        self.starts = torch.from_numpy(done.astype(np.float32))
+
+    def finish_episodes(self, finished, infos, stats):
+        """Record finished episodes and restart their worlds on fresh randomized layouts."""
+        self.recent.extend(infos[index]['hidden'] / infos[index]['play_steps'] for index in finished)
+        self.recent = self.recent[-RECENT_EPISODES:]
+        self.episodes += len(finished)
+        stats['diverged'] += sum(1 for index in finished if infos[index].get('diverged'))
+        for index in finished:
+            r = infos[index]
+            stats['behavior'][6:8] += np.asarray(r['path']) / max(1, r['play_steps'])
+            stats['behavior'][8:] += np.asarray(r['grabs']) / max(1, r['play_steps'])
+        seeds = [int(self.world_generator.integers(1, SEED_LIMIT)) for _ in finished]
+        changes = [environment_config(self.world_generator, index, self.args.variant) for index in finished]
+        self.physical[finished] = self.pool.reset_at(finished, seeds, changes)
+        self.buttons[finished] = 0
+        self.role_ids[finished] = assign_for_variant(self.opponent_generator, len(finished), len(self.histories),
+                                                     self.active_counts[1] / max(1, self.current_counts[1]), self.args.variant)
+
+    def bootstrap(self):
+        with torch.no_grad():
+            bootstrap_memories = [memory * (1 - self.starts[:, None]) for memory in self.memories]
+            _, _, _, records = act_grouped(self.models, self.histories, self.physical, bootstrap_memories, self.buttons,
+                                           self.role_ids, sample=False)
+            partial = torch.stack([record[3] for record in records], dim=-1)
+            return self.critic(batch_states(self.pool.central_states), torch.stack(bootstrap_memories, dim=1), partial)
+
+    # ------------------------------------------------------------- learning
+    def optimize(self, batch, bootstrap):
+        args = self.args
+        advantages, returns = advantages_and_returns(batch['rewards'], batch['values'], batch['dones'], bootstrap)
+        started = time.monotonic()
+        actor_stats = []
+        for role, model in enumerate(self.models):
+            actor_stats.append(actor_update(
+                model, self.optimizers[role], batch['actor_buffers'][role], advantages if role == 0 else -advantages,
+                batch['current_rows'][:, :, role], role, epochs=args.epochs, sequence_length=args.sequence_length,
+                sequence_batch=args.sequence_batch, entropy_weight=args.entropy, kl_limit=args.kl_limit,
+                burn_in=self.burn_in, prefix=self.prefixes[role]))
+        # The tail of this rollout warms up the first sequence of the next one.
+        if self.burn_in:
+            self.prefixes = [tuple(batch['actor_buffers'][role][k][-self.burn_in:].clone() for k in range(3)) for role in range(2)]
+        else:
+            self.prefixes = [None, None]
+        value_stats = critic_update(self.critic, self.critic_optimizer, batch['central'], batch['before_memories'],
+                                    batch['values'], returns, epochs=args.epochs, batch_size=args.critic_batch_size,
+                                    partial_values=batch['partial_values'])
+        return actor_stats, value_stats, time.monotonic() - started
+
+    # --------------------------------------------------------------- league
+    def snapshot_league(self, stats):
+        pair = [copy.deepcopy(m).eval().requires_grad_(False) for m in self.models]
+        self.histories.append(pair)
+        self.frozen_before.append([copy.deepcopy(m.state_dict()) for m in pair])
+        self.descriptors.append((stats['behavior'] / max(1, stats['behavior_count'])).tolist())
+
+    def prune_league(self):
+        """Keep the newest eight plus any opponent still serving an episode, or the diverse archive."""
+        if self.args.variant in RECENT_ONLY_VARIANTS:
+            newest = range(max(0, len(self.histories) - NEWEST_SNAPSHOTS), len(self.histories))
+            keep = sorted(set(newest) | {int(x) for x in self.role_ids.ravel() if x >= 0})
+        else:
+            keep = archive_indices(self.descriptors, self.role_ids, limit=self.args.archive_limit)
+        remap = {old: new for new, old in enumerate(keep)}
+        for role in range(2):
+            self.role_ids[:, role] = np.array([remap[int(x)] if x >= 0 else -1 for x in self.role_ids[:, role]])
+        self.histories = [self.histories[i] for i in keep]
+        self.frozen_before = [self.frozen_before[i] for i in keep]
+        self.descriptors = [self.descriptors[i] for i in keep]
+
+    def verify_frozen(self):
+        """Frozen opponents must be bit-identical to their snapshots and carry no gradients."""
+        for before, pair in zip(self.frozen_before, self.histories):
+            for old, model in zip(before, pair):
+                for name, value in model.state_dict().items():
+                    torch.testing.assert_close(old[name], value, atol=0, rtol=0)
+                assert all(parameter.grad is None for parameter in model.parameters())
+
+    # ----------------------------------------------------------- checkpoint
+    def record(self, update, row):
+        args, parent = self.args, self.parent
+        rollout_state = dict(pool=self.pool.snapshot(), buttons=self.buttons.copy(), memories=[x.clone() for x in self.memories],
+                             starts=self.starts.clone(), roleIds=self.role_ids.copy(),
+                             burnInPrefix=[None if x is None else tuple(t.clone() for t in x) for x in self.prefixes],
+                             recent=list(self.recent))
+        method = getattr(args, 'training_description',
+                         f'Matched encoder comparison: {args.encoder}, league B; original visibility-only rewards')
+        return dict(
+            format=FORMAT, encoderTypes=parent['encoderTypes'], observationSize=OBSERVATION_SIZE,
+            physicsObservationSize=PHYSICAL_OBSERVATION_SIZE, trainingMethod=method, rolloutState=rollout_state,
+            leagueDescriptors=self.descriptors, leagueModels=[[m.state_dict() for m in pair] for pair in self.histories],
+            models=[model.state_dict() for model in self.models], optimizers=[optimizer.state_dict() for optimizer in self.optimizers],
+            centralCritic=self.critic.state_dict(), centralCriticOptimizer=self.critic_optimizer.state_dict(),
+            centralCriticSchema=SCHEMA, parentDecisions=parent['decisions'],
+            criticWarmupDecisions=self.provenance['criticWarmupDecisions'],
+            pilotDecisions=self.interactions, totalPolicyInteractions=self.interactions,
+            actorUpdateDecisions=int(self.current_counts.sum()), currentPolicyDecisions=self.current_counts.tolist(),
+            historicalPolicyDecisions=self.historical_counts.tolist(), activePolicySamples=self.active_counts.tolist(),
+            decisions=parent['decisions'] + self.interactions,
+            decisionsDefinition='Inherited selected-pair resource lineage plus this arm total current/historical policy interactions; not a per-role count.',
+            newActorUpdates=update + 1, pilotUpdates=update + 1, pilotEpisodes=self.episodes, seconds=row['seconds'],
+            provenance=self.provenance, arguments=vars(args), log=self.log,
+            torchRNG=torch.get_rng_state(), worldRNG=self.world_generator.bit_generator.state,
+            opponentRNG=self.opponent_generator.bit_generator.state)
+
+    def checkpoint(self, update, row):
+        self.verify_frozen()
+        saved = self.record(update, row)
+        torch.save(saved, self.destination / 'latest.tmp')
+        os.replace(self.destination / 'latest.tmp', self.destination / 'latest.pt')
+        if update + 1 in self.retained:
+            torch.save(saved, self.destination / f'checkpoint-{self.interactions}.pt')
+        (self.destination / 'training-log.json').write_text(json.dumps(self.log, indent=2) + '\n')
+        (self.destination / 'provenance.json').write_text(json.dumps(self.provenance, indent=2) + '\n')
+        if self.on_checkpoint is not None:
+            self.on_checkpoint(saved, self.destination)
+
+
+def train(args, *, stop_requested=None, on_checkpoint=None):
+    Trainer(args, stop_requested, on_checkpoint).train()
 
 
 def parser():
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument('--variant',choices=['full','baseline','short','unbalanced','recent-only','short-memory'],default='full')
+    result.add_argument('--variant', choices=['full', 'baseline', 'short', 'unbalanced', 'recent-only', 'short-memory'], default='full')
     for argument in ['parent', 'critic', 'initial', 'output', 'protocol']:
         result.add_argument('--' + argument, required=True)
     result.add_argument('--history', nargs='+', required=True)
@@ -370,11 +531,13 @@ def parser():
 
 def main(args):
     stopped = False
+
     def stop(signum, _frame):
         nonlocal stopped
         stopped = True
         print(json.dumps(dict(stopRequested=signal.Signals(signum).name,
-            behavior='Finish this rollout/update, atomically save optimizer/RNG state, then stop.')), flush=True)
+                              behavior='Finish this rollout/update, atomically save optimizer/RNG state, then stop.')), flush=True)
+
     previous = {sig: signal.getsignal(sig) for sig in [signal.SIGINT, signal.SIGTERM]}
     for sig in previous:
         signal.signal(sig, stop)
