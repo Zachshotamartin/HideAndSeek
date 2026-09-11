@@ -22,13 +22,13 @@ Hide-and-seek: two recurrent policies learn continuous movement, grabbing, locki
 4. **Exact resumability:** independently compare uninterrupted and split runs, including actor/critic/optimizer/RNG, simulator integration, welded objects, button state, recurrent memory, opponent archive, curriculum and routine history. Check snapshot consistency, source/version checks, interruption during evaluation, pilot-to-continuation transfer, completed-budget extension and source dependency portability. Some tests reference local output fixtures; identify what prevents fresh-clone reproduction rather than silently skipping them.
 5. **Browser/runtime integration:** inspect src/core, workers/controllers, renderer and asset manifests against their actual exported observation/action/physics contracts. The new v10 native diver is NOT yet wired into the existing browser runtime. Do not confuse a pure inference parity test with complete closed-loop native/WASM parity. Inspect the shared character's world-space planted feet, direction changes, attachment and visual/physical agreement.
 
-## Reproduce known failures first
+## Audit the repaired regressions first
 
-Both `npm run build` commands passed. `npm test` currently reports:
+Both `npm run build` commands passed. `npm test` previously reported:
 - LearnToDive: 47/49 pass; native/WASM trajectory parity and first-contact timing fail.
 - HideAndSeek: 35/40 pass; live entity dispatch, native/browser physics parity, shipped model validation, blind-seeker recurrent controls and deterministic/sampled reset tests fail.
 
-Read the actual assertions and schemas before deciding whether these are implementation defects, stale fixtures, or both. Do not simply regenerate expected outputs from the implementation under test. Native training's focused tests passed separately, but that does not resolve these browser failures or prove model quality.
+These seven original failures are now repaired: LearnToDive passes 49/49 and HideAndSeek passes 44/44. Review the repairs, independently generated native references, unchanged numerical tolerances, model metadata and new validation instead of assuming the passing tests prove correctness. Full legacy browser/qualification suites remain separate from the focused `npm run test:runtime` smoke tests. Do not simply regenerate expected outputs from the implementation under test. Native training's focused tests passed separately, but that does not prove model quality or full closed-loop equivalence.
 
 For research claims, verify against primary sources, including the World Aquatics rules linked in difficulty.json and OpenAI's Emergent Tool Use paper. This is original project code: do not replace it with OpenAI's implementation.
 

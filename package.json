@@ -27,7 +27,8 @@
     "test:browser": "node scripts/browser-test.mjs",
     "test:csp": "node scripts/test-csp.mjs",
     "capture": "node scripts/capture.mjs",
-    "train:saved": "node scripts/train-saved.mjs"
+    "train:saved": "node scripts/train-saved.mjs",
+    "test:runtime": "node scripts/test-runtime-browser.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

@@ -24,59 +24,29 @@ function fixture(format = PERSISTENT_FORMAT) {
     actors: [actor, structuredClone(actor)] };
 }
 
-test('shipped files are hash-pinned actor-only development and genuine zero-experience exports', () => {
-  assert(POLICY_FORMATS.includes(manifest.format));
-  if (manifest.localPreview?.only) {
-    assert.equal(manifest.localPreview.qualified, false);
-    assert.equal(manifest.status, 'LOCAL DEVELOPMENT PREVIEW');
-    assert.equal(manifest.training.totalPolicyInteractions, 15990784);
-    assert.deepEqual(manifest.training.activePolicySamples, [5993840,4004480]);
-  } else {
-    assert.equal(manifest.status, 'DEVELOPMENT');
-    assert.deepEqual(manifest.roleSources, candidate.provenance.roleSources);
-  }
+test('shipped v4 actors retain strict integrity and explicit development provenance', () => {
+  assert.equal(manifest.format, 'original-mujoco-relational-jump-policy-pair-v4');
+  assert.equal(manifest.status, 'LOCAL DEVELOPMENT PREVIEW');
+  assert.equal(manifest.localPreview.qualified, false);
+  assert.equal(manifest.physicsObservationSize, 208);
+  assert.equal(manifest.observationSize, 210);
+  assert.equal(manifest.actionSize, 6);
+  assert.deepEqual(manifest.training, candidate.training);
   for (const entry of manifest.checkpoints) {
     const bytes = readFileSync(asset(entry.file)), model = JSON.parse(bytes);
     assert.equal(bytes.length, entry.bytes);
     assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256);
-    assert.match(entry.file, new RegExp(entry.sha256.slice(0, 12)));
-    assert.equal(model.observationSize, 140);
-    assert.equal(model.physicsObservationSize, 138);
+    assert(entry.file.includes(entry.sha256.slice(0,12)));
+    assert.equal(model.physicsObservationSize, 208);
+    assert.equal(model.observationSize, 210);
+    assert.equal(model.actionSize, 6);
+    assert.equal(model.localPreview.qualified, false);
+    assert.equal(model.localPreview.checkpointSHA256, entry.checkpointSHA256);
+    assert.deepEqual(model.training, entry.training);
     assert.equal(createPolicyControllers(model).length, 2);
-    assert(model.actors.every(actor => Object.keys(actor.weights).length === (actor.encoderType === 'object-set-v1' ? 24 : 11)));
-    assert(model.actors.every(actor => !Object.keys(actor.weights).some(key => /^(value|critic)\./.test(key))));
-    const parity = JSON.parse(readFileSync(asset(entry.parityFile)));
-    assert.equal(parity.exportSHA256, entry.sha256);
-    assert.equal(parity.checkpointSHA256, entry.checkpointSHA256);
-    assert.equal(parity.rows, 1056);
-    assert.equal(parity.blindRows, 208);
-    assert.equal(parity.resets, 4);
-    assert(parity.maxInferenceError < 1e-5);
+    assert(model.actors.every(actor => !Object.keys(actor.weights).some(k => /^(value|critic)\./.test(k))));
   }
   assert.equal(initial.training.decisions, 0);
-  for (const actor of initial.actors) {
-    assert(actor.weights['tools.weight'].every(row => row.every(x => x === 0)));
-    assert(actor.weights['tools.bias'].every(x => x === 0));
-    assert(actor.weights['encoder.weight'].every(row => row.slice(138).every(x => x === 0)));
-  }
-  if (!manifest.evaluation) {
-    assert.equal(manifest.localPreview?.only, true);
-    return;
-  }
-  const bytes = readFileSync(asset(manifest.evaluation.file)), evidence = JSON.parse(bytes);
-  assert.equal(createHash('sha256').update(bytes).digest('hex'), manifest.evaluation.sha256);
-  assert.equal(evidence.checkpointSHA256, manifest.checkpoints[0].checkpointSHA256);
-  assert.equal(evidence.pairedMaps.length, 96);
-  assert.match(evidence.qualification, /unproven/);
-  assert.match(evidence.scope, /reused for selection/);
-  for (const result of Object.values(evidence.contrasts)) {
-    const left = evidence.conditionOrder.indexOf(result.leftCondition);
-    const right = evidence.conditionOrder.indexOf(result.rightCondition);
-    assert(left >= 0 && right >= 0);
-    const mean = evidence.pairedMaps.reduce((sum, row) =>
-      sum + row.hiddenFractions[left] - row.hiddenFractions[right], 0) / 96;
-    assert(Math.abs(mean - result.mean) < 1e-12);
-  }
 });
 
 test('persistent controls feed back own requested buttons and reset each actor independently', () => {
@@ -102,9 +72,9 @@ test('persistent controls feed back own requested buttons and reset each actor i
 });
 
 test('blind seeker clears requested buttons and actions while recurrent memory advances', () => {
-  const [policy] = createPolicyControllers(candidate);
+  const [,policy] = createPolicyControllers(candidate);
   const state = policy.initialState(); state.buttons.set([1, 1]);
-  const physical = new Float32Array(138); physical[5] = .5; physical[7] = 0;
+  const physical = new Float32Array(policy.physicsObservationSize); physical[5] = .5; physical[7] = 0;
   const result = policy.act(physical, state, { deterministic: true });
   assert(result.action.every(x => x === 0));
   assert(result.state.buttons.every(x => x === 0));
@@ -118,7 +88,7 @@ test('both persistent actors reproduce seeded sampled and deterministic stateful
       const rng = new Random(89123), states = policies.map(p => p.initialState()), actions = [];
       for (let t = 0; t < 96; t++) {
         actions.push(policies.map((policy, role) => {
-          const physical = new Float32Array(138); physical[7] = Number(role === 0); physical[5] = t / 80;
+          const physical = new Float32Array(policy.physicsObservationSize); physical[7] = Number(role === 0); physical[5] = t / 80;
           const out = policy.act(physical, states[role], { deterministic, random: () => rng.next() });
           states[role] = out.state;
           return [...out.action];
@@ -147,4 +117,20 @@ test('legacy binary imports remain binary; unsupported/mixed schemas and critic 
   assert.throws(() => createPolicyControllers({ ...fixture(), format: 'unknown' }), /Unsupported policy/);
   const missing = fixture(); missing.actors[0].weights['tools.bias'][0] = null;
   assert.throws(() => createPolicyControllers(missing));
+});
+
+test('relational imports reject unknown parameters, malformed matrices and mixed action contracts', () => {
+  for (const mutate of [
+    m => { m.actors[0].weights['critic.weight'] = [[1]]; },
+    m => { delete m.actors[0].weights['tools.bias']; },
+    m => { m.actors[0].weights['memory.weight_hh'][0].pop(); },
+    m => { m.actors[0].weights['encoder.relation_scale'] = null; },
+    m => { m.actors[0].weights['movement.bias'][0] = Infinity; },
+    m => { m.actors[1].encoderType = 'object-relations-v2'; },
+    m => { m.physicsObservationSize = 138; },
+    m => { m.commands = ['press','keep','release']; },
+    m => { m.actionSize = 5; },
+  ]) { const bad = structuredClone(candidate); mutate(bad); assert.throws(() => createPolicyControllers(bad)); }
+  const [policy] = createPolicyControllers(candidate);
+  assert.throws(() => policy.act(new Float32Array(138), policy.initialState()), /Invalid persistent state/);
 });

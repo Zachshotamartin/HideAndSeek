@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { EntityPolicy, createEntityPolicies, ENTITY_PAIR_FORMAT } from '../src/core/entityPolicy.js';
 import { createPolicyControllers, BINARY_FORMAT, PERSISTENT_FORMAT } from '../src/core/policyController.js';
+import { createRelationalPolicies } from '../src/core/relationalPolicy.js';
 import { Random } from '../src/core/physics.js';
 
 const directory = new URL('../public/models/', import.meta.url);
@@ -134,10 +135,10 @@ test('existing persistent and legacy binary imports keep exactly their old infer
 
 test('live entity pair dispatches through the application controller', () => {
   const model = JSON.parse(readFileSync(new URL(manifest.file, directory)));
-  const direct = createEntityPolicies(model), routed = createPolicyControllers(model);
+  const direct = createRelationalPolicies(model), routed = createPolicyControllers(model);
   for (let role = 0; role < 2; role++) {
-    assert.equal(routed[role].physicsObservationSize, 138);
-    const physical = observation().slice(0,138);
+    assert.equal(routed[role].physicsObservationSize, 208);
+    const physical = new Float32Array(208); physical[5] = 1; physical[7] = 1-role;
     const a = direct[role].act(physical,direct[role].initialState(),{ deterministic: true });
     const b = routed[role].act(physical,routed[role].initialState(),{ deterministic: true });
     assert.deepEqual(a,b);

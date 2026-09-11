@@ -120,3 +120,9 @@ Regenerate the native fixture with:
 ```
 
 Browser tests operate the actual learned policies, complete a round, manipulate props through controls and the 3D picker, export/import actual files and replays, exercise delayed-file/disposal races, and check 320 px and 390 px phone layouts.
+
+## Runtime regression checks
+
+`npm test` checks the committed native reference trajectories and current policy schema. `npm run test:runtime` runs focused browser loading/playback/export checks for trained and initial models. These are correctness checks, not proof of model quality; older browser qualification scenarios are separate.
+
+Regenerate native references only after investigating a contract change, using a Python environment with the pinned training dependencies: `python scripts/generate-runtime-fixtures.py`. References carry source/model hashes so drift is reported explicitly. Existing numerical parity tolerances remain unchanged.

@@ -1,31 +1,41 @@
 // Original masked object-set inference with explicit actor-only validation.
 import { PersistentPolicy } from './persistentPolicy.js';
-import { createPolicyControllers, POLICY_FORMATS } from './policyController.js';
 
 export const ENTITY_PAIR_FORMAT = 'original-mujoco-relational-policy-pair-v2';
 const ENTITY = 'object-relations-v2';
-const LEGACY = 'legacy-linear-v1';
 const finite = values => values.every(Number.isFinite);
 const sigmoid = value => 1 / (1 + Math.exp(-value));
-const baseMatrices = [
-  ['memory.weight_ih', 192, 96], ['memory.weight_hh', 192, 64],
-  ['movement.weight', 3, 64], ['tools.weight', 6, 64],
-];
-const baseVectors = [['memory.bias_ih', 192], ['memory.bias_hh', 192],
-  ['movement.bias', 3], ['tools.bias', 6], ['log_std', 3]];
-const entityMatrices = [
-  ['encoder.fixed.weight', 96, 44], ['encoder.object_linear', 96, 16],
-  ['encoder.embedding.0.weight', 32, 16], ['encoder.embedding.2.weight', 32, 32],
-  ['encoder.query.weight', 32, 44], ['encoder.key.weight', 32, 32],
-  ['encoder.value.weight', 32, 32], ['encoder.residual.weight', 96, 32],
-];
-const entityVectors = [['encoder.fixed.bias', 96], ['encoder.embedding.0.bias', 32],
-  ['encoder.embedding.2.bias', 32], ['encoder.query.bias', 32], ['encoder.key.bias', 32],
-  ['encoder.value.bias', 32], ['encoder.residual.bias', 96]];
 
 function validate(d) {
- if(!['object-relations-v2','object-relations-jump-v4'].includes(d.encoderType)||d.observationSize!==210||d.physicsObservationSize!==208||d.hiddenSize!==256||d.encoderSize!==256||d.embeddingSize!==128)throw Error('Unsupported relational model');
- for(const [key,value] of Object.entries(d.weights))if(![value].flat(Infinity).every(Number.isFinite))throw Error('Invalid weights: '+key);
+  if (!d || !['object-relations-v2', 'object-relations-jump-v4'].includes(d.encoderType) ||
+      d.observationSize !== 210 || d.physicsObservationSize !== 208 ||
+      d.hiddenSize !== 256 || d.encoderSize !== 256 || d.embeddingSize !== 128)
+    throw Error('Unsupported relational model');
+  const movement = d.encoderType === 'object-relations-jump-v4' ? 4 : 3;
+  const shapes = {
+    'memory.weight_ih': [768,256], 'memory.weight_hh': [768,256],
+    'memory.bias_ih': [768], 'memory.bias_hh': [768],
+    'movement.weight': [movement,256], 'movement.bias': [movement],
+    'tools.weight': [6,256], 'tools.bias': [6], log_std: [movement],
+    'encoder.fixed.weight': [256,50], 'encoder.fixed.bias': [256],
+    'encoder.object_linear': [256,16],
+    'encoder.embedding.0.weight': [128,16], 'encoder.embedding.0.bias': [128],
+    'encoder.embedding.2.weight': [128,128], 'encoder.embedding.2.bias': [128],
+    'encoder.query.weight': [128,50], 'encoder.query.bias': [128],
+    'encoder.key.weight': [128,128], 'encoder.key.bias': [128],
+    'encoder.value.weight': [128,128], 'encoder.value.bias': [128],
+    'encoder.residual.weight': [256,128], 'encoder.residual.bias': [256],
+    'encoder.relations.in_proj_weight': [384,128], 'encoder.relations.in_proj_bias': [384],
+    'encoder.relations.out_proj.weight': [128,128], 'encoder.relations.out_proj.bias': [128],
+    'encoder.relation_scale': [],
+  };
+  if (!d.weights || Object.keys(d.weights).some(key => !Object.hasOwn(shapes, key)))
+    throw Error('Expected actor-only relational weights; unknown or critic parameter');
+  const matches = (value, shape) => shape.length === 0 ? Number.isFinite(value) :
+    Array.isArray(value) && value.length === shape[0] &&
+      Array.from(value).every(row => matches(row, shape.slice(1)));
+  for (const [key, shape] of Object.entries(shapes))
+    if (!matches(d.weights[key], shape)) throw Error('Invalid relational weights: ' + key);
 }
 
 function linear(input, weight, bias) {
@@ -100,7 +110,14 @@ export class RelationalPolicy {
   }
 }
 
-export function createRelationalPolicies(model){
- if(![ENTITY_PAIR_FORMAT,'original-mujoco-relational-jump-policy-pair-v4'].includes(model.format)||model.actors?.length!==2)throw Error('Invalid relational policy pair');
- return model.actors.map(d=>new RelationalPolicy(d));
+export function createRelationalPolicies(model) {
+  const jumpFormat = 'original-mujoco-relational-jump-policy-pair-v4';
+  if (!model || ![ENTITY_PAIR_FORMAT,jumpFormat].includes(model.format) || model.actors?.length !== 2 ||
+      model.observationSize !== 210 || model.physicsObservationSize !== 208 ||
+      JSON.stringify(model.commands) !== JSON.stringify(['keep','press','release']) ||
+      (model.actionSize !== undefined && model.actionSize !== (model.format === jumpFormat ? 6 : 5)))
+    throw Error('Invalid relational policy pair');
+  const expected = model.format === jumpFormat ? 'object-relations-jump-v4' : ENTITY;
+  if (model.actors.some(actor => actor?.encoderType !== expected)) throw Error('Mixed relational action schemas');
+  return model.actors.map(d => new RelationalPolicy(d));
 }

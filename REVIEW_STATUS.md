@@ -5,8 +5,9 @@ This branch preserves the current source and development browser assets. It is n
 ## Checks run before push
 
 - `npm run build`: passed.
-- `npm test`: 35 passed / 5 failed: entity dispatch, native/browser physics parity, shipped asset validation, blind-seeker state, sampled/deterministic recurrent reset.
-- The preceding native training verification passed 9 diving tests and 17 focused hide-and-seek tests, plus a bounded-torque/momentum audit and pure browser-policy inference parity. These checks do not override the JavaScript failures above.
+- `npm run test:runtime`: passed for trained and initial models in an actual browser, without page errors.
+- `npm test`: 44 passed / 0 failed. Updated v4 observation/action fixtures, restored manifest integrity metadata, enforced relational actor-only shapes, and added native policy/jump parity.
+- The preceding native training verification passed 9 diving tests and 17 focused hide-and-seek tests, plus a bounded-torque/momentum audit and pure browser-policy inference parity. Native training verification remains separate from browser/model quality.
 
 ## Training boundary
 

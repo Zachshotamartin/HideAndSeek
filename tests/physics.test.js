@@ -1,9 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import load from '../src/vendor/mujoco-csp.js';import{PhysicsSimulation,generateArena,validateArena,editObject,OBS_DIM}from'../src/core/physics.js';
 const mj=await load({wasmBinary:fs.readFileSync(new URL('../node_modules/@mujoco/mujoco/mujoco.wasm',import.meta.url))});
 const near=(a,b,tol=3e-6)=>{assert.equal(a.length,b.length);for(let i=0;i<a.length;i++)assert.ok(Math.abs(a[i]-b[i])<tol,`${i}: ${a[i]} versus ${b[i]}`);};
 test('native and browser MuJoCo share real action, collision, grab, lock, observation trajectories',()=>{
- const f=JSON.parse(fs.readFileSync(new URL('../training/fixtures/native-physics.json',import.meta.url)));const s=new PhysicsSimulation(mj,f.arena,{prep:f.prep,play:f.play});
+ const f=JSON.parse(fs.readFileSync(new URL('../training/fixtures/native-physics.json',import.meta.url)));
+ assert.equal(f.observationSize,OBS_DIM);assert.equal(f.actionSize,6);
+ for(const [name,hash]of Object.entries(f.sources))assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../training_v4/'+name,import.meta.url))).digest('hex'),hash,`Stale native source: ${name}`);
+ const s=new PhysicsSimulation(mj,f.arena,{prep:f.prep,play:f.play});
  try{f.actions.forEach((actions,i)=>{s.step(actions);near(s.data.qpos,f.frames[i].qpos);near(s.data.qvel,f.frames[i].qvel,1e-5);for(let a=0;a<2;a++)near(s.observe(a),f.frames[i].obs[a],3e-5);assert.deepEqual(s.grips,f.frames[i].grips);assert.deepEqual(s.locks,f.frames[i].locks);});assert.ok(s.grabEvents[0]>0);assert.ok(s.lockEvents[0]>0);}finally{s.dispose();}
 });
 test('seeker is blind during prep and hidden opponent coordinates cannot leak into observations',()=>{
@@ -59,4 +63,13 @@ test('locks have ownership and physical tools cannot be acquired through a wall'
  const a=generateArena(4,'open',8,0,0);a.agents=[{position:[3.39,4,.25],yaw:0},{position:[4.61,4,.25],yaw:Math.PI}];a.objects=[{id:'box-a',kind:'box',position:[4,4,.353],size:[.7,.7,.7],yaw:0,mass:1.2}];const s=new PhysicsSimulation(mj,a,{prep:0,play:100});
  try{s.step([[0,0,0,0,1],[0,0,0,0,0]]);assert.equal(s.locks[0],0);s.step([[0,0,0,0,1],[0,0,0,0,0]]);assert.equal(s.locks[0],0,'other agent cannot unlock');s.step([[0,0,0,0,0],[0,0,0,0,0]]);assert.equal(s.locks[0],-1);}finally{s.dispose();}
  a.walls.push({position:[3.58,4,.45],size:[.08,1,.9],yaw:0});const blocked=new PhysicsSimulation(mj,a,{prep:0,play:100});try{assert.equal(blocked.objectSeen[0][0],false);blocked.step([[0,0,0,1,1],[0,0,0,0,0]]);assert.equal(blocked.grips[0],-1);assert.equal(blocked.locks[0],-1);}finally{blocked.dispose();}
+});
+
+test('native and WASM agree on airborne jump trajectories and landing on a box',()=>{
+ const f=JSON.parse(fs.readFileSync(new URL('./fixtures/jump-native.json',import.meta.url)));
+ const s=new PhysicsSimulation(mj,f.arena,{prep:f.prep,play:f.play});
+ try{
+  for(const row of f.frames){s.step(row.action);near(s.data.qpos,row.qpos);near(s.data.qvel,row.qvel,1e-5);for(let a=0;a<2;a++)near(s.observe(a),row.obs[a],3e-5);assert.deepEqual([...s.jumpEvents],row.jumps);}
+  assert.equal(s.jumpEvents[0],1);assert(s.data.qpos[2]>.9,'lands on the prop');
+ }finally{s.dispose();}
 });
