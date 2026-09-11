@@ -49,6 +49,8 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
     if not hasattr(args,'variant'):args.variant='full'
     if args.horizon % args.sequence_length or args.envs < 1:
         raise ValueError('Positive environment count and complete recurrent sequences required')
+    if args.burn_in < 0 or args.burn_in > args.horizon or args.snapshot_every < 1 or args.archive_limit < 13:
+        raise ValueError('Burn-in must fit the horizon; the archive limit must leave room beyond anchors and the eight newest snapshots')
     block = args.envs * args.horizon * 2
     target_updates = args.target_interactions // block
     if not target_updates:
@@ -102,7 +104,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
             raise ValueError('Resume requires the identical initial critic asset')
         if resumed['provenance']['initialSHA256'] != file_hash(args.initial):
             raise ValueError('Resume requires the identical fixed initial comparison')
-        for field in ['encoder','arm','envs','horizon','sequence_length','sequence_batch','critic_batch_size','epochs','learning_rate','critic_learning_rate','entropy','kl_limit','seed']:
+        for field in ['encoder','arm','envs','horizon','sequence_length','burn_in','snapshot_every','archive_limit','sequence_batch','critic_batch_size','epochs','learning_rate','critic_learning_rate','entropy','kl_limit','seed','variant']:
             if resumed['arguments'][field] != getattr(args, field):
                 raise ValueError(f'Cannot silently change resumed setting: {field}')
     if resumed and 'leagueModels' in resumed:
@@ -149,6 +151,9 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
         rule='Only original zero-sum visibility reward; physical grab/lock semantics; no distance-only hiding',
         comparisons=protocol.get('comparisons', 'Same league B and unchanged visibility reward.'),
         architecture=[dict(memory=m.hidden_size, encoder=m.encoder_size, parameters=sum(p.numel() for p in m.parameters())) for m in models],
+        recurrence=dict(sequenceLength=args.sequence_length, burnIn=args.burn_in,
+            description='Truncated backpropagation over complete sequences; burn-in re-runs the recurrence through the previous rollout tail without gradients.'),
+        archive=dict(snapshotEvery=args.snapshot_every, limit=args.archive_limit),
         sourceHistory=[], resumes=[])
     if resumed and resumed['provenance']['sourceHistory'][-1]!=sources:
         raise ValueError('Training source changed; exact resume refused. Create an explicit new protocol instead.')
@@ -176,6 +181,8 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
     descriptors = list(resumed.get('leagueDescriptors', [])) if resumed else []
     if len(descriptors)!=len(histories): descriptors=[[0.]*10 for _ in histories]
     role_ids = assign_for_variant(opponent_generator,args.envs,len(histories),.8,args.variant)
+    burn_in = int(args.burn_in)
+    prefixes = [None, None]
     if resumed and 'rolloutState' in resumed:configs=resumed['rolloutState']['pool']['configs']
     with PhysicsEnvPool(configs,workers=args.workers,with_central_state=True,
                         ignore_parent_signals=getattr(args,'graceful_worker_signals',False)) as pool:
@@ -185,6 +192,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
         starts = torch.ones(args.envs)
         if resumed and 'rolloutState' in resumed:
             rs=resumed['rolloutState'];physical=pool.restore(rs['pool']);buttons=rs['buttons'];memories=rs['memories'];starts=rs['starts'];role_ids=rs['roleIds']
+            prefixes=list(rs.get('burnInPrefix',[None,None]));recent=list(rs.get('recent',[]))
             world_generator.bit_generator.state=resumed['worldRNG'];opponent_generator.bit_generator.state=resumed['opponentRNG'];torch.set_rng_state(resumed['torchRNG'])
         started = time.monotonic()
         retained = {int(value) for value in args.retain_updates.split(',') if value}
@@ -261,7 +269,9 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
                 actor_stats.append(actor_update(model,optimizers[role],actor_buffers[role],
                     advantages if role==0 else -advantages,current_rows[:,:,role],role,
                     epochs=args.epochs,sequence_length=args.sequence_length,sequence_batch=args.sequence_batch,
-                    entropy_weight=args.entropy,kl_limit=args.kl_limit,burn_in=0 if args.variant in ('baseline','short-memory') else 32))
+                    entropy_weight=args.entropy,kl_limit=args.kl_limit,burn_in=burn_in,prefix=prefixes[role]))
+            # The tail of this rollout warms up the first sequence of the next one.
+            prefixes=[(actor_buffers[role][0][-burn_in:].clone(),actor_buffers[role][1][-burn_in:].clone(),actor_buffers[role][2][-burn_in:].clone()) for role in range(2)] if burn_in else [None,None]
             value_stats = critic_update(critic,critic_optimizer,central,before_memories,values,returns,
                 epochs=args.epochs,batch_size=args.critic_batch_size,partial_values=partial_values)
             optimizer_seconds = time.monotonic()-optimizer_started
@@ -275,13 +285,13 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
                 hider=actor_stats[0],seeker=actor_stats[1],critic=value_stats,
                 meanHiddenFraction=float(np.mean(recent)) if recent else None,
                 unscaledRewardSum=unscaled.tolist())
-            if (update + 1) % 16 == 0:
+            if (update + 1) % args.snapshot_every == 0:
                 pair = [copy.deepcopy(m).eval().requires_grad_(False) for m in models]
                 histories.append(pair)
                 frozen_before.append([copy.deepcopy(m.state_dict()) for m in pair])
                 descriptors.append((behavior/max(1,behavior_count)).tolist())
             # Retain the latest eight plus any opponent still serving an episode.
-            keep=sorted(set(range(max(0,len(histories)-8),len(histories)))|{int(x) for x in role_ids.ravel() if x>=0}) if args.variant in ('baseline','recent-only') else archive_indices(descriptors,role_ids)
+            keep=sorted(set(range(max(0,len(histories)-8),len(histories)))|{int(x) for x in role_ids.ravel() if x>=0}) if args.variant in ('baseline','recent-only') else archive_indices(descriptors,role_ids,limit=args.archive_limit)
             remap={old:new for new,old in enumerate(keep)}
             for role in range(2):
                 role_ids[:,role]=np.array([remap[int(x)] if x>=0 else -1 for x in role_ids[:,role]])
@@ -299,7 +309,8 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
                         assert all(parameter.grad is None for parameter in model.parameters())
                 saved = dict(format=FORMAT,encoderTypes=parent['encoderTypes'],observationSize=210,physicsObservationSize=208,
                     trainingMethod=getattr(args, 'training_description', f'Matched encoder comparison: {args.encoder}, league B; original visibility-only rewards'),
-                    rolloutState=dict(pool=pool.snapshot(),buttons=buttons.copy(),memories=[x.clone() for x in memories],starts=starts.clone(),roleIds=role_ids.copy()),leagueDescriptors=descriptors,leagueModels=[[m.state_dict() for m in pair] for pair in histories],models=[model.state_dict() for model in models],optimizers=[optimizer.state_dict() for optimizer in optimizers],
+                    rolloutState=dict(pool=pool.snapshot(),buttons=buttons.copy(),memories=[x.clone() for x in memories],starts=starts.clone(),roleIds=role_ids.copy(),
+                        burnInPrefix=[None if x is None else tuple(t.clone() for t in x) for x in prefixes],recent=list(recent)),leagueDescriptors=descriptors,leagueModels=[[m.state_dict() for m in pair] for pair in histories],models=[model.state_dict() for model in models],optimizers=[optimizer.state_dict() for optimizer in optimizers],
                     centralCritic=critic.state_dict(),centralCriticOptimizer=critic_optimizer.state_dict(),
                     centralCriticSchema=SCHEMA,parentDecisions=parent['decisions'],
                     criticWarmupDecisions=provenance['criticWarmupDecisions'],
@@ -338,6 +349,9 @@ def parser():
     result.add_argument('--workers', type=int, default=8)
     result.add_argument('--horizon', type=int, default=256)
     result.add_argument('--sequence-length', type=int, default=32)
+    result.add_argument('--burn-in', type=int, default=0)
+    result.add_argument('--snapshot-every', type=int, default=16)
+    result.add_argument('--archive-limit', type=int, default=24)
     result.add_argument('--sequence-batch', type=int, default=256)
     result.add_argument('--critic-batch-size', type=int, default=2048)
     result.add_argument('--epochs', type=int, default=2)

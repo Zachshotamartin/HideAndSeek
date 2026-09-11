@@ -5,14 +5,16 @@ import argparse,fcntl,json,os,signal,subprocess,sys
 from pathlib import Path
 import numpy as np
 from checkpoint_store import atomic_json,utc_now
+from protocol import archive_exercised
+from train_scaled import VARIANTS,SNAPSHOT_EVERY,ARCHIVE_LIMIT
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parent
-VARIANTS=['full','baseline','short','unbalanced','recent-only','short-memory']
 
 def main(a):
  out=Path(a.output).resolve();out.mkdir(parents=True,exist_ok=True)
  lock=(out/'.suite.lock').open('a+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
  file=out/'SUITE.json';state=json.loads(file.read_text()) if file.exists() else dict(config=vars(a),trials=[],publication='No automatic browser promotion')
  if state['config']!=vars(a):raise ValueError('Resume with identical suite configuration')
+ if not archive_exercised(a.pilot_updates,SNAPSHOT_EVERY,1,ARCHIVE_LIMIT):raise ValueError('Pilot length must exceed the opponent archive limit so the archive ablation is exercised')
  stop=False;child=None
  def save(**changes):state.update(changes,pid=os.getpid(),updatedUTC=utc_now());atomic_json(file,state)
  def halt(sig,frame):
@@ -26,7 +28,9 @@ def main(a):
   if status.exists():
    phase=json.loads(status.read_text())['phase']
    if phase=='completed-awaiting-review' or (pilot and phase=='pilot-complete'):return
-  command=[sys.executable,str(HERE/'train_scaled.py'),'--source',a.source,'--output',str(folder),'--seed',str(seed),'--variant',variant,'--target',str(a.total_steps)]
+  command=[sys.executable,str(HERE/'train_scaled.py'),'--source',a.source,'--cohort',a.cohort,'--output',str(folder),'--seed',str(seed),'--variant',variant,'--target',str(a.total_steps)]
+  if a.history is not None:command+=['--history',*a.history]
+  if a.heldout:command+=['--heldout',a.heldout]
   if pilot:command+=['--stop-after-updates',str(a.pilot_updates)]
   save(phase='training',current=name,stage='pilot' if pilot else 'continuation')
   with (out/(name+'.log')).open('a') as log:
@@ -52,7 +56,9 @@ def main(a):
   save(phase='paused' if stop else 'finished-awaiting-review',childPID=None)
  except BaseException as error:save(phase='failed',error=repr(error),childPID=None);raise
 if __name__=='__main__':
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--source',required=True);p.add_argument('--seeds',type=int,nargs='+',default=[109310,109311,109312]);p.add_argument('--pilot-updates',type=int,default=160);p.add_argument('--total-steps',type=int,default=1048576000)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--source',required=True);p.add_argument('--cohort',required=True)
+ p.add_argument('--history',nargs='*',default=None);p.add_argument('--heldout',default=None)
+ p.add_argument('--seeds',type=int,nargs='+',default=[109310,109311,109312]);p.add_argument('--pilot-updates',type=int,default=160);p.add_argument('--total-steps',type=int,default=1048576000)
  a=p.parse_args()
  if a.pilot_updates<1 or a.total_steps<=a.pilot_updates*65536 or a.total_steps%65536:p.error('Use complete PPO batches and a larger continuation budget')
  main(a)

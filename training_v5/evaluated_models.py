@@ -31,7 +31,7 @@ def register(candidate_path, reference_path, report_path, directory):
     manifest_path = directory / 'EVALUATED.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else dict(
         format='hide-seek-evaluated-native-pairs-v1', evaluationContractSHA256=contract,
-        rule='Highest mean utility against the same fixed opponents, with no statistically clear role regression versus reference. This is measured development performance, not browser promotion or proof of useful tools.',
+        rule='Highest mean utility against the same fixed opponents, promoted only with a statistically clear improvement in at least one role and no statistically clear regression versus reference. This is measured development performance, not browser promotion or proof of useful tools.',
         records=[])
     if manifest['evaluationContractSHA256'] != contract:
         raise ValueError('Do not rank evaluations with different maps, opponents, physics or inference code')
@@ -58,22 +58,26 @@ def register(candidate_path, reference_path, report_path, directory):
     if not (0 <= hider <= 1 and 0 <= seeker <= 1):
         raise ValueError('Evaluation utilities must be finite fractions')
     score = .5 * (hider + seeker)
-    regressions = []
+    regressions, improvements = [], []
     for role in ['Hider change', 'Seeker change']:
         interval = report['contrasts'][role]['bootstrap95Percent']
         if len(interval) != 2 or not all(math.isfinite(value) for value in interval) or not -1 <= interval[0] <= interval[1] <= 1:
             raise ValueError('Role evaluation intervals must be finite valid utility differences')
         if interval[1] < 0:
             regressions.append(role)
-    eligible = not regressions
+        if interval[0] > 0:
+            improvements.append(role)
+    # A promotion needs evidence, not a coin flip: some role must have improved
+    # with a bootstrap interval excluding zero, and no role may have clearly regressed.
+    eligible = not regressions and bool(improvements)
     entry = dict(preserve(candidate_path, candidate, candidate_hash), score=score,
-        hiderUtility=hider, seekerUtility=seeker, roleRegressions=regressions,
+        hiderUtility=hider, seekerUtility=seeker, roleRegressions=regressions, clearImprovements=improvements,
         eligible=eligible, reportSHA256=evidence_hash)
     if not any(row['sha256'] == candidate_hash and row['reportSHA256'] == evidence_hash
                for row in manifest['records']):
         manifest['records'].append(entry)
     if eligible and score > manifest['best']['score']:
-        manifest['best'] = dict(entry, selection='Higher fixed-opponent utility; role-regression guard passed.')
+        manifest['best'] = dict(entry, selection='Higher fixed-opponent utility with a statistically clear role improvement; no clear regression.')
     manifest['updatedUTC'] = utc_now()
     replace_from_immutable(directory / manifest['best']['file'], directory / 'best-evaluated.pt')
     atomic_json(manifest_path, manifest)

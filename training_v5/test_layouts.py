@@ -30,7 +30,7 @@ class Layouts(unittest.TestCase):
     fingerprints.add(str(a['walls']))
    for seed in range(3):
     e=PhysicsEnv(seed=700+seed,scenario=scenario,size=10,n_boxes=6,n_ramps=2)
-    for _ in range(240):obs,reward,done,info=e.step(np.array([[.4,.2,.1,0,0],[-.3,.1,.1,0,0]]))
+    for _ in range(240):obs,reward,done,info=e.step(np.array([[.4,.2,.1,0,0,0],[-.3,.1,.1,0,0,0]]))
     self.assertTrue(done);self.assertTrue(np.isfinite(obs).all())
   self.assertEqual(len(fingerprints),120)
 if __name__=='__main__':unittest.main()

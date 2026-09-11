@@ -16,6 +16,8 @@ from persistent_actor import PersistentActor, advance_buttons, augment, FORMAT
 from physics import PhysicsEnv, DT
 
 torch.set_num_threads(1)
+BLACKOUT_STEPS = 24  # 1.9 s without the opponent block after the seeker's first sight
+OPPONENT_BLOCK = slice(10, 18)
 
 
 def plain(value):
@@ -79,12 +81,20 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
     buttons=np.zeros((2,2),np.float32)
     random=[np.random.default_rng(seed+912341),np.random.default_rng(seed+2912341)]
     histories=[[],[]]; frames=[env.trace()] if trace else None
+    first_sight=None; blackout_ticks=0
     with torch.no_grad():
         for tick in range(env.prep+env.play):
             actions=np.zeros((2,6),np.float32); commands=[]
+            view=physical.copy()
+            if mode=='seeker-blackout':
+                if first_sight is None and env.seen[1,0]:first_sight=tick
+                if first_sight is not None and first_sight<tick<=first_sight+BLACKOUT_STEPS:
+                    # Observation-only probe: the physical world and the recurrence
+                    # are untouched; only the seeker's opponent block is hidden.
+                    view[1,OPPONENT_BLOCK]=0;blackout_ticks+=1
             for role, model in enumerate(models):
                 if mode==f'no-{["hider","seeker"][role]}-memory':memory[role].zero_()
-                actions[role],memory[role],buttons[role],chosen=sample(model,physical[role],memory[role],buttons[role],random[role])
+                actions[role],memory[role],buttons[role],chosen=sample(model,view[role],memory[role],buttons[role],random[role])
                 commands.append(chosen.tolist())
                 if mode=='no-hider-tools' and role==0 or mode=='no-seeker-tools' and role==1:
                     actions[role,3:5]=0
@@ -130,7 +140,7 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
                 for command in range(3)] for tool in range(2)]))
     result=dict(seed=seed,scenario=scenario,mode=mode,hiddenFraction=info['hidden']/info['play_steps'],
         propShieldedFraction=info['shielded']/info['play_steps'],propDisplacement=sum(info['object_displacement']),
-        info=info,roles=roles)
+        info=info,roles=roles,blackoutTicks=blackout_ticks,firstSightTick=first_sight)
     if arena_config is not None:result.update(arenaConfig=configuration,actualObjectCount=len(env.arena['objects']))
     if trace: result.update(arena=env.arena,frames=frames)
     env.close()

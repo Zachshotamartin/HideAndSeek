@@ -51,11 +51,15 @@ class InteractionTests(unittest.TestCase):
         e=self.env();e.prep=96;a=np.ones((2,6));e.step(a);self.assertEqual(e.jump_events[1],0)
     def test_migration_and_ppo(self):
         torch.set_num_threads(2)
-        old=torch.load('output/expanded-layouts-v3/run/latest.pt',map_location='cpu',weights_only=False)
+        import tempfile
+        from synthetic import legacy_movement_source
+        with tempfile.TemporaryDirectory() as folder:
+            old=torch.load(legacy_movement_source(folder+'/legacy.pt'),map_location='cpu',weights_only=False)
         record,models=migrate(old)
         for before,after in zip(old['models'],models):
             torch.testing.assert_close(before['movement.weight'],after.movement.weight[:3])
-        e=self.env();obs=np.stack([e.observe()]*2);mem=[torch.zeros(2,256) for _ in range(2)];buttons=np.zeros((2,2,2),np.float32);roles=np.full((2,2),-1)
+            self.assertEqual(after.movement.weight.shape[0],4);torch.testing.assert_close(after.movement.weight[3],torch.zeros_like(after.movement.weight[3]))
+        e=self.env();obs=np.stack([e.observe()]*2);mem=[torch.zeros(2,models[0].hidden_size) for _ in range(2)];buttons=np.zeros((2,2,2),np.float32);roles=np.full((2,2),-1)
         actions,states,buttons,records=act_grouped(models,[],obs,mem,buttons,roles)
         self.assertEqual(actions.shape,(2,2,6));e.step(actions[0])
         ob,raw,logp,_=records[0]
