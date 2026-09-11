@@ -1,0 +1,3590 @@
+{
+  "format": "selected-role-development-evidence-v1",
+  "status": "DEVELOPMENT",
+  "checkpointSHA256": "ca9462e9cd3f084a2df687defc4de23513f15df700826a3a4524d0676bc74117",
+  "roleSources": [
+    {
+      "role": "hider",
+      "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+      "sourceFile": "checkpoint-14098432.pt",
+      "sourceRunCounters": {
+        "decisions": 37036032,
+        "parentDecisions": 22937600,
+        "pilotDecisions": 14098432,
+        "totalPolicyInteractions": null,
+        "criticWarmupDecisions": null,
+        "currentPolicyDecisions": null,
+        "historicalPolicyDecisions": null,
+        "activePolicySamples": null
+      },
+      "inheritedRoleSources": []
+    },
+    {
+      "role": "seeker",
+      "sourceCheckpointSHA256": "2bd4bea653feb098cf56fe849b76e3df1e7fbac7a3e176701ad002f9dc011896",
+      "sourceFile": "15990784.pt",
+      "sourceRunCounters": {
+        "decisions": 62988288,
+        "parentDecisions": 46997504,
+        "pilotDecisions": 15990784,
+        "totalPolicyInteractions": 15990784,
+        "criticWarmupDecisions": 0,
+        "currentPolicyDecisions": [
+          6001280,
+          5957888
+        ],
+        "historicalPolicyDecisions": [
+          1994112,
+          2037504
+        ],
+        "activePolicySamples": [
+          6001280,
+          3968000
+        ]
+      },
+      "inheritedRoleSources": [
+        {
+          "role": "hider",
+          "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+          "sourceFile": "checkpoint-14098432.pt",
+          "sourceRunCounters": {
+            "decisions": 37036032,
+            "parentDecisions": 22937600,
+            "pilotDecisions": 14098432,
+            "criticWarmupDecisions": null,
+            "totalPolicyInteractions": null,
+            "currentPolicyDecisions": null,
+            "historicalPolicyDecisions": null,
+            "activePolicySamples": null
+          }
+        },
+        {
+          "role": "seeker",
+          "sourceCheckpointSHA256": "7436af8583581b342f1150c1949f00dc9e0c465a95ae120de6d1eb61db00ca77",
+          "sourceFile": "checkpoint-7995392.pt",
+          "sourceRunCounters": {
+            "decisions": 46997504,
+            "parentDecisions": 37036032,
+            "pilotDecisions": 7995392,
+            "criticWarmupDecisions": 1966080,
+            "totalPolicyInteractions": 7995392,
+            "currentPolicyDecisions": [
+              3007152,
+              2992448
+            ],
+            "historicalPolicyDecisions": [
+              990544,
+              1005248
+            ],
+            "activePolicySamples": [
+              3007152,
+              1992960
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "sourceReports": {
+    "selection": "50e918e744474ecd4f41ebb0f4fc2ea0d05b4300521ca75ac25943c5bc878271",
+    "baseline": "a8fc5a4a9b10a23ea5561d405ee28028e8c83d18517a58258a19573435bb9d3b",
+    "cache": "63876f1981051ce5ba095e45c7360d69e2e13bfdf48c5971994fa22c02f382f7",
+    "modes": "5ab9c32836d16da44b01fec93c599575ba68c5a8ed7e1f1afe4f215d7829157c",
+    "tools": "c8b68e0e221c7eb8b655968b514b38379f00de23200a7aacc68e1abe80bd0dfc",
+    "browser_comparison": "e7532c415ef6a935ab06c4c6a8513d6ebb4824bcad955c1c3dc2d5798f4073a8"
+  },
+  "maps": 96,
+  "scope": "Three scenarios, sizes 6\u201312 m, zero to eight boxes and zero to two ramps. These maps were reused for selection; they are not an untouched final test.",
+  "qualification": "Search improved descriptively against the original reference, with an interval crossing zero. Reliable useful grab/lock strategies remain unproven. This is a development checkpoint.",
+  "effectUnits": "Role objective fraction; multiply by 100 for percentage points. Paired-map bootstrap 95% intervals; repeated selection is not adjusted away.",
+  "sampling": "Seeded action distributions remain the default. Mean is the actual tanh Gaussian mean plus categorical argmax, without additional control changes.",
+  "modes": {
+    "candidate_pair_sample": {
+      "maps": 96,
+      "hiddenFraction": 0.5341145833333333,
+      "completeSearchMisses": 16,
+      "roles": [
+        {
+          "grips": 229,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.20611353711790395,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6375545851528385,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7175,
+              6370,
+              9495
+            ],
+            [
+              4863,
+              12826,
+              5351
+            ]
+          ]
+        },
+        {
+          "grips": 134,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.18567164179104478,
+          "maxGripSeconds": 0.8,
+          "fractionGripsShorterThanThreeTicks": 0.6791044776119403,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              5198,
+              4667,
+              5495
+            ],
+            [
+              4841,
+              4776,
+              5743
+            ]
+          ]
+        }
+      ]
+    },
+    "candidate_hider_sample_fixed_browser_seeker": {
+      "maps": 96,
+      "hiddenFraction": 0.58671875,
+      "completeSearchMisses": 25,
+      "roles": [
+        {
+          "grips": 204,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.21098039215686273,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6519607843137255,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7226,
+              6374,
+              9440
+            ],
+            [
+              4838,
+              12931,
+              5271
+            ]
+          ]
+        },
+        {
+          "grips": 207,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.2732367149758454,
+          "maxGripSeconds": 1.76,
+          "fractionGripsShorterThanThreeTicks": 0.5700483091787439,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              4167,
+              5472,
+              5721
+            ],
+            [
+              8225,
+              3058,
+              4077
+            ]
+          ]
+        }
+      ]
+    },
+    "fixed_browser_hider_candidate_seeker_sample": {
+      "maps": 96,
+      "hiddenFraction": 0.5341145833333333,
+      "completeSearchMisses": 16,
+      "roles": [
+        {
+          "grips": 229,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.20611353711790395,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6375545851528385,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7175,
+              6370,
+              9495
+            ],
+            [
+              4863,
+              12826,
+              5351
+            ]
+          ]
+        },
+        {
+          "grips": 134,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.18567164179104478,
+          "maxGripSeconds": 0.8,
+          "fractionGripsShorterThanThreeTicks": 0.6791044776119403,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              5198,
+              4667,
+              5495
+            ],
+            [
+              4841,
+              4776,
+              5743
+            ]
+          ]
+        }
+      ]
+    },
+    "initial_hider_sample_fixed_browser_seeker": {
+      "maps": 96,
+      "hiddenFraction": 0.39108072916666664,
+      "completeSearchMisses": 20,
+      "roles": [
+        {
+          "grips": 358,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.23106145251396648,
+          "maxGripSeconds": 1.44,
+          "fractionGripsShorterThanThreeTicks": 0.5614525139664804,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              7788,
+              7585,
+              7667
+            ],
+            [
+              7699,
+              7636,
+              7705
+            ]
+          ]
+        },
+        {
+          "grips": 184,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.358695652173913,
+          "maxGripSeconds": 2.16,
+          "fractionGripsShorterThanThreeTicks": 0.5163043478260869,
+          "requestedHoldMedianSeconds": [
+            0.24,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              3529,
+              7443,
+              4388
+            ],
+            [
+              7466,
+              3964,
+              3930
+            ]
+          ]
+        }
+      ]
+    },
+    "fixed_browser_hider_initial_seeker_sample": {
+      "maps": 96,
+      "hiddenFraction": 0.948828125,
+      "completeSearchMisses": 80,
+      "roles": [
+        {
+          "grips": 183,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.2185792349726776,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6229508196721312,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7261,
+              6976,
+              8803
+            ],
+            [
+              4484,
+              13972,
+              4584
+            ]
+          ]
+        },
+        {
+          "grips": 129,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.2275968992248062,
+          "maxGripSeconds": 1.04,
+          "fractionGripsShorterThanThreeTicks": 0.5891472868217055,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              5117,
+              5032,
+              5211
+            ],
+            [
+              5136,
+              5079,
+              5145
+            ]
+          ]
+        }
+      ]
+    },
+    "browser_pair_sample": {
+      "maps": 96,
+      "hiddenFraction": 0.58671875,
+      "completeSearchMisses": 25,
+      "roles": [
+        {
+          "grips": 204,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.21098039215686273,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6519607843137255,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7226,
+              6374,
+              9440
+            ],
+            [
+              4838,
+              12931,
+              5271
+            ]
+          ]
+        },
+        {
+          "grips": 207,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.2732367149758454,
+          "maxGripSeconds": 1.76,
+          "fractionGripsShorterThanThreeTicks": 0.5700483091787439,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              4167,
+              5472,
+              5721
+            ],
+            [
+              8225,
+              3058,
+              4077
+            ]
+          ]
+        }
+      ]
+    },
+    "initial_pair_sample": {
+      "maps": 96,
+      "hiddenFraction": 0.7224609375000001,
+      "completeSearchMisses": 46,
+      "roles": [
+        {
+          "grips": 356,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.23438202247191012,
+          "maxGripSeconds": 1.44,
+          "fractionGripsShorterThanThreeTicks": 0.5533707865168539,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              7788,
+              7585,
+              7667
+            ],
+            [
+              7699,
+              7636,
+              7705
+            ]
+          ]
+        },
+        {
+          "grips": 128,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.23250000000000004,
+          "maxGripSeconds": 1.04,
+          "fractionGripsShorterThanThreeTicks": 0.578125,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.16
+          ],
+          "commandCounts": [
+            [
+              5117,
+              5032,
+              5211
+            ],
+            [
+              5136,
+              5079,
+              5145
+            ]
+          ]
+        }
+      ]
+    },
+    "candidate_hider_mean_fixed_browser_seeker": {
+      "maps": 96,
+      "hiddenFraction": 0.5824869791666667,
+      "completeSearchMisses": 25,
+      "roles": [
+        {
+          "grips": 30,
+          "medianGripSeconds": 0.08,
+          "meanGripSeconds": 1.0373333333333332,
+          "maxGripSeconds": 6.8,
+          "fractionGripsShorterThanThreeTicks": 0.6333333333333333,
+          "requestedHoldMedianSeconds": [
+            4.96,
+            9.6
+          ],
+          "commandCounts": [
+            [
+              861,
+              7238,
+              14941
+            ],
+            [
+              1,
+              20799,
+              2240
+            ]
+          ]
+        },
+        {
+          "grips": 170,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.24941176470588233,
+          "maxGripSeconds": 2.08,
+          "fractionGripsShorterThanThreeTicks": 0.611764705882353,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              4210,
+              5544,
+              5606
+            ],
+            [
+              8211,
+              3081,
+              4068
+            ]
+          ]
+        }
+      ]
+    },
+    "initial_hider_mean_fixed_browser_seeker": {
+      "maps": 96,
+      "hiddenFraction": 0.3389973958333334,
+      "completeSearchMisses": 17,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "meanGripSeconds": 0,
+          "maxGripSeconds": 0,
+          "fractionGripsShorterThanThreeTicks": 0,
+          "requestedHoldMedianSeconds": [
+            0,
+            0
+          ],
+          "commandCounts": [
+            [
+              23040,
+              0,
+              0
+            ],
+            [
+              23040,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "grips": 240,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.3326666666666667,
+          "maxGripSeconds": 3.52,
+          "fractionGripsShorterThanThreeTicks": 0.5208333333333334,
+          "requestedHoldMedianSeconds": [
+            0.24,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              3414,
+              7768,
+              4178
+            ],
+            [
+              7380,
+              4064,
+              3916
+            ]
+          ]
+        }
+      ]
+    },
+    "fixed_browser_hider_candidate_seeker_mean": {
+      "maps": 96,
+      "hiddenFraction": 0.4908854166666667,
+      "completeSearchMisses": 17,
+      "roles": [
+        {
+          "grips": 224,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.20714285714285716,
+          "maxGripSeconds": 1.2,
+          "fractionGripsShorterThanThreeTicks": 0.6651785714285714,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7169,
+              6286,
+              9585
+            ],
+            [
+              4916,
+              12693,
+              5431
+            ]
+          ]
+        },
+        {
+          "grips": 11,
+          "medianGripSeconds": 1.84,
+          "meanGripSeconds": 2.9454545454545458,
+          "maxGripSeconds": 9.120000000000001,
+          "fractionGripsShorterThanThreeTicks": 0.09090909090909091,
+          "requestedHoldMedianSeconds": [
+            0.48,
+            2.0
+          ],
+          "commandCounts": [
+            [
+              3861,
+              5539,
+              5960
+            ],
+            [
+              976,
+              8325,
+              6059
+            ]
+          ]
+        }
+      ]
+    },
+    "fixed_browser_hider_initial_seeker_mean": {
+      "maps": 96,
+      "hiddenFraction": 0.9464843750000002,
+      "completeSearchMisses": 81,
+      "roles": [
+        {
+          "grips": 163,
+          "medianGripSeconds": 0.16,
+          "meanGripSeconds": 0.22380368098159506,
+          "maxGripSeconds": 1.12,
+          "fractionGripsShorterThanThreeTicks": 0.6012269938650306,
+          "requestedHoldMedianSeconds": [
+            0.16,
+            0.24
+          ],
+          "commandCounts": [
+            [
+              7264,
+              6961,
+              8815
+            ],
+            [
+              4492,
+              13951,
+              4597
+            ]
+          ]
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "meanGripSeconds": 0,
+          "maxGripSeconds": 0,
+          "fractionGripsShorterThanThreeTicks": 0,
+          "requestedHoldMedianSeconds": [
+            0,
+            0
+          ],
+          "commandCounts": [
+            [
+              15360,
+              0,
+              0
+            ],
+            [
+              15360,
+              0,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "candidate_pair_mean": {
+      "maps": 96,
+      "hiddenFraction": 0.3974609375,
+      "completeSearchMisses": 14,
+      "roles": [
+        {
+          "grips": 20,
+          "medianGripSeconds": 0.08,
+          "meanGripSeconds": 1.1480000000000001,
+          "maxGripSeconds": 4.88,
+          "fractionGripsShorterThanThreeTicks": 0.65,
+          "requestedHoldMedianSeconds": [
+            5.28,
+            10.4
+          ],
+          "commandCounts": [
+            [
+              869,
+              6174,
+              15997
+            ],
+            [
+              1,
+              20747,
+              2292
+            ]
+          ]
+        },
+        {
+          "grips": 19,
+          "medianGripSeconds": 2.96,
+          "meanGripSeconds": 3.810526315789474,
+          "maxGripSeconds": 10.8,
+          "fractionGripsShorterThanThreeTicks": 0.05263157894736842,
+          "requestedHoldMedianSeconds": [
+            0.32,
+            2.24
+          ],
+          "commandCounts": [
+            [
+              3883,
+              6772,
+              4705
+            ],
+            [
+              807,
+              9142,
+              5411
+            ]
+          ]
+        }
+      ]
+    },
+    "browser_pair_mean": {
+      "maps": 96,
+      "hiddenFraction": 0.5419921875,
+      "completeSearchMisses": 23,
+      "roles": [
+        {
+          "grips": 23,
+          "medianGripSeconds": 0.08,
+          "meanGripSeconds": 1.3530434782608696,
+          "maxGripSeconds": 9.6,
+          "fractionGripsShorterThanThreeTicks": 0.6521739130434783,
+          "requestedHoldMedianSeconds": [
+            6.08,
+            10.0
+          ],
+          "commandCounts": [
+            [
+              960,
+              7228,
+              14852
+            ],
+            [
+              1,
+              20836,
+              2203
+            ]
+          ]
+        },
+        {
+          "grips": 10,
+          "medianGripSeconds": 6.96,
+          "meanGripSeconds": 6.288000000000001,
+          "maxGripSeconds": 9.28,
+          "fractionGripsShorterThanThreeTicks": 0.0,
+          "requestedHoldMedianSeconds": [
+            2.64,
+            8.16
+          ],
+          "commandCounts": [
+            [
+              288,
+              7051,
+              8021
+            ],
+            [
+              13304,
+              1121,
+              935
+            ]
+          ]
+        }
+      ]
+    },
+    "initial_pair_mean": {
+      "maps": 96,
+      "hiddenFraction": 0.5729166666666666,
+      "completeSearchMisses": 55,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "meanGripSeconds": 0,
+          "maxGripSeconds": 0,
+          "fractionGripsShorterThanThreeTicks": 0,
+          "requestedHoldMedianSeconds": [
+            0,
+            0
+          ],
+          "commandCounts": [
+            [
+              23040,
+              0,
+              0
+            ],
+            [
+              23040,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "meanGripSeconds": 0,
+          "maxGripSeconds": 0,
+          "fractionGripsShorterThanThreeTicks": 0,
+          "requestedHoldMedianSeconds": [
+            0,
+            0
+          ],
+          "commandCounts": [
+            [
+              15360,
+              0,
+              0
+            ],
+            [
+              15360,
+              0,
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "toolInterventions": {
+    "sample_learned": {
+      "hiddenFraction": 0.5341145833333333,
+      "completeSearchMisses": 16,
+      "propShieldedFraction": 0.06067708333333333,
+      "meanPropDisplacement": 0.7447892617546333,
+      "roles": [
+        {
+          "grips": 229,
+          "medianGripSeconds": 0.16,
+          "maxGripSeconds": 1.12
+        },
+        {
+          "grips": 134,
+          "medianGripSeconds": 0.16,
+          "maxGripSeconds": 0.8
+        }
+      ]
+    },
+    "mean_learned": {
+      "hiddenFraction": 0.3974609375,
+      "completeSearchMisses": 14,
+      "propShieldedFraction": 0.040364583333333336,
+      "meanPropDisplacement": 0.6020480224572021,
+      "roles": [
+        {
+          "grips": 20,
+          "medianGripSeconds": 0.08,
+          "maxGripSeconds": 4.88
+        },
+        {
+          "grips": 19,
+          "medianGripSeconds": 2.96,
+          "maxGripSeconds": 10.8
+        }
+      ]
+    },
+    "sample_no_hider_tools": {
+      "hiddenFraction": 0.5365234375000001,
+      "completeSearchMisses": 17,
+      "propShieldedFraction": 0.06263020833333333,
+      "meanPropDisplacement": 0.8679916502790617,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        },
+        {
+          "grips": 119,
+          "medianGripSeconds": 0.16,
+          "maxGripSeconds": 0.8
+        }
+      ]
+    },
+    "sample_no_seeker_tools": {
+      "hiddenFraction": 0.5255208333333333,
+      "completeSearchMisses": 17,
+      "propShieldedFraction": 0.06588541666666667,
+      "meanPropDisplacement": 0.745082294839161,
+      "roles": [
+        {
+          "grips": 230,
+          "medianGripSeconds": 0.16,
+          "maxGripSeconds": 1.12
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        }
+      ]
+    },
+    "sample_push_only": {
+      "hiddenFraction": 0.5320963541666667,
+      "completeSearchMisses": 15,
+      "propShieldedFraction": 0.06178385416666667,
+      "meanPropDisplacement": 0.8630014462734165,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        }
+      ]
+    },
+    "mean_no_hider_tools": {
+      "hiddenFraction": 0.41445312500000003,
+      "completeSearchMisses": 14,
+      "propShieldedFraction": 0.04290364583333334,
+      "meanPropDisplacement": 0.7564350659037026,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        },
+        {
+          "grips": 15,
+          "medianGripSeconds": 2.96,
+          "maxGripSeconds": 10.8
+        }
+      ]
+    },
+    "mean_no_seeker_tools": {
+      "hiddenFraction": 0.3962239583333333,
+      "completeSearchMisses": 14,
+      "propShieldedFraction": 0.04003906249999999,
+      "meanPropDisplacement": 0.6240318050374059,
+      "roles": [
+        {
+          "grips": 20,
+          "medianGripSeconds": 0.08,
+          "maxGripSeconds": 4.88
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        }
+      ]
+    },
+    "mean_push_only": {
+      "hiddenFraction": 0.4078125000000001,
+      "completeSearchMisses": 14,
+      "propShieldedFraction": 0.042317708333333336,
+      "meanPropDisplacement": 0.7634465296058547,
+      "roles": [
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        },
+        {
+          "grips": 0,
+          "medianGripSeconds": 0,
+          "maxGripSeconds": 0
+        }
+      ]
+    }
+  },
+  "contrasts": {
+    "Selected seeker vs original browser seeker": {
+      "mean": 0.052604166666666674,
+      "bootstrap95Percent": [
+        -0.0035856119791666534,
+        0.10677083333333333
+      ],
+      "positiveCases": 52,
+      "negativeCases": 31,
+      "unchangedCases": 13,
+      "leftCondition": "browser_pair_sample",
+      "rightCondition": "candidate_pair_sample"
+    },
+    "Sampled hider vs genuine initial, same browser seeker": {
+      "mean": 0.19563802083333334,
+      "bootstrap95Percent": [
+        0.13769205729166667,
+        0.2546272786458333
+      ],
+      "leftCondition": "candidate_hider_sample_fixed_browser_seeker",
+      "rightCondition": "initial_hider_sample_fixed_browser_seeker"
+    },
+    "Sampled seeker vs genuine initial, same browser hider": {
+      "mean": 0.4147135416666667,
+      "bootstrap95Percent": [
+        0.35168945312500005,
+        0.47871256510416665
+      ],
+      "leftCondition": "fixed_browser_hider_initial_seeker_sample",
+      "rightCondition": "fixed_browser_hider_candidate_seeker_sample"
+    },
+    "Mean seeker vs sampled, same sampled browser hider": {
+      "mean": 0.04322916666666667,
+      "bootstrap95Percent": [
+        -0.0041682942708333205,
+        0.09238444010416665
+      ],
+      "leftCondition": "fixed_browser_hider_candidate_seeker_sample",
+      "rightCondition": "fixed_browser_hider_candidate_seeker_mean"
+    },
+    "Sampled hider grab/lock benefit": {
+      "mean": -0.002408854166666668,
+      "bootstrap95Percent": [
+        -0.01855631510416667,
+        0.013997395833333329
+      ],
+      "leftCondition": "candidate_pair_sample",
+      "rightCondition": "sample_no_hider_tools"
+    },
+    "Sampled seeker grab/lock benefit": {
+      "mean": -0.008593749999999999,
+      "bootstrap95Percent": [
+        -0.0353515625,
+        0.014388020833333334
+      ],
+      "leftCondition": "sample_no_seeker_tools",
+      "rightCondition": "candidate_pair_sample"
+    },
+    "Mean hider grab/lock benefit": {
+      "mean": -0.016992187500000002,
+      "bootstrap95Percent": [
+        -0.03320312499999999,
+        -0.001886393229166689
+      ],
+      "leftCondition": "candidate_pair_mean",
+      "rightCondition": "mean_no_hider_tools"
+    },
+    "Mean seeker grab/lock benefit": {
+      "mean": -0.001236979166666668,
+      "bootstrap95Percent": [
+        -0.012239583333333333,
+        0.009049479166666664
+      ],
+      "leftCondition": "mean_no_seeker_tools",
+      "rightCondition": "candidate_pair_mean"
+    }
+  },
+  "conditionOrder": [
+    "candidate_pair_sample",
+    "candidate_hider_sample_fixed_browser_seeker",
+    "fixed_browser_hider_candidate_seeker_sample",
+    "initial_hider_sample_fixed_browser_seeker",
+    "fixed_browser_hider_initial_seeker_sample",
+    "browser_pair_sample",
+    "initial_pair_sample",
+    "candidate_hider_mean_fixed_browser_seeker",
+    "initial_hider_mean_fixed_browser_seeker",
+    "fixed_browser_hider_candidate_seeker_mean",
+    "fixed_browser_hider_initial_seeker_mean",
+    "candidate_pair_mean",
+    "browser_pair_mean",
+    "initial_pair_mean",
+    "sample_no_hider_tools",
+    "sample_no_seeker_tools",
+    "sample_push_only",
+    "mean_no_hider_tools",
+    "mean_no_seeker_tools",
+    "mean_push_only"
+  ],
+  "pairedMaps": [
+    {
+      "seed": 1500140000,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.11875,
+        0.6125,
+        0.11875,
+        0.325,
+        1.0,
+        0.6125,
+        0.56875,
+        0.7125,
+        0.0,
+        0.54375,
+        1.0,
+        0.04375,
+        0.79375,
+        0.0,
+        0.11875,
+        0.11875,
+        0.11875,
+        0.04375,
+        0.04375,
+        0.04375
+      ]
+    },
+    {
+      "seed": 1500140001,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.08125,
+        0.13125,
+        0.08125,
+        0.04375,
+        1.0,
+        0.13125,
+        0.05,
+        0.10625,
+        0.0,
+        0.15,
+        1.0,
+        0.11875,
+        0.1125,
+        0.0,
+        0.08125,
+        0.08125,
+        0.08125,
+        0.11875,
+        0.11875,
+        0.11875
+      ]
+    },
+    {
+      "seed": 1500140002,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.13125,
+        0.2625,
+        0.13125,
+        0.15,
+        1.0,
+        0.2625,
+        0.875,
+        0.3,
+        0.0,
+        0.125,
+        1.0,
+        0.11875,
+        0.99375,
+        0.0,
+        0.13125,
+        0.13125,
+        0.13125,
+        0.11875,
+        0.11875,
+        0.11875
+      ]
+    },
+    {
+      "seed": 1500140003,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.275,
+        0.6,
+        0.275,
+        0.0,
+        1.0,
+        0.6,
+        0.15625,
+        0.275,
+        0.0,
+        0.125,
+        1.0,
+        0.23125,
+        0.70625,
+        0.0,
+        0.49375,
+        0.275,
+        0.49375,
+        0.23125,
+        0.23125,
+        0.23125
+      ]
+    },
+    {
+      "seed": 1500140004,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.66875,
+        0.39375,
+        0.66875,
+        0.0,
+        1.0,
+        0.39375,
+        0.025,
+        0.1875,
+        0.2125,
+        0.7,
+        1.0,
+        0.18125,
+        0.1875,
+        0.0,
+        0.38125,
+        0.66875,
+        0.38125,
+        0.18125,
+        0.18125,
+        0.18125
+      ]
+    },
+    {
+      "seed": 1500140005,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.20625,
+        0.49375,
+        0.20625,
+        0.0,
+        1.0,
+        0.49375,
+        0.0,
+        0.225,
+        0.0,
+        0.21875,
+        1.0,
+        0.15625,
+        0.24375,
+        0.0,
+        0.20625,
+        0.26875,
+        0.26875,
+        0.15625,
+        0.1375,
+        0.1375
+      ]
+    },
+    {
+      "seed": 1500140006,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.2125,
+        0.1875,
+        0.2125,
+        0.0,
+        1.0,
+        0.1875,
+        0.15,
+        0.7,
+        0.15625,
+        0.15,
+        1.0,
+        0.09375,
+        0.9375,
+        0.0,
+        0.2125,
+        0.30625,
+        0.30625,
+        0.09375,
+        0.09375,
+        0.09375
+      ]
+    },
+    {
+      "seed": 1500140007,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.18125,
+        0.26875,
+        0.18125,
+        0.0,
+        1.0,
+        0.26875,
+        0.4,
+        0.15625,
+        0.0,
+        0.16875,
+        1.0,
+        0.13125,
+        0.1375,
+        0.0,
+        0.18125,
+        0.18125,
+        0.18125,
+        0.13125,
+        0.13125,
+        0.13125
+      ]
+    },
+    {
+      "seed": 1500140008,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.70625,
+        0.3625,
+        0.70625,
+        0.0,
+        1.0,
+        0.3625,
+        0.0,
+        0.09375,
+        0.0,
+        0.31875,
+        1.0,
+        0.0875,
+        0.275,
+        0.0,
+        0.70625,
+        0.70625,
+        0.70625,
+        0.0875,
+        0.0875,
+        0.0875
+      ]
+    },
+    {
+      "seed": 1500140009,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.7875,
+        0.25,
+        0.7875,
+        0.03125,
+        1.0,
+        0.25,
+        0.84375,
+        0.19375,
+        0.05625,
+        0.075,
+        0.81875,
+        0.3,
+        1.0,
+        0.0,
+        0.88125,
+        0.79375,
+        0.88125,
+        0.3,
+        0.3,
+        0.3
+      ]
+    },
+    {
+      "seed": 1500140010,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.95625,
+        0.35625,
+        1.0,
+        0.2875,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.2875,
+        0.2875,
+        0.2875
+      ]
+    },
+    {
+      "seed": 1500140011,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.40625,
+        0.275,
+        0.40625,
+        0.5625,
+        1.0,
+        0.275,
+        0.75625,
+        0.28125,
+        0.05625,
+        0.34375,
+        1.0,
+        0.35,
+        0.36875,
+        0.0,
+        0.40625,
+        0.40625,
+        0.40625,
+        0.35,
+        0.35,
+        0.35
+      ]
+    },
+    {
+      "seed": 1500140012,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.21875,
+        0.05625,
+        0.21875,
+        0.55625,
+        1.0,
+        0.05625,
+        0.6625,
+        0.95625,
+        0.175,
+        0.15,
+        1.0,
+        0.51875,
+        0.98125,
+        1.0,
+        0.075,
+        0.65625,
+        0.65625,
+        0.74375,
+        0.51875,
+        0.74375
+      ]
+    },
+    {
+      "seed": 1500140013,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.33125,
+        1.0,
+        0.33125,
+        0.0,
+        1.0,
+        1.0,
+        0.05625,
+        1.0,
+        0.0,
+        0.2,
+        1.0,
+        0.26875,
+        1.0,
+        0.0,
+        0.31875,
+        0.33125,
+        0.31875,
+        0.26875,
+        0.26875,
+        0.26875
+      ]
+    },
+    {
+      "seed": 1500140014,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.1875,
+        0.21875,
+        0.1875,
+        0.0,
+        1.0,
+        0.21875,
+        0.0,
+        0.2125,
+        0.0,
+        0.175,
+        1.0,
+        0.16875,
+        0.78125,
+        0.0,
+        0.1875,
+        0.1875,
+        0.1875,
+        0.16875,
+        0.16875,
+        0.16875
+      ]
+    },
+    {
+      "seed": 1500140015,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.9125,
+        0.15,
+        0.9125,
+        0.14375,
+        1.0,
+        0.15,
+        0.75625,
+        0.8,
+        0.0,
+        0.15,
+        1.0,
+        0.2875,
+        0.13125,
+        0.0,
+        0.9125,
+        0.9125,
+        0.9125,
+        0.2875,
+        0.2875,
+        0.2875
+      ]
+    },
+    {
+      "seed": 1500140016,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.35625,
+        0.55,
+        0.35625,
+        0.31875,
+        1.0,
+        0.55,
+        0.35625,
+        0.46875,
+        0.0375,
+        0.38125,
+        1.0,
+        0.35,
+        0.375,
+        0.0,
+        0.3875,
+        0.4375,
+        0.4375,
+        0.35,
+        0.35,
+        0.35
+      ]
+    },
+    {
+      "seed": 1500140017,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.26875,
+        0.30625,
+        0.26875,
+        0.14375,
+        1.0,
+        0.30625,
+        0.6,
+        0.775,
+        0.2,
+        0.1875,
+        1.0,
+        0.2375,
+        0.19375,
+        0.0,
+        0.26875,
+        0.26875,
+        0.26875,
+        0.2625,
+        0.2375,
+        0.2625
+      ]
+    },
+    {
+      "seed": 1500140018,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.1,
+        0.73125,
+        0.1,
+        0.24375,
+        1.0,
+        0.73125,
+        0.55625,
+        0.83125,
+        0.0,
+        0.08125,
+        1.0,
+        0.08125,
+        0.8625,
+        0.0,
+        0.1,
+        0.1,
+        0.1,
+        0.08125,
+        0.08125,
+        0.08125
+      ]
+    },
+    {
+      "seed": 1500140019,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.16875,
+        0.85,
+        0.16875,
+        0.06875,
+        1.0,
+        0.85,
+        0.11875,
+        0.15,
+        0.0,
+        0.175,
+        1.0,
+        0.125,
+        0.3375,
+        0.0,
+        0.16875,
+        0.16875,
+        0.16875,
+        0.125,
+        0.125,
+        0.125
+      ]
+    },
+    {
+      "seed": 1500140020,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.43125,
+        0.2625,
+        0.43125,
+        0.0,
+        1.0,
+        0.2625,
+        0.60625,
+        0.775,
+        0.0,
+        0.14375,
+        1.0,
+        0.125,
+        0.125,
+        0.0,
+        0.1625,
+        0.43125,
+        0.1625,
+        0.125,
+        0.125,
+        0.125
+      ]
+    },
+    {
+      "seed": 1500140021,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.30625,
+        1.0,
+        0.30625,
+        0.0,
+        1.0,
+        1.0,
+        0.06875,
+        1.0,
+        0.025,
+        0.3625,
+        1.0,
+        0.14375,
+        1.0,
+        0.0,
+        0.30625,
+        0.30625,
+        0.30625,
+        0.14375,
+        0.14375,
+        0.14375
+      ]
+    },
+    {
+      "seed": 1500140022,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.2375,
+        0.71875,
+        0.2375,
+        0.06875,
+        1.0,
+        0.71875,
+        0.83125,
+        0.28125,
+        0.0875,
+        0.5,
+        1.0,
+        0.18125,
+        0.91875,
+        0.0,
+        0.2375,
+        0.2375,
+        0.2375,
+        0.2875,
+        0.18125,
+        0.2875
+      ]
+    },
+    {
+      "seed": 1500140023,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500140024,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.59375,
+        0.2875,
+        0.59375,
+        0.05,
+        1.0,
+        0.2875,
+        0.31875,
+        0.125,
+        0.0875,
+        0.4625,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.59375,
+        0.7125,
+        0.7125,
+        0.0,
+        0.0125,
+        0.0125
+      ]
+    },
+    {
+      "seed": 1500140025,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.53125,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.25625,
+        0.99375,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500140026,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.3625,
+        0.30625,
+        0.3625,
+        0.08125,
+        1.0,
+        0.30625,
+        0.55625,
+        0.3875,
+        0.0,
+        0.2125,
+        1.0,
+        0.13125,
+        0.325,
+        0.0,
+        0.2375,
+        0.3625,
+        0.2375,
+        0.13125,
+        0.13125,
+        0.13125
+      ]
+    },
+    {
+      "seed": 1500140027,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.13125,
+        0.14375,
+        0.13125,
+        0.04375,
+        1.0,
+        0.14375,
+        0.10625,
+        0.5375,
+        0.0,
+        0.13125,
+        1.0,
+        0.13125,
+        0.4125,
+        0.0,
+        0.13125,
+        0.13125,
+        0.13125,
+        0.13125,
+        0.13125,
+        0.13125
+      ]
+    },
+    {
+      "seed": 1500140028,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.2875,
+        0.7625,
+        0.2875,
+        0.0,
+        1.0,
+        0.7625,
+        0.0,
+        0.5125,
+        0.0125,
+        0.175,
+        1.0,
+        0.34375,
+        0.3875,
+        0.0,
+        0.2875,
+        0.2875,
+        0.2875,
+        0.0,
+        0.34375,
+        0.0
+      ]
+    },
+    {
+      "seed": 1500140029,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.25625,
+        0.3625,
+        0.25625,
+        0.075,
+        1.0,
+        0.3625,
+        0.80625,
+        0.2625,
+        0.0375,
+        0.2375,
+        1.0,
+        0.2,
+        0.225,
+        0.0,
+        0.25625,
+        0.25625,
+        0.25625,
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "seed": 1500140030,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.04375,
+        0.04375,
+        0.04375,
+        0.05,
+        1.0,
+        0.04375,
+        0.225,
+        0.08125,
+        0.0625,
+        0.04375,
+        1.0,
+        0.06875,
+        0.075,
+        0.0,
+        0.04375,
+        0.04375,
+        0.04375,
+        0.06875,
+        0.06875,
+        0.06875
+      ]
+    },
+    {
+      "seed": 1500140031,
+      "scenario": "shelter",
+      "hiddenFractions": [
+        0.10625,
+        0.09375,
+        0.10625,
+        0.0,
+        1.0,
+        0.09375,
+        0.0,
+        0.60625,
+        0.0,
+        0.11875,
+        1.0,
+        0.09375,
+        0.09375,
+        0.0,
+        0.10625,
+        0.10625,
+        0.10625,
+        0.09375,
+        0.09375,
+        0.09375
+      ]
+    },
+    {
+      "seed": 1500141000,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.7625,
+        0.79375,
+        0.7625,
+        1.0,
+        1.0,
+        0.79375,
+        1.0,
+        0.84375,
+        1.0,
+        0.80625,
+        1.0,
+        0.60625,
+        0.6875,
+        1.0,
+        0.5,
+        0.7125,
+        0.79375,
+        0.59375,
+        0.60625,
+        0.59375
+      ]
+    },
+    {
+      "seed": 1500141001,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.33125,
+        0.51875,
+        0.33125,
+        0.4875,
+        1.0,
+        0.51875,
+        0.9375,
+        0.4,
+        0.33125,
+        0.90625,
+        1.0,
+        0.90625,
+        0.2625,
+        1.0,
+        0.33125,
+        0.35,
+        0.35,
+        0.90625,
+        0.53125,
+        0.53125
+      ]
+    },
+    {
+      "seed": 1500141002,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.5375,
+        0.76875,
+        0.5375,
+        0.73125,
+        1.0,
+        0.76875,
+        1.0,
+        0.78125,
+        0.1625,
+        0.50625,
+        1.0,
+        0.375,
+        0.65625,
+        1.0,
+        0.55625,
+        0.5375,
+        0.55625,
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    {
+      "seed": 1500141003,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.4125,
+        0.70625,
+        0.4125,
+        0.65625,
+        1.0,
+        0.70625,
+        1.0,
+        0.70625,
+        0.64375,
+        0.3875,
+        1.0,
+        0.3875,
+        0.46875,
+        1.0,
+        0.4125,
+        0.4125,
+        0.4125,
+        0.3875,
+        0.3875,
+        0.3875
+      ]
+    },
+    {
+      "seed": 1500141004,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.91875,
+        1.0,
+        1.0,
+        0.65625,
+        0.65,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141005,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.7,
+        1.0,
+        0.7,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.6625,
+        1.0,
+        0.63125,
+        1.0,
+        1.0,
+        0.7,
+        0.7,
+        0.7,
+        0.63125,
+        0.63125,
+        0.63125
+      ]
+    },
+    {
+      "seed": 1500141006,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141007,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141008,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141009,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        0.49375,
+        1.0,
+        0.26875,
+        1.0,
+        0.49375,
+        1.0,
+        1.0,
+        0.33125,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141010,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.6125,
+        1.0,
+        0.6125,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.6125,
+        0.59375,
+        0.59375,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141011,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.5625,
+        1.0,
+        0.5625,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.49375,
+        1.0,
+        0.56875,
+        1.0,
+        1.0,
+        0.5625,
+        0.5625,
+        0.5625,
+        0.56875,
+        0.56875,
+        0.56875
+      ]
+    },
+    {
+      "seed": 1500141012,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.6125,
+        1.0,
+        0.6125,
+        0.75,
+        1.0,
+        1.0,
+        1.0,
+        0.3125,
+        0.54375,
+        0.625,
+        1.0,
+        0.24375,
+        0.2375,
+        1.0,
+        0.6125,
+        0.53125,
+        0.53125,
+        0.24375,
+        0.24375,
+        0.24375
+      ]
+    },
+    {
+      "seed": 1500141013,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.64375,
+        0.4,
+        0.64375,
+        0.1375,
+        1.0,
+        0.4,
+        1.0,
+        0.325,
+        0.15625,
+        0.3625,
+        1.0,
+        0.30625,
+        0.2625,
+        1.0,
+        0.64375,
+        0.65,
+        0.65,
+        0.30625,
+        0.30625,
+        0.30625
+      ]
+    },
+    {
+      "seed": 1500141014,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.84375,
+        0.90625,
+        0.84375,
+        0.84375,
+        1.0,
+        0.90625,
+        1.0,
+        0.78125,
+        0.79375,
+        0.8125,
+        1.0,
+        0.8625,
+        0.71875,
+        1.0,
+        0.84375,
+        0.84375,
+        0.84375,
+        0.8625,
+        0.8625,
+        0.8625
+      ]
+    },
+    {
+      "seed": 1500141015,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.96875,
+        1.0,
+        0.96875,
+        0.5375,
+        1.0,
+        1.0,
+        1.0,
+        0.33125,
+        0.61875,
+        1.0,
+        1.0,
+        0.30625,
+        0.3625,
+        1.0,
+        0.99375,
+        0.96875,
+        0.99375,
+        0.30625,
+        0.30625,
+        0.30625
+      ]
+    },
+    {
+      "seed": 1500141016,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.96875,
+        1.0,
+        0.96875,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.825,
+        0.96875,
+        0.825,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141017,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141018,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.20625,
+        0.16875,
+        0.20625,
+        0.1,
+        1.0,
+        0.16875,
+        1.0,
+        0.36875,
+        0.03125,
+        0.2,
+        1.0,
+        0.3,
+        0.35,
+        1.0,
+        0.20625,
+        0.20625,
+        0.20625,
+        0.3,
+        0.3,
+        0.3
+      ]
+    },
+    {
+      "seed": 1500141019,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.375,
+        0.63125,
+        0.375,
+        0.425,
+        1.0,
+        0.63125,
+        0.975,
+        0.475,
+        0.43125,
+        1.0,
+        1.0,
+        1.0,
+        0.4,
+        1.0,
+        0.375,
+        0.375,
+        0.375,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141020,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        0.4625,
+        1.0,
+        0.43125,
+        1.0,
+        0.4625,
+        1.0,
+        0.5875,
+        0.425,
+        1.0,
+        1.0,
+        1.0,
+        0.9375,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141021,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141022,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.3875,
+        0.44375,
+        0.3875,
+        0.2625,
+        1.0,
+        0.44375,
+        1.0,
+        0.4,
+        0.25625,
+        0.36875,
+        1.0,
+        0.33125,
+        0.3625,
+        1.0,
+        0.3875,
+        0.3875,
+        0.3875,
+        0.33125,
+        0.33125,
+        0.33125
+      ]
+    },
+    {
+      "seed": 1500141023,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "seed": 1500141024,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.725,
+        1.0,
+        0.725,
+        0.1125,
+        1.0,
+        1.0,
+        1.0,
+        0.45625,
+        0.05625,
+        0.45,
+        1.0,
+        0.45,
+        0.45625,
+        1.0,
+        0.725,
+        0.58125,
+        0.58125,
+        0.45,
+        0.45,
+        0.45
+      ]
+    },
+    {
+      "seed": 1500141025,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        0.975,
+        1.0,
+        1.0,
+        1.0,
+        0.975,
+        1.0,
+        0.975,
+        1.0,
+        1.0,
+        1.0,
+        0.5,
+        0.49375,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "seed": 1500141026,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.8625,
+        1.0,
+        0.8625,
+        0.40625,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.75625,
+        1.0,
+        0.85,
+        1.0,
+        1.0,
+        0.8625,
+        0.46875,
+        0.46875,
+        0.85,
+        0.85,
+        0.85
+      ]
+    },
+    {
+      "seed": 1500141027,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.60625,
+        0.30625,
+        0.60625,
+        0.2125,
+        1.0,
+        0.30625,
+        1.0,
+        1.0,
+        0.225,
+        0.4625,
+        1.0,
+        0.53125,
+        1.0,
+        1.0,
+        0.60625,
+        0.60625,
+        0.60625,
+        0.53125,
+        0.53125,
+        0.53125
+      ]
+    },
+    {
+      "seed": 1500141028,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.89375,
+        1.0,
+        0.89375,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.64375,
+        0.6375,
+        1.0,
+        0.46875,
+        1.0,
+        1.0,
+        0.89375,
+        0.89375,
+        0.89375,
+        0.46875,
+        0.46875,
+        0.46875
+      ]
+    },
+    {
+      "seed": 1500141029,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.2875,
+        0.36875,
+        1.0,
+        0.43125,
+        0.9375,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.43125,
+        0.43125,
+        0.43125
+      ]
+    },
+    {
+      "seed": 1500141030,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        1.0,
+        0.925,
+        1.0,
+        0.81875,
+        1.0,
+        0.925,
+        1.0,
+        0.6875,
+        0.675,
+        0.6125,
+        1.0,
+        0.71875,
+        0.50625,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.71875,
+        0.71875,
+        0.71875
+      ]
+    },
+    {
+      "seed": 1500141031,
+      "scenario": "rooms",
+      "hiddenFractions": [
+        0.9375,
+        0.48125,
+        0.9375,
+        0.54375,
+        1.0,
+        0.48125,
+        0.96875,
+        0.45625,
+        0.55,
+        0.3625,
+        1.0,
+        0.2875,
+        0.30625,
+        1.0,
+        0.9375,
+        0.475,
+        0.475,
+        0.2875,
+        0.2875,
+        0.2875
+      ]
+    },
+    {
+      "seed": 1500142000,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.38125,
+        0.375,
+        0.38125,
+        0.2375,
+        0.96875,
+        0.375,
+        1.0,
+        0.2625,
+        0.2375,
+        0.1875,
+        0.7875,
+        0.19375,
+        0.19375,
+        1.0,
+        0.38125,
+        0.38125,
+        0.38125,
+        0.19375,
+        0.19375,
+        0.19375
+      ]
+    },
+    {
+      "seed": 1500142001,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.24375,
+        0.275,
+        0.24375,
+        0.0,
+        1.0,
+        0.275,
+        0.0625,
+        0.0,
+        0.0625,
+        0.53125,
+        0.69375,
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.24375,
+        0.24375,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1500142002,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.55625,
+        0.625,
+        0.55625,
+        0.18125,
+        0.81875,
+        0.625,
+        0.76875,
+        0.80625,
+        0.23125,
+        0.55625,
+        0.7125,
+        0.29375,
+        0.75,
+        0.0,
+        0.45,
+        0.35625,
+        0.425,
+        0.5875,
+        0.24375,
+        0.5875
+      ]
+    },
+    {
+      "seed": 1500142003,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.23125,
+        0.39375,
+        0.23125,
+        0.2625,
+        0.79375,
+        0.39375,
+        1.0,
+        0.64375,
+        0.3,
+        0.28125,
+        0.9875,
+        0.46875,
+        0.59375,
+        1.0,
+        0.23125,
+        0.23125,
+        0.23125,
+        0.46875,
+        0.46875,
+        0.46875
+      ]
+    },
+    {
+      "seed": 1500142004,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.29375,
+        0.50625,
+        0.29375,
+        0.0125,
+        1.0,
+        0.50625,
+        0.64375,
+        0.0875,
+        0.0125,
+        0.35,
+        1.0,
+        0.1625,
+        0.33125,
+        1.0,
+        0.29375,
+        0.29375,
+        0.29375,
+        0.1625,
+        0.1625,
+        0.1625
+      ]
+    },
+    {
+      "seed": 1500142005,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.38125,
+        0.5875,
+        0.38125,
+        0.0875,
+        0.45625,
+        0.5875,
+        1.0,
+        0.25625,
+        0.08125,
+        0.58125,
+        0.64375,
+        0.1625,
+        0.59375,
+        1.0,
+        0.6875,
+        0.38125,
+        0.6875,
+        0.1625,
+        0.1625,
+        0.1625
+      ]
+    },
+    {
+      "seed": 1500142006,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.925,
+        1.0,
+        0.925,
+        0.0,
+        1.0,
+        1.0,
+        0.3375,
+        0.30625,
+        0.04375,
+        0.95,
+        1.0,
+        0.39375,
+        0.2375,
+        0.0,
+        0.925,
+        0.925,
+        0.925,
+        0.39375,
+        0.39375,
+        0.39375
+      ]
+    },
+    {
+      "seed": 1500142007,
+      "scenario": "open",
+      "hiddenFractions": [
+        1.0,
+        1.0,
+        1.0,
+        0.9625,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.4,
+        0.3875,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.775,
+        0.4,
+        0.775
+      ]
+    },
+    {
+      "seed": 1500142008,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.6375,
+        0.4,
+        0.6375,
+        0.0375,
+        0.96875,
+        0.4,
+        0.45625,
+        0.3625,
+        0.0625,
+        0.60625,
+        1.0,
+        0.025,
+        0.2125,
+        0.0,
+        0.6375,
+        0.7625,
+        0.94375,
+        0.1,
+        0.025,
+        0.1
+      ]
+    },
+    {
+      "seed": 1500142009,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.9125,
+        0.78125,
+        0.9125,
+        1.0,
+        0.9875,
+        0.78125,
+        1.0,
+        1.0,
+        0.93125,
+        0.66875,
+        1.0,
+        0.53125,
+        1.0,
+        1.0,
+        0.9875,
+        0.95,
+        0.68125,
+        0.55,
+        0.85,
+        0.55
+      ]
+    },
+    {
+      "seed": 1500142010,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.20625,
+        0.1625,
+        0.20625,
+        0.05,
+        1.0,
+        0.1625,
+        0.61875,
+        0.3125,
+        0.0375,
+        0.18125,
+        1.0,
+        0.28125,
+        0.18125,
+        0.0,
+        0.20625,
+        0.20625,
+        0.20625,
+        0.28125,
+        0.28125,
+        0.28125
+      ]
+    },
+    {
+      "seed": 1500142011,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.38125,
+        0.2375,
+        0.38125,
+        0.25625,
+        1.0,
+        0.2375,
+        1.0,
+        0.45,
+        0.26875,
+        0.15625,
+        1.0,
+        0.275,
+        0.30625,
+        1.0,
+        0.38125,
+        0.38125,
+        0.38125,
+        0.275,
+        0.275,
+        0.275
+      ]
+    },
+    {
+      "seed": 1500142012,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.6375,
+        0.13125,
+        0.6375,
+        0.01875,
+        0.76875,
+        0.13125,
+        0.9625,
+        0.025,
+        0.0125,
+        0.2375,
+        1.0,
+        0.1875,
+        0.03125,
+        0.0,
+        0.73125,
+        0.6375,
+        0.73125,
+        0.1875,
+        0.1875,
+        0.1875
+      ]
+    },
+    {
+      "seed": 1500142013,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.11875,
+        0.25625,
+        0.11875,
+        0.26875,
+        1.0,
+        0.25625,
+        1.0,
+        0.4375,
+        0.2,
+        0.125,
+        0.6375,
+        0.1875,
+        0.2,
+        1.0,
+        0.11875,
+        0.11875,
+        0.11875,
+        0.1875,
+        0.1875,
+        0.1875
+      ]
+    },
+    {
+      "seed": 1500142014,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.775,
+        0.46875,
+        0.775,
+        0.04375,
+        0.89375,
+        0.46875,
+        0.1625,
+        0.53125,
+        0.05,
+        0.8875,
+        0.51875,
+        0.5,
+        0.425,
+        0.0,
+        0.8125,
+        1.0,
+        0.81875,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "seed": 1500142015,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.1,
+        0.44375,
+        0.1,
+        0.05625,
+        0.3125,
+        0.44375,
+        0.30625,
+        0.025,
+        0.075,
+        0.1,
+        0.0875,
+        0.01875,
+        0.01875,
+        0.0,
+        0.09375,
+        0.1,
+        0.09375,
+        0.20625,
+        0.01875,
+        0.20625
+      ]
+    },
+    {
+      "seed": 1500142016,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.2625,
+        0.475,
+        0.2625,
+        0.6125,
+        0.45,
+        0.475,
+        0.69375,
+        0.86875,
+        0.3375,
+        0.59375,
+        1.0,
+        0.25,
+        0.21875,
+        1.0,
+        0.475,
+        0.2625,
+        0.475,
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    {
+      "seed": 1500142017,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.8375,
+        0.6125,
+        0.8375,
+        0.49375,
+        1.0,
+        0.6125,
+        1.0,
+        0.5875,
+        0.2875,
+        0.525,
+        1.0,
+        0.35625,
+        0.3625,
+        1.0,
+        0.8375,
+        0.8375,
+        0.8375,
+        0.35625,
+        0.35625,
+        0.35625
+      ]
+    },
+    {
+      "seed": 1500142018,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.93125,
+        0.8,
+        0.93125,
+        0.475,
+        1.0,
+        0.8,
+        1.0,
+        0.1,
+        0.06875,
+        0.8625,
+        1.0,
+        0.275,
+        0.06875,
+        0.0,
+        1.0,
+        1.0,
+        1.0,
+        0.2625,
+        0.275,
+        0.2625
+      ]
+    },
+    {
+      "seed": 1500142019,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.26875,
+        0.45625,
+        0.26875,
+        0.0125,
+        1.0,
+        0.45625,
+        0.8125,
+        0.4,
+        0.0,
+        0.36875,
+        1.0,
+        0.0875,
+        0.48125,
+        0.0,
+        0.26875,
+        0.26875,
+        0.26875,
+        0.33125,
+        0.0875,
+        0.33125
+      ]
+    },
+    {
+      "seed": 1500142020,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.85625,
+        1.0,
+        0.85625,
+        0.775,
+        1.0,
+        1.0,
+        1.0,
+        0.81875,
+        0.7875,
+        1.0,
+        1.0,
+        0.7375,
+        0.375,
+        1.0,
+        0.8,
+        1.0,
+        0.61875,
+        0.81875,
+        0.73125,
+        0.78125
+      ]
+    },
+    {
+      "seed": 1500142021,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.35625,
+        0.3625,
+        0.35625,
+        0.35,
+        0.675,
+        0.3625,
+        1.0,
+        0.9,
+        0.1875,
+        0.98125,
+        0.8,
+        0.275,
+        0.875,
+        1.0,
+        0.35625,
+        0.35625,
+        0.35625,
+        0.275,
+        0.275,
+        0.275
+      ]
+    },
+    {
+      "seed": 1500142022,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.25,
+        0.375,
+        0.25,
+        0.275,
+        0.61875,
+        0.375,
+        0.60625,
+        1.0,
+        0.2375,
+        0.525,
+        0.775,
+        0.30625,
+        1.0,
+        1.0,
+        0.3625,
+        0.4125,
+        0.3625,
+        0.30625,
+        0.30625,
+        0.30625
+      ]
+    },
+    {
+      "seed": 1500142023,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.61875,
+        0.38125,
+        0.61875,
+        0.3,
+        1.0,
+        0.38125,
+        1.0,
+        1.0,
+        0.2875,
+        0.6,
+        1.0,
+        0.48125,
+        1.0,
+        1.0,
+        0.61875,
+        0.61875,
+        0.61875,
+        0.48125,
+        0.48125,
+        0.48125
+      ]
+    },
+    {
+      "seed": 1500142024,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.31875,
+        0.61875,
+        0.31875,
+        0.0,
+        0.45,
+        0.61875,
+        0.0,
+        0.15625,
+        0.0,
+        0.26875,
+        0.65625,
+        0.325,
+        0.25625,
+        0.0,
+        0.3,
+        0.31875,
+        0.3,
+        0.29375,
+        0.325,
+        0.29375
+      ]
+    },
+    {
+      "seed": 1500142025,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.0,
+        0.44375,
+        0.0,
+        1.0,
+        0.09375,
+        0.44375,
+        0.61875,
+        0.8,
+        0.0,
+        0.025,
+        0.00625,
+        0.0875,
+        0.38125,
+        0.0,
+        0.00625,
+        0.0,
+        0.00625,
+        0.21875,
+        0.0875,
+        0.0
+      ]
+    },
+    {
+      "seed": 1500142026,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.325,
+        0.45625,
+        0.325,
+        0.075,
+        1.0,
+        0.45625,
+        0.48125,
+        0.36875,
+        0.11875,
+        0.20625,
+        1.0,
+        0.28125,
+        0.29375,
+        1.0,
+        0.325,
+        0.325,
+        0.325,
+        0.28125,
+        0.28125,
+        0.28125
+      ]
+    },
+    {
+      "seed": 1500142027,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.1125,
+        0.575,
+        0.1125,
+        0.01875,
+        0.89375,
+        0.575,
+        0.6875,
+        0.51875,
+        0.00625,
+        0.26875,
+        1.0,
+        0.2125,
+        0.3875,
+        0.0,
+        0.1125,
+        0.1125,
+        0.1125,
+        0.2125,
+        0.2125,
+        0.2125
+      ]
+    },
+    {
+      "seed": 1500142028,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.1875,
+        0.175,
+        0.1875,
+        0.05,
+        1.0,
+        0.175,
+        1.0,
+        0.1625,
+        0.04375,
+        0.15625,
+        1.0,
+        0.2,
+        0.14375,
+        1.0,
+        0.1875,
+        0.1875,
+        0.1875,
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "seed": 1500142029,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.35625,
+        0.65,
+        0.35625,
+        0.175,
+        1.0,
+        0.65,
+        1.0,
+        0.59375,
+        0.45625,
+        0.46875,
+        1.0,
+        0.1875,
+        0.2,
+        1.0,
+        0.45625,
+        0.35625,
+        0.45625,
+        0.45625,
+        0.1875,
+        0.45625
+      ]
+    },
+    {
+      "seed": 1500142030,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.275,
+        0.40625,
+        0.275,
+        0.70625,
+        0.9375,
+        0.40625,
+        0.96875,
+        0.03125,
+        0.7125,
+        0.18125,
+        0.93125,
+        0.0,
+        0.00625,
+        1.0,
+        0.56875,
+        0.2625,
+        0.56875,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1500142031,
+      "scenario": "open",
+      "hiddenFractions": [
+        0.5125,
+        0.23125,
+        0.5125,
+        0.06875,
+        1.0,
+        0.23125,
+        0.8375,
+        0.225,
+        0.08125,
+        0.21875,
+        0.80625,
+        0.39375,
+        0.2125,
+        1.0,
+        0.475,
+        0.55,
+        0.4875,
+        0.39375,
+        0.39375,
+        0.39375
+      ]
+    }
+  ],
+  "newOptimizationDuringSelection": 0,
+  "preservation": "The final 31,981,568-interaction native continuation remains latest; the earlier seeker is retained for broader measured behavior."
+}

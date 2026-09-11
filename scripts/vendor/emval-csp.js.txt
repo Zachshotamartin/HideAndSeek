@@ -1,0 +1,19 @@
+  // Adapted from Emscripten's !DYNAMIC_EXECUTION method caller. Reflect.construct
+  // is a normal constructor call, not string compilation.
+  var __emval_get_method_caller = (argCount, argTypes, kind) => {
+    var types = emval_lookupTypes(argCount, argTypes);
+    var retType = types.shift();
+    argCount--;
+    var invokerFunction = (obj, func, destructorsRef, args) => {
+      var argN = new Array(argCount);
+      var offset = 0;
+      for (var i = 0; i < argCount; ++i) {
+        argN[i] = types[i].readValueFromPointer(args + offset);
+        offset += types[i].argPackAdvance;
+      }
+      var rv = kind === 1 ? Reflect.construct(func, argN) : func.apply(obj, argN);
+      if (!retType.isVoid) return emval_returnValue(retType, destructorsRef, rv);
+    };
+    var functionName = `methodCaller<(${types.map(t => t.name).join(', ')}) => ${retType.name}>`;
+    return emval_addMethodCaller(createNamedFunction(functionName, invokerFunction));
+  };

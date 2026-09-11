@@ -1,0 +1,258 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "gradients-A",
+  "sourceReportSHA256": "ab4edc203eaa0d493cedfef554a2bd7d6a55eb7de86149710cd8513dd43c62a7",
+  "sourceReportRelativePath": "diagnostics-A/diagnostics.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "checkpointSHA256": "6de217867908e78dd9759186ac0472bbce76f64902cc7b7b864d3e210ab4a1af",
+    "diagnosticActorDecisions": 32768,
+    "optimizerSteps": 0,
+    "scope": "64 seeded varied-size/count current/current diagnostic games plus16 reset ticks; no performance-selection claim.",
+    "interpretation": "Unclipped PPO gradient at ratio1 before Adam or clipping, averaged across diagnostic recurrent chunks. Entropy coefficient .005. Not a causal test of a new optimization setting.",
+    "roleOrder": [
+      "hider",
+      "seeker"
+    ],
+    "commandOrder": [
+      "Keep",
+      "Press",
+      "Release"
+    ],
+    "criticCalibration": {
+      "complete": {
+        "centralMSE": 7.493616104125977,
+        "partialPairMSE": 9.574799537658691
+      },
+      "preparation": {
+        "centralMSE": 13.251103401184082,
+        "partialPairMSE": 16.480945587158203
+      },
+      "play": {
+        "centralMSE": 4.614872932434082,
+        "partialPairMSE": 6.121725559234619
+      }
+    },
+    "roles": [
+      {
+        "activeSamples": 16384,
+        "toolProbabilities": {
+          "all": [
+            [
+              0.34434768557548523,
+              0.25850388407707214,
+              0.3971484899520874
+            ],
+            [
+              0.3119310736656189,
+              0.3952447474002838,
+              0.2928240895271301
+            ]
+          ],
+          "holding": [
+            [
+              0.3534538447856903,
+              0.3039207458496094,
+              0.34262534976005554
+            ],
+            [
+              0.3003107011318207,
+              0.4789167046546936,
+              0.22077253460884094
+            ]
+          ],
+          "notHolding": [
+            [
+              0.34388503432273865,
+              0.2561969459056854,
+              0.39991793036460876
+            ],
+            [
+              0.31252139806747437,
+              0.39099469780921936,
+              0.2964840531349182
+            ]
+          ],
+          "preparation": [
+            [
+              0.33061107993125916,
+              0.2448917180299759,
+              0.4244973361492157
+            ],
+            [
+              0.2864101827144623,
+              0.3873450458049774,
+              0.3262448310852051
+            ]
+          ],
+          "play": [
+            [
+              0.3525894582271576,
+              0.2666712701320648,
+              0.38073915243148804
+            ],
+            [
+              0.3272436857223511,
+              0.3999846279621124,
+              0.2727716863155365
+            ]
+          ]
+        },
+        "conditionCounts": {
+          "all": 16384,
+          "holding": 792,
+          "notHolding": 15592,
+          "preparation": 6144,
+          "play": 10240
+        },
+        "meanToolEntropyNats": [
+          1.0659277439117432,
+          1.0536024570465088
+        ],
+        "gradients": {
+          "toolHead": {
+            "toolReward": 0.07195822149515152,
+            "movementReward": 0.0,
+            "toolEntropy": 0.00361072295345366,
+            "movementEntropy": 0.0,
+            "totalRewardNorm": 0.07195822149515152,
+            "totalEntropyNorm": 0.00361072295345366,
+            "entropyToRewardNorm": 0.05017804726958275,
+            "rewardEntropyCosine": 0.05051592364907265
+          },
+          "movementHead": {
+            "toolReward": 0.0,
+            "movementReward": 0.1567429006099701,
+            "toolEntropy": 0.0,
+            "movementEntropy": 0.033298347145318985,
+            "totalRewardNorm": 0.1567429006099701,
+            "totalEntropyNorm": 0.033298347145318985,
+            "entropyToRewardNorm": 0.21243926882743835,
+            "rewardEntropyCosine": -0.6791255474090576
+          },
+          "sharedEncoderMemory": {
+            "toolReward": 0.01507320161908865,
+            "movementReward": 0.1100676953792572,
+            "toolEntropy": 0.0005168414791114628,
+            "movementEntropy": 0.014377756975591183,
+            "totalRewardNorm": 0.10647894442081451,
+            "totalEntropyNorm": 0.014497418887913227,
+            "entropyToRewardNorm": 0.13615292310714722,
+            "rewardEntropyCosine": -0.6515112519264221
+          }
+        },
+        "toolRewardChunkCosine": 0.28164201974868774,
+        "maximumRecomputedLogpError": 9.5367431640625e-07
+      },
+      {
+        "activeSamples": 10240,
+        "toolProbabilities": {
+          "all": [
+            [
+              0.30819445848464966,
+              0.2867996096611023,
+              0.40500587224960327
+            ],
+            [
+              0.40393662452697754,
+              0.2921631336212158,
+              0.3039003312587738
+            ]
+          ],
+          "holding": [
+            [
+              0.3306916058063507,
+              0.3103243410587311,
+              0.3589840233325958
+            ],
+            [
+              0.4082542061805725,
+              0.3195595145225525,
+              0.2721862196922302
+            ]
+          ],
+          "notHolding": [
+            [
+              0.3074570596218109,
+              0.2860284745693207,
+              0.4065144658088684
+            ],
+            [
+              0.403795063495636,
+              0.291265070438385,
+              0.30493977665901184
+            ]
+          ],
+          "preparation": null,
+          "play": [
+            [
+              0.30819445848464966,
+              0.2867996096611023,
+              0.40500587224960327
+            ],
+            [
+              0.40393662452697754,
+              0.2921631336212158,
+              0.3039003312587738
+            ]
+          ]
+        },
+        "conditionCounts": {
+          "all": 10240,
+          "holding": 325,
+          "notHolding": 9915,
+          "preparation": 0,
+          "play": 10240
+        },
+        "meanToolEntropyNats": [
+          1.0197556018829346,
+          1.0533878803253174
+        ],
+        "gradients": {
+          "toolHead": {
+            "toolReward": 0.08308709412813187,
+            "movementReward": 0.0,
+            "toolEntropy": 0.0030645192600786686,
+            "movementEntropy": 0.0,
+            "totalRewardNorm": 0.08308709412813187,
+            "totalEntropyNorm": 0.0030645192600786686,
+            "entropyToRewardNorm": 0.036883216351270676,
+            "rewardEntropyCosine": -0.24429990351200104
+          },
+          "movementHead": {
+            "toolReward": 0.0,
+            "movementReward": 0.21828891336917877,
+            "toolEntropy": 0.0,
+            "movementEntropy": 0.014807110652327538,
+            "totalRewardNorm": 0.21828891336917877,
+            "totalEntropyNorm": 0.014807110652327538,
+            "entropyToRewardNorm": 0.06783262640237808,
+            "rewardEntropyCosine": 0.23327931761741638
+          },
+          "sharedEncoderMemory": {
+            "toolReward": 0.02589065581560135,
+            "movementReward": 0.24330942332744598,
+            "toolEntropy": 0.0010741975856944919,
+            "movementEntropy": 0.010285202413797379,
+            "totalRewardNorm": 0.24623289704322815,
+            "totalEntropyNorm": 0.01097005046904087,
+            "entropyToRewardNorm": 0.04455152153968811,
+            "rewardEntropyCosine": -0.31941094994544983
+          }
+        },
+        "toolRewardChunkCosine": 0.3140263557434082,
+        "maximumRecomputedLogpError": 9.5367431640625e-07
+      }
+    ],
+    "sources": {
+      "diagnose_league_gradients.py": "02757f6af41ec8f725c80fb895d584e42683d2b2381902fbf96fef5533ee20f3",
+      "league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+      "central_persistent_train.py": "0a594254bdc1fbd524aa3acb737b7d83a68d15748bd63cd30a61db5c71afed20",
+      "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+      "central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+      "residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+      "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+    }
+  }
+}

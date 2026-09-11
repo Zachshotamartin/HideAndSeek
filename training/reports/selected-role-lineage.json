@@ -1,0 +1,99 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "selected-role-lineage",
+  "sourceReportSHA256": "50e918e744474ecd4f41ebb0f4fc2ea0d05b4300521ca75ac25943c5bc878271",
+  "sourceReportRelativePath": "selected-candidate/candidate.selection.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "candidateSHA256": "ca9462e9cd3f084a2df687defc4de23513f15df700826a3a4524d0676bc74117",
+    "candidateFile": "candidate.pt",
+    "roleSources": [
+      {
+        "role": "hider",
+        "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+        "sourceFile": "checkpoint-14098432.pt",
+        "sourceRunCounters": {
+          "decisions": 37036032,
+          "parentDecisions": 22937600,
+          "pilotDecisions": 14098432,
+          "totalPolicyInteractions": null,
+          "criticWarmupDecisions": null,
+          "currentPolicyDecisions": null,
+          "historicalPolicyDecisions": null,
+          "activePolicySamples": null
+        },
+        "inheritedRoleSources": []
+      },
+      {
+        "role": "seeker",
+        "sourceCheckpointSHA256": "2bd4bea653feb098cf56fe849b76e3df1e7fbac7a3e176701ad002f9dc011896",
+        "sourceFile": "15990784.pt",
+        "sourceRunCounters": {
+          "decisions": 62988288,
+          "parentDecisions": 46997504,
+          "pilotDecisions": 15990784,
+          "totalPolicyInteractions": 15990784,
+          "criticWarmupDecisions": 0,
+          "currentPolicyDecisions": [
+            6001280,
+            5957888
+          ],
+          "historicalPolicyDecisions": [
+            1994112,
+            2037504
+          ],
+          "activePolicySamples": [
+            6001280,
+            3968000
+          ]
+        },
+        "inheritedRoleSources": [
+          {
+            "role": "hider",
+            "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+            "sourceFile": "checkpoint-14098432.pt",
+            "sourceRunCounters": {
+              "decisions": 37036032,
+              "parentDecisions": 22937600,
+              "pilotDecisions": 14098432,
+              "criticWarmupDecisions": null,
+              "totalPolicyInteractions": null,
+              "currentPolicyDecisions": null,
+              "historicalPolicyDecisions": null,
+              "activePolicySamples": null
+            }
+          },
+          {
+            "role": "seeker",
+            "sourceCheckpointSHA256": "7436af8583581b342f1150c1949f00dc9e0c465a95ae120de6d1eb61db00ca77",
+            "sourceFile": "checkpoint-7995392.pt",
+            "sourceRunCounters": {
+              "decisions": 46997504,
+              "parentDecisions": 37036032,
+              "pilotDecisions": 7995392,
+              "criticWarmupDecisions": 1966080,
+              "totalPolicyInteractions": 7995392,
+              "currentPolicyDecisions": [
+                3007152,
+                2992448
+              ],
+              "historicalPolicyDecisions": [
+                990544,
+                1005248
+              ],
+              "activePolicySamples": [
+                3007152,
+                1992960
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "unionSourceBudget": 62988288,
+    "newActorUpdates": 0,
+    "sourceSHA256": "4be80cf88a2f5f1c3272e2792a677b120e5f840625bb5968df156bd46e5e0061",
+    "reason": "Retain the original hider and the 16M-phase seeker after the complete fixed 32M assessment: no credible hider improvement, earlier seeker has fewer broad search misses and more consistent fixed-opponent gains. This is a development selection, not reliable useful-tool evidence or browser promotion."
+  }
+}

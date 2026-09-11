@@ -1,0 +1,49 @@
+{
+  "format": "hide-seek-native-resume-bundle-v1",
+  "status": "Frozen 37M development parent, not reliable useful-tool strategy or a new model promotion",
+  "parentActorLineageDecisions": 37036032,
+  "criticOnlyWarmupDecisions": 1966080,
+  "newActorUpdates": 0,
+  "resumeFile": "resume.pt",
+  "files": {
+    "assets/parent.pt": {
+      "sha256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+      "bytes": 1144545
+    },
+    "assets/critic.pt": {
+      "sha256": "91ebc0f76d7e2206a550bd02464d71834d368d4b507770d8dadf3589c76fe126",
+      "bytes": 1122994
+    },
+    "assets/initial.pt": {
+      "sha256": "b0638b43059be7676141cb23e0b85b548801bd217c8ed2070cf969267a6d950b",
+      "bytes": 371477
+    },
+    "assets/history-0.pt": {
+      "sha256": "e28dcb93a11e46d93266b4ad6a058052ca90fab93a08a33fee0c1a7eb2324394",
+      "bytes": 372021
+    },
+    "assets/history-1.pt": {
+      "sha256": "6373c587672cac080a8e9329c30e919f0bab77c89ac8f0aaa450d637f2e9690d",
+      "bytes": 1135666
+    },
+    "resume.pt": {
+      "sha256": "2c2f341044fccd05bb8f3004b2d5e3fb4063ae2fc1691f92f20e788ece2ddd30",
+      "bytes": 1869142
+    }
+  },
+  "totalBytes": 6015845,
+  "preparation": "Zero new actor updates. Exact parent weights/moments/Torch RNG; new-phase world RNG seed 773119. Actor LR explicitly set to 0.0001. Fitted critic retained.",
+  "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+  "command": "npm run train:continuous -- --resume training/resume-bundle/resume.pt --output output/continuous-run --until-stop",
+  "sources": {
+    "scripts/build-training-bundle.py": "7c3a2cbbb98e9181f1bcf1acc16fecdd35149a097c2d85a7f007a2abfbb5e7ed",
+    "training/train_continuous.py": "fc841c316b5387f0fb3b39346b135390ede627e844fe18bebac95cf1fc93870a",
+    "training/train_league.py": "abf5bf67cd0dd4c479055727547545b13905db5a7bc21e8058409009169ef901",
+    "training/league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+    "training/env_pool.py": "cf0b7a5718a3e097eed850bd37118609d3963dd199e7dc34eb3564de8bd4c367",
+    "training/persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+    "training/central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+    "training/residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+    "training/physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+  }
+}

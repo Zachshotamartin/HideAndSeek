@@ -1,0 +1,901 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "selected-action-modes",
+  "sourceReportSHA256": "5ab9c32836d16da44b01fec93c599575ba68c5a8ed7e1f1afe4f215d7829157c",
+  "sourceReportRelativePath": "policy-modes/evaluation.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "frozen-policy-action-mode-validation-v1",
+    "candidateSHA256": "ca9462e9cd3f084a2df687defc4de23513f15df700826a3a4524d0676bc74117",
+    "browserSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+    "initialSHA256": "b0638b43059be7676141cb23e0b85b548801bd217c8ed2070cf969267a6d950b",
+    "baselineSHA256": "a8fc5a4a9b10a23ea5561d405ee28028e8c83d18517a58258a19573435bb9d3b",
+    "cachedCandidateSHA256": "63876f1981051ce5ba095e45c7360d69e2e13bfdf48c5971994fa22c02f382f7",
+    "sources": {
+      "evaluate_policy_modes.py": "2c0a81c62da1c60f6071502aa379d7154cec5bf874d393587fad772abf748efa",
+      "persistent_evaluate.py": "c2f0cf0c4410662b5a38f8c407192c18f72a94cab9966e878646beafc8567996",
+      "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+      "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+      "actor.py": "6a31e52ac1ce51578fa16c3e240264cb70df3c2af48f9b0b1c9222247a8e71db",
+      "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+    },
+    "scope": "Same 96 repeated development maps. Role-mode comparisons keep the browser opponent sampled; whole-pair mean conditions match the UI global setting.",
+    "semantics": "Mean means tanh Gaussian mean plus categorical argmax, with the actual recurrent requested-button controller. No buttons suppressed beyond the unchanged preparation mask.",
+    "candidateRoleSources": [
+      {
+        "role": "hider",
+        "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+        "sourceFile": "checkpoint-14098432.pt",
+        "sourceRunCounters": {
+          "decisions": 37036032,
+          "parentDecisions": 22937600,
+          "pilotDecisions": 14098432,
+          "totalPolicyInteractions": null,
+          "criticWarmupDecisions": null,
+          "currentPolicyDecisions": null,
+          "historicalPolicyDecisions": null,
+          "activePolicySamples": null
+        },
+        "inheritedRoleSources": []
+      },
+      {
+        "role": "seeker",
+        "sourceCheckpointSHA256": "2bd4bea653feb098cf56fe849b76e3df1e7fbac7a3e176701ad002f9dc011896",
+        "sourceFile": "15990784.pt",
+        "sourceRunCounters": {
+          "decisions": 62988288,
+          "parentDecisions": 46997504,
+          "pilotDecisions": 15990784,
+          "totalPolicyInteractions": 15990784,
+          "criticWarmupDecisions": 0,
+          "currentPolicyDecisions": [
+            6001280,
+            5957888
+          ],
+          "historicalPolicyDecisions": [
+            1994112,
+            2037504
+          ],
+          "activePolicySamples": [
+            6001280,
+            3968000
+          ]
+        },
+        "inheritedRoleSources": [
+          {
+            "role": "hider",
+            "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+            "sourceFile": "checkpoint-14098432.pt",
+            "sourceRunCounters": {
+              "decisions": 37036032,
+              "parentDecisions": 22937600,
+              "pilotDecisions": 14098432,
+              "criticWarmupDecisions": null,
+              "totalPolicyInteractions": null,
+              "currentPolicyDecisions": null,
+              "historicalPolicyDecisions": null,
+              "activePolicySamples": null
+            }
+          },
+          {
+            "role": "seeker",
+            "sourceCheckpointSHA256": "7436af8583581b342f1150c1949f00dc9e0c465a95ae120de6d1eb61db00ca77",
+            "sourceFile": "checkpoint-7995392.pt",
+            "sourceRunCounters": {
+              "decisions": 46997504,
+              "parentDecisions": 37036032,
+              "pilotDecisions": 7995392,
+              "criticWarmupDecisions": 1966080,
+              "totalPolicyInteractions": 7995392,
+              "currentPolicyDecisions": [
+                3007152,
+                2992448
+              ],
+              "historicalPolicyDecisions": [
+                990544,
+                1005248
+              ],
+              "activePolicySamples": [
+                3007152,
+                1992960
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "newEvaluationActorDecisions": 322560,
+    "cachedGamesReused": 672,
+    "summary": {
+      "candidate_pair_sample": {
+        "maps": 96,
+        "hiddenFraction": 0.5341145833333333,
+        "completeSearchMisses": 16,
+        "roles": [
+          {
+            "grips": 229,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.20611353711790395,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6375545851528385,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7175,
+                6370,
+                9495
+              ],
+              [
+                4863,
+                12826,
+                5351
+              ]
+            ]
+          },
+          {
+            "grips": 134,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.18567164179104478,
+            "maxGripSeconds": 0.8,
+            "fractionGripsShorterThanThreeTicks": 0.6791044776119403,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                5198,
+                4667,
+                5495
+              ],
+              [
+                4841,
+                4776,
+                5743
+              ]
+            ]
+          }
+        ]
+      },
+      "candidate_hider_sample_fixed_browser_seeker": {
+        "maps": 96,
+        "hiddenFraction": 0.58671875,
+        "completeSearchMisses": 25,
+        "roles": [
+          {
+            "grips": 204,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21098039215686273,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6519607843137255,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7226,
+                6374,
+                9440
+              ],
+              [
+                4838,
+                12931,
+                5271
+              ]
+            ]
+          },
+          {
+            "grips": 207,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2732367149758454,
+            "maxGripSeconds": 1.76,
+            "fractionGripsShorterThanThreeTicks": 0.5700483091787439,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                4167,
+                5472,
+                5721
+              ],
+              [
+                8225,
+                3058,
+                4077
+              ]
+            ]
+          }
+        ]
+      },
+      "fixed_browser_hider_candidate_seeker_sample": {
+        "maps": 96,
+        "hiddenFraction": 0.5341145833333333,
+        "completeSearchMisses": 16,
+        "roles": [
+          {
+            "grips": 229,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.20611353711790395,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6375545851528385,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7175,
+                6370,
+                9495
+              ],
+              [
+                4863,
+                12826,
+                5351
+              ]
+            ]
+          },
+          {
+            "grips": 134,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.18567164179104478,
+            "maxGripSeconds": 0.8,
+            "fractionGripsShorterThanThreeTicks": 0.6791044776119403,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                5198,
+                4667,
+                5495
+              ],
+              [
+                4841,
+                4776,
+                5743
+              ]
+            ]
+          }
+        ]
+      },
+      "initial_hider_sample_fixed_browser_seeker": {
+        "maps": 96,
+        "hiddenFraction": 0.39108072916666664,
+        "completeSearchMisses": 20,
+        "roles": [
+          {
+            "grips": 358,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23106145251396648,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5614525139664804,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "grips": 184,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.358695652173913,
+            "maxGripSeconds": 2.16,
+            "fractionGripsShorterThanThreeTicks": 0.5163043478260869,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                3529,
+                7443,
+                4388
+              ],
+              [
+                7466,
+                3964,
+                3930
+              ]
+            ]
+          }
+        ]
+      },
+      "fixed_browser_hider_initial_seeker_sample": {
+        "maps": 96,
+        "hiddenFraction": 0.948828125,
+        "completeSearchMisses": 80,
+        "roles": [
+          {
+            "grips": 183,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2185792349726776,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6229508196721312,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7261,
+                6976,
+                8803
+              ],
+              [
+                4484,
+                13972,
+                4584
+              ]
+            ]
+          },
+          {
+            "grips": 129,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2275968992248062,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.5891472868217055,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                5117,
+                5032,
+                5211
+              ],
+              [
+                5136,
+                5079,
+                5145
+              ]
+            ]
+          }
+        ]
+      },
+      "browser_pair_sample": {
+        "maps": 96,
+        "hiddenFraction": 0.58671875,
+        "completeSearchMisses": 25,
+        "roles": [
+          {
+            "grips": 204,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21098039215686273,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6519607843137255,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7226,
+                6374,
+                9440
+              ],
+              [
+                4838,
+                12931,
+                5271
+              ]
+            ]
+          },
+          {
+            "grips": 207,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2732367149758454,
+            "maxGripSeconds": 1.76,
+            "fractionGripsShorterThanThreeTicks": 0.5700483091787439,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                4167,
+                5472,
+                5721
+              ],
+              [
+                8225,
+                3058,
+                4077
+              ]
+            ]
+          }
+        ]
+      },
+      "initial_pair_sample": {
+        "maps": 96,
+        "hiddenFraction": 0.7224609375000001,
+        "completeSearchMisses": 46,
+        "roles": [
+          {
+            "grips": 356,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23438202247191012,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5533707865168539,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "grips": 128,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23250000000000004,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.578125,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "commandCounts": [
+              [
+                5117,
+                5032,
+                5211
+              ],
+              [
+                5136,
+                5079,
+                5145
+              ]
+            ]
+          }
+        ]
+      },
+      "candidate_hider_mean_fixed_browser_seeker": {
+        "maps": 96,
+        "hiddenFraction": 0.5824869791666667,
+        "completeSearchMisses": 25,
+        "roles": [
+          {
+            "grips": 30,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 1.0373333333333332,
+            "maxGripSeconds": 6.8,
+            "fractionGripsShorterThanThreeTicks": 0.6333333333333333,
+            "requestedHoldMedianSeconds": [
+              4.96,
+              9.6
+            ],
+            "commandCounts": [
+              [
+                861,
+                7238,
+                14941
+              ],
+              [
+                1,
+                20799,
+                2240
+              ]
+            ]
+          },
+          {
+            "grips": 170,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.24941176470588233,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.611764705882353,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                4210,
+                5544,
+                5606
+              ],
+              [
+                8211,
+                3081,
+                4068
+              ]
+            ]
+          }
+        ]
+      },
+      "initial_hider_mean_fixed_browser_seeker": {
+        "maps": 96,
+        "hiddenFraction": 0.3389973958333334,
+        "completeSearchMisses": 17,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0,
+              0
+            ],
+            "commandCounts": [
+              [
+                23040,
+                0,
+                0
+              ],
+              [
+                23040,
+                0,
+                0
+              ]
+            ]
+          },
+          {
+            "grips": 240,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.3326666666666667,
+            "maxGripSeconds": 3.52,
+            "fractionGripsShorterThanThreeTicks": 0.5208333333333334,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                3414,
+                7768,
+                4178
+              ],
+              [
+                7380,
+                4064,
+                3916
+              ]
+            ]
+          }
+        ]
+      },
+      "fixed_browser_hider_candidate_seeker_mean": {
+        "maps": 96,
+        "hiddenFraction": 0.4908854166666667,
+        "completeSearchMisses": 17,
+        "roles": [
+          {
+            "grips": 224,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.20714285714285716,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.6651785714285714,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7169,
+                6286,
+                9585
+              ],
+              [
+                4916,
+                12693,
+                5431
+              ]
+            ]
+          },
+          {
+            "grips": 11,
+            "medianGripSeconds": 1.84,
+            "meanGripSeconds": 2.9454545454545458,
+            "maxGripSeconds": 9.120000000000001,
+            "fractionGripsShorterThanThreeTicks": 0.09090909090909091,
+            "requestedHoldMedianSeconds": [
+              0.48,
+              2.0
+            ],
+            "commandCounts": [
+              [
+                3861,
+                5539,
+                5960
+              ],
+              [
+                976,
+                8325,
+                6059
+              ]
+            ]
+          }
+        ]
+      },
+      "fixed_browser_hider_initial_seeker_mean": {
+        "maps": 96,
+        "hiddenFraction": 0.9464843750000002,
+        "completeSearchMisses": 81,
+        "roles": [
+          {
+            "grips": 163,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.22380368098159506,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6012269938650306,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "commandCounts": [
+              [
+                7264,
+                6961,
+                8815
+              ],
+              [
+                4492,
+                13951,
+                4597
+              ]
+            ]
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0,
+              0
+            ],
+            "commandCounts": [
+              [
+                15360,
+                0,
+                0
+              ],
+              [
+                15360,
+                0,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "candidate_pair_mean": {
+        "maps": 96,
+        "hiddenFraction": 0.3974609375,
+        "completeSearchMisses": 14,
+        "roles": [
+          {
+            "grips": 20,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 1.1480000000000001,
+            "maxGripSeconds": 4.88,
+            "fractionGripsShorterThanThreeTicks": 0.65,
+            "requestedHoldMedianSeconds": [
+              5.28,
+              10.4
+            ],
+            "commandCounts": [
+              [
+                869,
+                6174,
+                15997
+              ],
+              [
+                1,
+                20747,
+                2292
+              ]
+            ]
+          },
+          {
+            "grips": 19,
+            "medianGripSeconds": 2.96,
+            "meanGripSeconds": 3.810526315789474,
+            "maxGripSeconds": 10.8,
+            "fractionGripsShorterThanThreeTicks": 0.05263157894736842,
+            "requestedHoldMedianSeconds": [
+              0.32,
+              2.24
+            ],
+            "commandCounts": [
+              [
+                3883,
+                6772,
+                4705
+              ],
+              [
+                807,
+                9142,
+                5411
+              ]
+            ]
+          }
+        ]
+      },
+      "browser_pair_mean": {
+        "maps": 96,
+        "hiddenFraction": 0.5419921875,
+        "completeSearchMisses": 23,
+        "roles": [
+          {
+            "grips": 23,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 1.3530434782608696,
+            "maxGripSeconds": 9.6,
+            "fractionGripsShorterThanThreeTicks": 0.6521739130434783,
+            "requestedHoldMedianSeconds": [
+              6.08,
+              10.0
+            ],
+            "commandCounts": [
+              [
+                960,
+                7228,
+                14852
+              ],
+              [
+                1,
+                20836,
+                2203
+              ]
+            ]
+          },
+          {
+            "grips": 10,
+            "medianGripSeconds": 6.96,
+            "meanGripSeconds": 6.288000000000001,
+            "maxGripSeconds": 9.28,
+            "fractionGripsShorterThanThreeTicks": 0.0,
+            "requestedHoldMedianSeconds": [
+              2.64,
+              8.16
+            ],
+            "commandCounts": [
+              [
+                288,
+                7051,
+                8021
+              ],
+              [
+                13304,
+                1121,
+                935
+              ]
+            ]
+          }
+        ]
+      },
+      "initial_pair_mean": {
+        "maps": 96,
+        "hiddenFraction": 0.5729166666666666,
+        "completeSearchMisses": 55,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0,
+              0
+            ],
+            "commandCounts": [
+              [
+                23040,
+                0,
+                0
+              ],
+              [
+                23040,
+                0,
+                0
+              ]
+            ]
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0,
+              0
+            ],
+            "commandCounts": [
+              [
+                15360,
+                0,
+                0
+              ],
+              [
+                15360,
+                0,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "contrasts": {
+      "Hider mean vs sampled, same sampled browser seeker": {
+        "mean": -0.00423177083333333,
+        "bootstrap95Percent": [
+          -0.06667154947916665,
+          0.05690104166666666
+        ]
+      },
+      "Seeker mean vs sampled, same sampled browser hider": {
+        "mean": 0.04322916666666667,
+        "bootstrap95Percent": [
+          -0.0041682942708333205,
+          0.09238444010416665
+        ]
+      },
+      "Mean hider learning vs genuine mean initial, same opponent": {
+        "mean": 0.24348958333333334,
+        "bootstrap95Percent": [
+          0.18385416666666665,
+          0.30462402343750006
+        ]
+      },
+      "Sampled hider learning vs genuine sampled initial, same opponent": {
+        "mean": 0.19563802083333334,
+        "bootstrap95Percent": [
+          0.13769205729166667,
+          0.2546272786458333
+        ]
+      },
+      "Mean seeker learning vs genuine mean initial, same opponent": {
+        "mean": 0.4555989583333333,
+        "bootstrap95Percent": [
+          0.38873372395833333,
+          0.5220052083333333
+        ]
+      },
+      "Sampled seeker learning vs genuine sampled initial, same opponent": {
+        "mean": 0.4147135416666667,
+        "bootstrap95Percent": [
+          0.35168945312500005,
+          0.47871256510416665
+        ]
+      }
+    },
+    "automaticPromotion": false,
+    "sourceSHA256": "2c0a81c62da1c60f6071502aa379d7154cec5bf874d393587fad772abf748efa"
+  }
+}
