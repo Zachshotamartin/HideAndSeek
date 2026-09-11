@@ -1,0 +1,58 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "sustained-32m-browser",
+  "sourceReportSHA256": "29866f1126e2756cb00e4f494edb4ca319c5eb69812d5a02e772b6289dcd27ba",
+  "sourceReportRelativePath": "validation-31981568/browser-reference-comparison.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "phaseInteractions": 31981568,
+    "checkpointSHA256": "447c4a2661e35b96d26aa1fba3c25998299aa4ea02a2c305960ce20602469adc",
+    "sourceReportSHA256": "03f8f1c9a47609c2848dd4264b79f46db7d99d6341bd4bc64e37d66f8c187652",
+    "cachedBaselineSHA256": "a8fc5a4a9b10a23ea5561d405ee28028e8c83d18517a58258a19573435bb9d3b",
+    "contrasts": {
+      "Seeker change vs browser seeker, same 37M hider": {
+        "mean": 0.05514322916666667,
+        "bootstrap95Percent": [
+          -0.005143229166666663,
+          0.11328450520833329
+        ],
+        "positiveCases": 55,
+        "negativeCases": 24,
+        "unchangedCases": 17
+      },
+      "Seeker change vs browser seeker, same initial hider": {
+        "mean": 0.06373697916666667,
+        "bootstrap95Percent": [
+          0.02239420572916667,
+          0.1057307942708333
+        ],
+        "positiveCases": 51,
+        "negativeCases": 21,
+        "unchangedCases": 24
+      },
+      "Seeker change vs browser seeker, same warm-start hider": {
+        "mean": 0.006380208333333334,
+        "bootstrap95Percent": [
+          -0.03873697916666666,
+          0.04967610677083332
+        ],
+        "positiveCases": 46,
+        "negativeCases": 26,
+        "unchangedCases": 24
+      },
+      "Seeker change vs browser seeker, same intermediate hider": {
+        "mean": 0.03001302083333333,
+        "bootstrap95Percent": [
+          -0.021030273437500007,
+          0.08138346354166662
+        ],
+        "positiveCases": 44,
+        "negativeCases": 24,
+        "unchangedCases": 28
+      }
+    },
+    "additionalEvaluationInteractions": 0,
+    "scope": "Direct paired comparison to the original browser 37M seeker on identical fixed opponents and 96 repeated validation maps; no browser promotion."
+  }
+}

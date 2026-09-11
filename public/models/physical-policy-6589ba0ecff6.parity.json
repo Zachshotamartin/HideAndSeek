@@ -1,0 +1,27 @@
+{
+  "rows": 1056,
+  "resets": 4,
+  "stateChanges": 235,
+  "blindRows": 208,
+  "commandCounts": [
+    263,
+    1056,
+    793
+  ],
+  "maxInferenceError": 1.2069940567016602e-06,
+  "tolerance": 1e-05,
+  "deterministicAndSeededSampling": true,
+  "observationSource": "Native physical episodes, preparation boundaries and terminal resets",
+  "checkpointSHA256": "ca9462e9cd3f084a2df687defc4de23513f15df700826a3a4524d0676bc74117",
+  "exportSHA256": "6589ba0ecff6491d0b6c49f3c9b418b175597e87e6059ae1ea09f5277de99d90",
+  "bytes": 1861061,
+  "training": {
+    "parentDecisions": 62988288,
+    "pilotDecisions": 0,
+    "decisions": 62988288,
+    "pilotUpdates": 0,
+    "pilotEpisodes": 0,
+    "seconds": 0,
+    "trainingMethod": "Frozen role selection only; no new optimization or automatic promotion"
+  }
+}

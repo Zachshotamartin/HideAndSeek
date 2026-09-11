@@ -12,6 +12,6 @@ try {
    await download.saveAs(`examples/${file}`);
    await p.locator('.hs-files summary').click();
  }
- await fs.mkdir('examples',{recursive:true});await capture(2709,42,'none','hide-and-seek-arena.png');await capture(98231,48,'seeker','hide-and-seek-vision.png');
+ await fs.mkdir('examples',{recursive:true});await capture(2709,100,'none','hide-and-seek-arena.png');await capture(98231,150,'seeker','hide-and-seek-vision.png');
  console.log('Captured two real transparent WebGL scene exports, without interface edges.');
 } finally {await app.close();}

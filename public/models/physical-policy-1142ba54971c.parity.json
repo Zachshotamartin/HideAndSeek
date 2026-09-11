@@ -1,0 +1,12 @@
+{
+  "rows": 1056,
+  "blindRows": 208,
+  "resets": 4,
+  "sensorCases": 4320,
+  "maxInferenceError": 9.685754776000977e-07,
+  "tolerance": 1e-05,
+  "deterministicAndSeededSampling": true,
+  "exportSHA256": "1142ba54971c28b81753191997e2df522b715e5ecd1681da2bd676305089758e",
+  "checkpointSHA256": "0ca0adba75ced56beb6a1ee474931fde4d8da11d496e0e7dbce3a35fbe2448d9",
+  "bytes": 1894975
+}

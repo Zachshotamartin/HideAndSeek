@@ -1,0 +1,4076 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "sustained-8m",
+  "sourceReportSHA256": "e2f8b52e342bb8245d8259959a96071ac01220a2c0abb35e309fa7f39f377d84",
+  "sourceReportRelativePath": "validation-7995392/evaluation.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "sustained-mixed-role-validation-v1",
+    "checkpointSHA256": "f6dd7f187232b3ae17f0bb562c7aab1cc332c28cb996dff593248c5ab9e88e7c",
+    "baselineReportSHA256": "a8fc5a4a9b10a23ea5561d405ee28028e8c83d18517a58258a19573435bb9d3b",
+    "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+    "maps": [
+      {
+        "seed": 1500140000,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 0,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140001,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 8,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140002,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 1,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140003,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 6,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140004,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 8,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140005,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 7,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140006,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 5,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140007,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 0,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140008,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 4,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140009,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 0,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140010,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 4,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140011,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140012,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 6,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140013,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 4,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140014,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140015,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 0,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140016,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 4,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140017,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 3,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140018,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140019,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140020,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 5,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140021,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 7,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140022,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 5,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140023,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 8,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140024,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 5,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140025,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500140026,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 8,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140027,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 7,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140028,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140029,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 4,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500140030,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 7,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500140031,
+        "scenario": "shelter",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141000,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 5,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141001,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 4,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141002,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141003,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 4,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141004,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141005,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141006,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141007,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141008,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 8,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141009,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141010,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 8,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141011,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141012,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 1,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141013,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 2,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141014,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 1,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141015,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 4,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141016,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141017,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 8,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141018,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 0,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141019,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141020,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141021,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 2,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141022,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 0,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141023,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141024,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 0,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141025,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 5,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141026,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500141027,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141028,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500141029,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 2,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141030,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 6,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500141031,
+        "scenario": "rooms",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142000,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 6,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142001,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 8,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142002,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 5,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142003,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 1,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142004,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142005,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142006,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 4,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142007,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 6,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142008,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142009,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 7,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142010,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 0,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142011,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142012,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 1,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142013,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 2,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142014,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 4,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142015,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 7,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142016,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 5,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142017,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 1,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142018,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 4,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142019,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 4,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142020,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 5,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142021,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142022,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 5,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142023,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 4,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142024,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 7,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142025,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 7,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142026,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 8,
+          "n_boxes": 0,
+          "n_ramps": 1
+        }
+      },
+      {
+        "seed": 1500142027,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 9,
+          "n_boxes": 3,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142028,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 10,
+          "n_boxes": 0,
+          "n_ramps": 0
+        }
+      },
+      {
+        "seed": 1500142029,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 12,
+          "n_boxes": 8,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142030,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 6,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      },
+      {
+        "seed": 1500142031,
+        "scenario": "open",
+        "arenaConfig": {
+          "size": 7,
+          "n_boxes": 3,
+          "n_ramps": 2
+        }
+      }
+    ],
+    "trainingCounters": {
+      "parentDecisions": 46997504,
+      "decisions": 54992896,
+      "totalPolicyInteractions": 7995392,
+      "currentPolicyDecisions": [
+        3011408,
+        2975680
+      ],
+      "historicalPolicyDecisions": [
+        986288,
+        1022016
+      ],
+      "activePolicySamples": [
+        3011408,
+        1981760
+      ]
+    },
+    "inheritedRoleSources": [
+      {
+        "role": "hider",
+        "sourceCheckpointSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+        "sourceFile": "checkpoint-14098432.pt",
+        "sourceRunCounters": {
+          "decisions": 37036032,
+          "parentDecisions": 22937600,
+          "pilotDecisions": 14098432,
+          "criticWarmupDecisions": null,
+          "totalPolicyInteractions": null,
+          "currentPolicyDecisions": null,
+          "historicalPolicyDecisions": null,
+          "activePolicySamples": null
+        }
+      },
+      {
+        "role": "seeker",
+        "sourceCheckpointSHA256": "7436af8583581b342f1150c1949f00dc9e0c465a95ae120de6d1eb61db00ca77",
+        "sourceFile": "checkpoint-7995392.pt",
+        "sourceRunCounters": {
+          "decisions": 46997504,
+          "parentDecisions": 37036032,
+          "pilotDecisions": 7995392,
+          "criticWarmupDecisions": 1966080,
+          "totalPolicyInteractions": 7995392,
+          "currentPolicyDecisions": [
+            3007152,
+            2992448
+          ],
+          "historicalPolicyDecisions": [
+            990544,
+            1005248
+          ],
+          "activePolicySamples": [
+            3007152,
+            1992960
+          ]
+        }
+      }
+    ],
+    "newEvaluationGames": 1056,
+    "newEvaluationActorDecisions": 506880,
+    "cachedGamesReused": 1344,
+    "cachedActorDecisionsNotRepeated": 645120,
+    "scope": "Repeated broad development cohort and known frozen opponents; final test seeds remain untouched.",
+    "sampling": "Identical role-specific action tapes, consistent with the cached mixed assessment.",
+    "toolAblation": "Grab/lock disabled for the named role; physical pushing and requested controller state remain enabled.",
+    "selection": {
+      "credibleRoleRegressions": [],
+      "credibleRoleImprovements": [],
+      "automaticPromotion": false,
+      "unchangedBrowserReference": true
+    },
+    "summary": {
+      "parent": {
+        "hiddenFraction": 0.58671875,
+        "propShieldedFraction": 0.06015625,
+        "propDisplacement": 0.6833126619450769,
+        "roles": [
+          {
+            "gripCount": 204,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21098039215686273,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6519607843137255,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 43.291666666666664,
+            "meanAbsoluteTurns": 2.7088688254255398,
+            "meanSpeed": 0.5417252327822313,
+            "commandCounts": [
+              [
+                7226,
+                6374,
+                9440
+              ],
+              [
+                4838,
+                12931,
+                5271
+              ]
+            ]
+          },
+          {
+            "gripCount": 207,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2732367149758454,
+            "maxGripSeconds": 1.76,
+            "fractionGripsShorterThanThreeTicks": 0.5700483091787439,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 1.6770833333333333,
+            "meanAbsoluteTurns": 2.620758585920235,
+            "meanSpeed": 0.5727252547747331,
+            "commandCounts": [
+              [
+                4167,
+                5472,
+                5721
+              ],
+              [
+                8225,
+                3058,
+                4077
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 25
+      },
+      "mixed": {
+        "hiddenFraction": 0.5621744791666666,
+        "propShieldedFraction": 0.06263020833333333,
+        "propDisplacement": 0.7599843011001362,
+        "roles": [
+          {
+            "gripCount": 233,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21459227467811157,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6394849785407726,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 41.927083333333336,
+            "meanAbsoluteTurns": 2.701368021147021,
+            "meanSpeed": 0.5409100374866561,
+            "commandCounts": [
+              [
+                7165,
+                6406,
+                9469
+              ],
+              [
+                4841,
+                12936,
+                5263
+              ]
+            ]
+          },
+          {
+            "gripCount": 150,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23573333333333335,
+            "maxGripSeconds": 1.36,
+            "fractionGripsShorterThanThreeTicks": 0.54,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.6041666666666665,
+            "meanAbsoluteTurns": 2.5862701052934054,
+            "meanSpeed": 0.5547668655374364,
+            "commandCounts": [
+              [
+                5327,
+                5083,
+                4950
+              ],
+              [
+                6641,
+                4006,
+                4713
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 22
+      },
+      "initial": {
+        "hiddenFraction": 0.7224609375000001,
+        "propShieldedFraction": 0.15716145833333334,
+        "propDisplacement": 0.037654545393972866,
+        "roles": [
+          {
+            "gripCount": 356,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23438202247191012,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5533707865168539,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.13541666666666666,
+            "meanAbsoluteTurns": 3.1332242376268256,
+            "meanSpeed": 0.4183626536664531,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 128,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2325,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.578125,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.020833333333333332,
+            "meanAbsoluteTurns": 2.1293355551919038,
+            "meanSpeed": 0.2845420819910521,
+            "commandCounts": [
+              [
+                5117,
+                5032,
+                5211
+              ],
+              [
+                5136,
+                5079,
+                5145
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 46
+      },
+      "parent_hider_initial_seeker": {
+        "hiddenFraction": 0.948828125,
+        "propShieldedFraction": 0.058984375,
+        "propDisplacement": 0.5618101081636141,
+        "roles": [
+          {
+            "gripCount": 183,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2185792349726776,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6229508196721312,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 50.75,
+            "meanAbsoluteTurns": 2.4935323084213326,
+            "meanSpeed": 0.4277709880477967,
+            "commandCounts": [
+              [
+                7261,
+                6976,
+                8803
+              ],
+              [
+                4484,
+                13972,
+                4584
+              ]
+            ]
+          },
+          {
+            "gripCount": 129,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.22759689922480622,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.5891472868217055,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.020833333333333332,
+            "meanAbsoluteTurns": 2.1276716107011793,
+            "meanSpeed": 0.2860040755779597,
+            "commandCounts": [
+              [
+                5117,
+                5032,
+                5211
+              ],
+              [
+                5136,
+                5079,
+                5145
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 80
+      },
+      "initial_hider_parent_seeker": {
+        "hiddenFraction": 0.39108072916666664,
+        "propShieldedFraction": 0.08144531249999999,
+        "propDisplacement": 0.13415633336517588,
+        "roles": [
+          {
+            "gripCount": 358,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23106145251396648,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5614525139664804,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.13541666666666666,
+            "meanAbsoluteTurns": 3.1347666405184818,
+            "meanSpeed": 0.41850188524432413,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 184,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.358695652173913,
+            "maxGripSeconds": 2.16,
+            "fractionGripsShorterThanThreeTicks": 0.5163043478260869,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.1979166666666665,
+            "meanAbsoluteTurns": 2.300898088897203,
+            "meanSpeed": 0.4874683508619106,
+            "commandCounts": [
+              [
+                3529,
+                7443,
+                4388
+              ],
+              [
+                7466,
+                3964,
+                3930
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 20
+      },
+      "initial_hider_mixed_seeker": {
+        "hiddenFraction": 0.37851562499999997,
+        "propShieldedFraction": 0.09023437500000002,
+        "propDisplacement": 0.13604066962363393,
+        "roles": [
+          {
+            "gripCount": 359,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23108635097493035,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5598885793871866,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.125,
+            "meanAbsoluteTurns": 3.134601324980709,
+            "meanSpeed": 0.4186727491651636,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 270,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.32237037037037036,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.4888888888888889,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.0416666666666665,
+            "meanAbsoluteTurns": 2.2116511735703583,
+            "meanSpeed": 0.4638122637901703,
+            "commandCounts": [
+              [
+                4561,
+                6594,
+                4205
+              ],
+              [
+                6000,
+                4829,
+                4531
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 20
+      },
+      "warm_hider_parent_seeker": {
+        "hiddenFraction": 0.5136067708333333,
+        "propShieldedFraction": 0.04583333333333334,
+        "propDisplacement": 0.4532719112854797,
+        "roles": [
+          {
+            "gripCount": 509,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.22491159135559924,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.593320235756385,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 77.80208333333333,
+            "meanAbsoluteTurns": 2.497397891480874,
+            "meanSpeed": 0.550544164701568,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 169,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.34366863905325445,
+            "maxGripSeconds": 2.16,
+            "fractionGripsShorterThanThreeTicks": 0.5384615384615384,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 1.7083333333333333,
+            "meanAbsoluteTurns": 2.4338162436879593,
+            "meanSpeed": 0.541606153741895,
+            "commandCounts": [
+              [
+                3770,
+                6607,
+                4983
+              ],
+              [
+                7644,
+                3611,
+                4105
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 24
+      },
+      "warm_hider_mixed_seeker": {
+        "hiddenFraction": 0.5194010416666667,
+        "propShieldedFraction": 0.05221354166666667,
+        "propDisplacement": 0.433969705896873,
+        "roles": [
+          {
+            "gripCount": 509,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.22554027504911592,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5854616895874263,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 78.78125,
+            "meanAbsoluteTurns": 2.4770976471841695,
+            "meanSpeed": 0.5426100442972256,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 212,
+            "medianGripSeconds": 0.2,
+            "meanGripSeconds": 0.2943396226415094,
+            "maxGripSeconds": 1.6,
+            "fractionGripsShorterThanThreeTicks": 0.5,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.15625,
+            "meanAbsoluteTurns": 2.4552786295951363,
+            "meanSpeed": 0.5309216430551092,
+            "commandCounts": [
+              [
+                4904,
+                5938,
+                4518
+              ],
+              [
+                6352,
+                4306,
+                4702
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 25
+      },
+      "middle_hider_parent_seeker": {
+        "hiddenFraction": 0.4971354166666666,
+        "propShieldedFraction": 0.067578125,
+        "propDisplacement": 0.49844271605829177,
+        "roles": [
+          {
+            "gripCount": 417,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 0.14618705035971222,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.8465227817745803,
+            "requestedHoldMedianSeconds": [
+              0.08,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 68.02083333333333,
+            "meanAbsoluteTurns": 2.2959928605510522,
+            "meanSpeed": 0.4278087250549422,
+            "commandCounts": [
+              [
+                4781,
+                6168,
+                12091
+              ],
+              [
+                5644,
+                12487,
+                4909
+              ]
+            ]
+          },
+          {
+            "gripCount": 151,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2945695364238411,
+            "maxGripSeconds": 1.92,
+            "fractionGripsShorterThanThreeTicks": 0.5562913907284768,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 1.8541666666666667,
+            "meanAbsoluteTurns": 2.4858112127939527,
+            "meanSpeed": 0.543848283640637,
+            "commandCounts": [
+              [
+                3797,
+                6587,
+                4976
+              ],
+              [
+                7716,
+                3594,
+                4050
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 23
+      },
+      "middle_hider_mixed_seeker": {
+        "hiddenFraction": 0.4783854166666666,
+        "propShieldedFraction": 0.06803385416666667,
+        "propDisplacement": 0.5713345428702296,
+        "roles": [
+          {
+            "gripCount": 426,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 0.14384976525821597,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.8497652582159625,
+            "requestedHoldMedianSeconds": [
+              0.08,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 66.04166666666667,
+            "meanAbsoluteTurns": 2.307485189285701,
+            "meanSpeed": 0.4365279355223262,
+            "commandCounts": [
+              [
+                4770,
+                6140,
+                12130
+              ],
+              [
+                5663,
+                12446,
+                4931
+              ]
+            ]
+          },
+          {
+            "gripCount": 171,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2839766081871345,
+            "maxGripSeconds": 1.92,
+            "fractionGripsShorterThanThreeTicks": 0.543859649122807,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.7604166666666665,
+            "meanAbsoluteTurns": 2.424945897297453,
+            "meanSpeed": 0.5113469477217677,
+            "commandCounts": [
+              [
+                4843,
+                5992,
+                4525
+              ],
+              [
+                6302,
+                4457,
+                4601
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 21
+      },
+      "mixed_no_hider_tools": {
+        "hiddenFraction": 0.5510416666666667,
+        "propShieldedFraction": 0.056835937499999996,
+        "propDisplacement": 0.8824418609305598,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 44.114583333333336,
+            "meanAbsoluteTurns": 2.779296565016402,
+            "meanSpeed": 0.5587220217708521,
+            "commandCounts": [
+              [
+                7151,
+                6394,
+                9495
+              ],
+              [
+                4851,
+                12904,
+                5285
+              ]
+            ]
+          },
+          {
+            "gripCount": 142,
+            "medianGripSeconds": 0.2,
+            "meanGripSeconds": 0.2507042253521127,
+            "maxGripSeconds": 1.36,
+            "fractionGripsShorterThanThreeTicks": 0.5,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 2.1354166666666665,
+            "meanAbsoluteTurns": 2.567232513938922,
+            "meanSpeed": 0.5535068488435746,
+            "commandCounts": [
+              [
+                5264,
+                5195,
+                4901
+              ],
+              [
+                6621,
+                4027,
+                4712
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 19
+      },
+      "mixed_no_seeker_tools": {
+        "hiddenFraction": 0.5496093750000001,
+        "propShieldedFraction": 0.0611328125,
+        "propDisplacement": 0.7889048342120546,
+        "roles": [
+          {
+            "gripCount": 237,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21974683544303797,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6160337552742616,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 41.322916666666664,
+            "meanAbsoluteTurns": 2.7091741642180813,
+            "meanSpeed": 0.5425616214932586,
+            "commandCounts": [
+              [
+                7178,
+                6383,
+                9479
+              ],
+              [
+                4856,
+                12885,
+                5299
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.4583333333333335,
+            "meanAbsoluteTurns": 2.670632862464449,
+            "meanSpeed": 0.5656415971036975,
+            "commandCounts": [
+              [
+                5229,
+                5205,
+                4926
+              ],
+              [
+                6603,
+                4044,
+                4713
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 19
+      },
+      "mixed_push_only": {
+        "hiddenFraction": 0.5438151041666667,
+        "propShieldedFraction": 0.06204427083333334,
+        "propDisplacement": 0.8948225727168345,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 42.895833333333336,
+            "meanAbsoluteTurns": 2.810902619404422,
+            "meanSpeed": 0.568897237023485,
+            "commandCounts": [
+              [
+                7156,
+                6380,
+                9504
+              ],
+              [
+                4854,
+                12873,
+                5313
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.8020833333333333,
+            "meanAbsoluteTurns": 2.6646509730492896,
+            "meanSpeed": 0.564415750064757,
+            "commandCounts": [
+              [
+                5194,
+                5274,
+                4892
+              ],
+              [
+                6588,
+                4048,
+                4724
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 18
+      },
+      "league_pair": {
+        "hiddenFraction": 0.5395182291666667,
+        "propShieldedFraction": 0.052929687499999996,
+        "propDisplacement": 0.6515663771298342,
+        "roles": [
+          {
+            "gripCount": 180,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2488888888888889,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.55,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 42.520833333333336,
+            "meanAbsoluteTurns": 2.669084432015963,
+            "meanSpeed": 0.5388027625432842,
+            "commandCounts": [
+              [
+                7116,
+                7593,
+                8331
+              ],
+              [
+                8325,
+                9111,
+                5604
+              ]
+            ]
+          },
+          {
+            "gripCount": 196,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.24244897959183676,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5918367346938775,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 2.6979166666666665,
+            "meanAbsoluteTurns": 2.5905255823275706,
+            "meanSpeed": 0.5417931465341719,
+            "commandCounts": [
+              [
+                5321,
+                4987,
+                5052
+              ],
+              [
+                6632,
+                4052,
+                4676
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 18
+      },
+      "new_pair": {
+        "hiddenFraction": 0.5942057291666667,
+        "propShieldedFraction": 0.05970052083333333,
+        "propDisplacement": 0.6240445135611433,
+        "roles": [
+          {
+            "gripCount": 334,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.25461077844311375,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.5329341317365269,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 44.677083333333336,
+            "meanAbsoluteTurns": 2.6737548587410935,
+            "meanSpeed": 0.5314240830374145,
+            "commandCounts": [
+              [
+                7707,
+                7433,
+                7900
+              ],
+              [
+                6925,
+                8844,
+                7271
+              ]
+            ]
+          },
+          {
+            "gripCount": 137,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23708029197080294,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.5401459854014599,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 3.6041666666666665,
+            "meanAbsoluteTurns": 2.726020230099245,
+            "meanSpeed": 0.5670257620481979,
+            "commandCounts": [
+              [
+                5563,
+                4546,
+                5251
+              ],
+              [
+                5699,
+                3870,
+                5791
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 26
+      },
+      "new_hider_fixed_mixed_seeker": {
+        "hiddenFraction": 0.5884114583333334,
+        "propShieldedFraction": 0.061848958333333336,
+        "propDisplacement": 0.6379828021154318,
+        "roles": [
+          {
+            "gripCount": 306,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.27790849673202617,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.46078431372549017,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 42.666666666666664,
+            "meanAbsoluteTurns": 2.6769296687581616,
+            "meanSpeed": 0.5353551562980065,
+            "commandCounts": [
+              [
+                7726,
+                7396,
+                7918
+              ],
+              [
+                6948,
+                8787,
+                7305
+              ]
+            ]
+          },
+          {
+            "gripCount": 122,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.259672131147541,
+            "maxGripSeconds": 1.36,
+            "fractionGripsShorterThanThreeTicks": 0.5409836065573771,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.9895833333333333,
+            "meanAbsoluteTurns": 2.70167924271752,
+            "meanSpeed": 0.5614595362278566,
+            "commandCounts": [
+              [
+                5403,
+                4934,
+                5023
+              ],
+              [
+                6709,
+                3933,
+                4718
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 21
+      },
+      "fixed_parent_hider_new_seeker": {
+        "hiddenFraction": 0.5826171875,
+        "propShieldedFraction": 0.057942708333333336,
+        "propDisplacement": 0.7285147968841329,
+        "roles": [
+          {
+            "gripCount": 217,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.20829493087557605,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6405529953917051,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 41.927083333333336,
+            "meanAbsoluteTurns": 2.686779570375297,
+            "meanSpeed": 0.5297211728849849,
+            "commandCounts": [
+              [
+                7187,
+                6431,
+                9422
+              ],
+              [
+                4808,
+                13008,
+                5224
+              ]
+            ]
+          },
+          {
+            "gripCount": 204,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.25176470588235295,
+            "maxGripSeconds": 1.92,
+            "fractionGripsShorterThanThreeTicks": 0.5637254901960784,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 3.4270833333333335,
+            "meanAbsoluteTurns": 2.6439187208949657,
+            "meanSpeed": 0.5659000391154613,
+            "commandCounts": [
+              [
+                5548,
+                4612,
+                5200
+              ],
+              [
+                5655,
+                3939,
+                5766
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 28
+      },
+      "new_hider_fixed_parent_seeker": {
+        "hiddenFraction": 0.641015625,
+        "propShieldedFraction": 0.05983072916666666,
+        "propDisplacement": 0.5959324513796701,
+        "roles": [
+          {
+            "gripCount": 307,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.27153094462540717,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.495114006514658,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 46.84375,
+            "meanAbsoluteTurns": 2.669613905923709,
+            "meanSpeed": 0.5373149261001141,
+            "commandCounts": [
+              [
+                7732,
+                7445,
+                7863
+              ],
+              [
+                6903,
+                8885,
+                7252
+              ]
+            ]
+          },
+          {
+            "gripCount": 163,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.20368098159509201,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.6748466257668712,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 1.5625,
+            "meanAbsoluteTurns": 2.7099689636294415,
+            "meanSpeed": 0.596208419480633,
+            "commandCounts": [
+              [
+                4381,
+                5023,
+                5956
+              ],
+              [
+                8344,
+                2902,
+                4114
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 29
+      },
+      "new_hider_initial_seeker": {
+        "hiddenFraction": 0.966796875,
+        "propShieldedFraction": 0.04511718749999999,
+        "propDisplacement": 0.4919101408304629,
+        "roles": [
+          {
+            "gripCount": 291,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.3109278350515464,
+            "maxGripSeconds": 3.04,
+            "fractionGripsShorterThanThreeTicks": 0.44673539518900346,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 55.34375,
+            "meanAbsoluteTurns": 2.4737878517476126,
+            "meanSpeed": 0.4225423023683925,
+            "commandCounts": [
+              [
+                7871,
+                7903,
+                7266
+              ],
+              [
+                6795,
+                9913,
+                6332
+              ]
+            ]
+          },
+          {
+            "gripCount": 128,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23375,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.578125,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.020833333333333332,
+            "meanAbsoluteTurns": 2.129656739635019,
+            "meanSpeed": 0.28478606383473404,
+            "commandCounts": [
+              [
+                5117,
+                5032,
+                5211
+              ],
+              [
+                5136,
+                5079,
+                5145
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 82
+      },
+      "initial_hider_new_seeker": {
+        "hiddenFraction": 0.415234375,
+        "propShieldedFraction": 0.08997395833333333,
+        "propDisplacement": 0.14910401537810916,
+        "roles": [
+          {
+            "gripCount": 358,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2341899441340782,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.553072625698324,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.13541666666666666,
+            "meanAbsoluteTurns": 3.1324545155208887,
+            "meanSpeed": 0.4181884841430516,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 240,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.292,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.525,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.9375,
+            "meanAbsoluteTurns": 2.3852473021124494,
+            "meanSpeed": 0.48657603184501014,
+            "commandCounts": [
+              [
+                4824,
+                5997,
+                4539
+              ],
+              [
+                5402,
+                4566,
+                5392
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 20
+      },
+      "warm_hider_new_seeker": {
+        "hiddenFraction": 0.5229166666666667,
+        "propShieldedFraction": 0.0443359375,
+        "propDisplacement": 0.4646268233230642,
+        "roles": [
+          {
+            "gripCount": 521,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2252591170825336,
+            "maxGripSeconds": 1.44,
+            "fractionGripsShorterThanThreeTicks": 0.5892514395393474,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 78.79166666666667,
+            "meanAbsoluteTurns": 2.476988585554188,
+            "meanSpeed": 0.5436273731590506,
+            "commandCounts": [
+              [
+                7788,
+                7585,
+                7667
+              ],
+              [
+                7699,
+                7636,
+                7705
+              ]
+            ]
+          },
+          {
+            "gripCount": 227,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.31647577092511014,
+            "maxGripSeconds": 2.0,
+            "fractionGripsShorterThanThreeTicks": 0.43171806167400884,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.8229166666666667,
+            "meanAbsoluteTurns": 2.5155396966351433,
+            "meanSpeed": 0.5331765487746584,
+            "commandCounts": [
+              [
+                5003,
+                5631,
+                4726
+              ],
+              [
+                5503,
+                4192,
+                5665
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 27
+      },
+      "middle_hider_new_seeker": {
+        "hiddenFraction": 0.4700520833333333,
+        "propShieldedFraction": 0.05768229166666666,
+        "propDisplacement": 0.5082921813702257,
+        "roles": [
+          {
+            "gripCount": 459,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 0.14431372549019608,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.840958605664488,
+            "requestedHoldMedianSeconds": [
+              0.08,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 68.625,
+            "meanAbsoluteTurns": 2.2995965171371613,
+            "meanSpeed": 0.43374111584022784,
+            "commandCounts": [
+              [
+                4783,
+                6167,
+                12090
+              ],
+              [
+                5677,
+                12408,
+                4955
+              ]
+            ]
+          },
+          {
+            "gripCount": 157,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2664968152866242,
+            "maxGripSeconds": 1.52,
+            "fractionGripsShorterThanThreeTicks": 0.5159235668789809,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 2.5416666666666665,
+            "meanAbsoluteTurns": 2.4962721689600507,
+            "meanSpeed": 0.5206511749301252,
+            "commandCounts": [
+              [
+                4934,
+                5756,
+                4670
+              ],
+              [
+                5482,
+                4334,
+                5544
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 24
+      },
+      "new_no_hider_tools": {
+        "hiddenFraction": 0.6096354166666668,
+        "propShieldedFraction": 0.06510416666666666,
+        "propDisplacement": 0.7005906584502792,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 45.520833333333336,
+            "meanAbsoluteTurns": 2.766382675893491,
+            "meanSpeed": 0.5496399409291622,
+            "commandCounts": [
+              [
+                7718,
+                7427,
+                7895
+              ],
+              [
+                6920,
+                8882,
+                7238
+              ]
+            ]
+          },
+          {
+            "gripCount": 135,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.22518518518518518,
+            "maxGripSeconds": 1.04,
+            "fractionGripsShorterThanThreeTicks": 0.5703703703703704,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 3.8333333333333335,
+            "meanAbsoluteTurns": 2.737755214430834,
+            "meanSpeed": 0.5684836972489813,
+            "commandCounts": [
+              [
+                5605,
+                4467,
+                5288
+              ],
+              [
+                5696,
+                3846,
+                5818
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 27
+      },
+      "new_no_seeker_tools": {
+        "hiddenFraction": 0.5843098958333334,
+        "propShieldedFraction": 0.057812499999999996,
+        "propDisplacement": 0.6395019319646115,
+        "roles": [
+          {
+            "gripCount": 329,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.25848024316109425,
+            "maxGripSeconds": 1.2,
+            "fractionGripsShorterThanThreeTicks": 0.5106382978723404,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 45.895833333333336,
+            "meanAbsoluteTurns": 2.6610448108664673,
+            "meanSpeed": 0.5268042595660444,
+            "commandCounts": [
+              [
+                7705,
+                7461,
+                7874
+              ],
+              [
+                6926,
+                8865,
+                7249
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 3.8541666666666665,
+            "meanAbsoluteTurns": 2.7512967332598177,
+            "meanSpeed": 0.5692582319771603,
+            "commandCounts": [
+              [
+                5518,
+                4624,
+                5218
+              ],
+              [
+                5668,
+                3927,
+                5765
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 25
+      },
+      "new_push_only": {
+        "hiddenFraction": 0.5967447916666667,
+        "propShieldedFraction": 0.05716145833333334,
+        "propDisplacement": 0.7794446502590131,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 45.614583333333336,
+            "meanAbsoluteTurns": 2.765137078359339,
+            "meanSpeed": 0.5496321624255279,
+            "commandCounts": [
+              [
+                7716,
+                7445,
+                7879
+              ],
+              [
+                6918,
+                8901,
+                7221
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 4.083333333333333,
+            "meanAbsoluteTurns": 2.773772437944347,
+            "meanSpeed": 0.5731910963623549,
+            "commandCounts": [
+              [
+                5553,
+                4568,
+                5239
+              ],
+              [
+                5670,
+                3895,
+                5795
+              ]
+            ]
+          }
+        ],
+        "completeSearchMisses": 23
+      }
+    },
+    "contrasts": {
+      "Hider change vs fixed mixed seeker": {
+        "mean": 0.026236979166666664,
+        "bootstrap95Percent": [
+          -0.0317724609375,
+          0.08379069010416663
+        ],
+        "positiveCases": 41,
+        "negativeCases": 37,
+        "unchangedCases": 18
+      },
+      "Hider change vs fixed original seeker": {
+        "mean": 0.054296874999999994,
+        "bootstrap95Percent": [
+          -0.00026204427083333976,
+          0.11067871093749997
+        ],
+        "positiveCases": 43,
+        "negativeCases": 29,
+        "unchangedCases": 24
+      },
+      "Hider change vs fixed initial seeker": {
+        "mean": 0.01796875,
+        "bootstrap95Percent": [
+          -0.004557291666666665,
+          0.04218912760416664
+        ],
+        "positiveCases": 12,
+        "negativeCases": 7,
+        "unchangedCases": 77
+      },
+      "Seeker change vs fixed original hider": {
+        "mean": -0.020442708333333337,
+        "bootstrap95Percent": [
+          -0.07220052083333334,
+          0.030533854166666666
+        ],
+        "positiveCases": 39,
+        "negativeCases": 33,
+        "unchangedCases": 24
+      },
+      "Seeker change vs fixed initial hider": {
+        "mean": -0.03671875,
+        "bootstrap95Percent": [
+          -0.07480631510416667,
+          0.0002620442708333133
+        ],
+        "positiveCases": 27,
+        "negativeCases": 37,
+        "unchangedCases": 32
+      },
+      "Seeker change vs fixed warm-start hider": {
+        "mean": -0.0035156249999999992,
+        "bootstrap95Percent": [
+          -0.03756510416666666,
+          0.029103190104166645
+        ],
+        "positiveCases": 34,
+        "negativeCases": 32,
+        "unchangedCases": 30
+      },
+      "Seeker change vs fixed intermediate hider": {
+        "mean": 0.008333333333333335,
+        "bootstrap95Percent": [
+          -0.04127929687499999,
+          0.05657714843749999
+        ],
+        "positiveCases": 36,
+        "negativeCases": 28,
+        "unchangedCases": 32
+      },
+      "New hider grab/lock benefit": {
+        "mean": -0.015429687499999999,
+        "bootstrap95Percent": [
+          -0.03216145833333334,
+          -0.0011718750000000021
+        ],
+        "positiveCases": 6,
+        "negativeCases": 14,
+        "unchangedCases": 76
+      },
+      "New seeker grab/lock benefit": {
+        "mean": -0.009895833333333331,
+        "bootstrap95Percent": [
+          -0.03274739583333333,
+          0.009244791666666667
+        ],
+        "positiveCases": 11,
+        "negativeCases": 11,
+        "unchangedCases": 74
+      },
+      "New hider total learning vs initial": {
+        "mean": 0.24433593750000002,
+        "bootstrap95Percent": [
+          0.1710921223958333,
+          0.31979329427083336
+        ],
+        "positiveCases": 46,
+        "negativeCases": 9,
+        "unchangedCases": 41
+      },
+      "New seeker total learning vs initial": {
+        "mean": 0.30722656249999997,
+        "bootstrap95Percent": [
+          0.2440755208333333,
+          0.3713557942708333
+        ],
+        "positiveCases": 65,
+        "negativeCases": 5,
+        "unchangedCases": 26
+      }
+    },
+    "breakdowns": {
+      "scenario": {
+        "shelter": {
+          "maps": 32,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.016796874999999975,
+              "bootstrap95Percent": [
+                -0.07324707031250001,
+                0.10234863281249991
+              ],
+              "positiveCases": 17,
+              "negativeCases": 13,
+              "unchangedCases": 2
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.08535156249999999,
+              "bootstrap95Percent": [
+                -0.017773437500000013,
+                0.19609374999999998
+              ],
+              "positiveCases": 17,
+              "negativeCases": 10,
+              "unchangedCases": 5
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.0,
+              "bootstrap95Percent": [
+                0.0,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 0,
+              "unchangedCases": 32
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.06015625000000001,
+              "bootstrap95Percent": [
+                -0.16738281249999998,
+                0.03789550781249994
+              ],
+              "positiveCases": 14,
+              "negativeCases": 12,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.019140624999999998,
+              "bootstrap95Percent": [
+                -0.051171875000000006,
+                0.010937500000000003
+              ],
+              "positiveCases": 6,
+              "negativeCases": 13,
+              "unchangedCases": 13
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.0439453125,
+              "bootstrap95Percent": [
+                -0.1091796875,
+                0.007226562499999993
+              ],
+              "positiveCases": 15,
+              "negativeCases": 10,
+              "unchangedCases": 7
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": -0.036718749999999994,
+              "bootstrap95Percent": [
+                -0.1205078125,
+                0.03203125000000001
+              ],
+              "positiveCases": 11,
+              "negativeCases": 11,
+              "unchangedCases": 10
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.0279296875,
+              "bootstrap95Percent": [
+                -0.0642626953125,
+                -0.001953125
+              ],
+              "positiveCases": 0,
+              "negativeCases": 5,
+              "unchangedCases": 27
+            },
+            "New seeker grab/lock benefit": {
+              "mean": 0.005078125000000001,
+              "bootstrap95Percent": [
+                -0.003515624999999998,
+                0.018750000000000003
+              ],
+              "positiveCases": 1,
+              "negativeCases": 1,
+              "unchangedCases": 30
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.5796874999999999,
+              "bootstrap95Percent": [
+                0.45956542968749997,
+                0.6986376953125
+              ],
+              "positiveCases": 29,
+              "negativeCases": 0,
+              "unchangedCases": 3
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.23359375000000002,
+              "bootstrap95Percent": [
+                0.1365234375,
+                0.3345800781249999
+              ],
+              "positiveCases": 20,
+              "negativeCases": 4,
+              "unchangedCases": 8
+            }
+          }
+        },
+        "rooms": {
+          "maps": 32,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.005664062499999997,
+              "bootstrap95Percent": [
+                -0.046484375,
+                0.06249999999999999
+              ],
+              "positiveCases": 10,
+              "negativeCases": 8,
+              "unchangedCases": 14
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.0009765624999999983,
+              "bootstrap95Percent": [
+                -0.047070312499999996,
+                0.05156250000000001
+              ],
+              "positiveCases": 8,
+              "negativeCases": 7,
+              "unchangedCases": 17
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": -0.0048828125,
+              "bootstrap95Percent": [
+                -0.0146484375,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 1,
+              "unchangedCases": 31
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.014648437500000002,
+              "bootstrap95Percent": [
+                -0.0896484375,
+                0.05645507812499986
+              ],
+              "positiveCases": 8,
+              "negativeCases": 11,
+              "unchangedCases": 13
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.105078125,
+              "bootstrap95Percent": [
+                -0.18613281249999997,
+                -0.03574218749999999
+              ],
+              "positiveCases": 8,
+              "negativeCases": 11,
+              "unchangedCases": 13
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.037890625,
+              "bootstrap95Percent": [
+                -0.0900439453125,
+                0.009379882812499931
+              ],
+              "positiveCases": 7,
+              "negativeCases": 11,
+              "unchangedCases": 14
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.04863281249999998,
+              "bootstrap95Percent": [
+                -0.051171875000000006,
+                0.1525390625
+              ],
+              "positiveCases": 13,
+              "negativeCases": 8,
+              "unchangedCases": 11
+            },
+            "New hider grab/lock benefit": {
+              "mean": 0.003125000000000001,
+              "bootstrap95Percent": [
+                -0.0029296875,
+                0.012304687500000003
+              ],
+              "positiveCases": 1,
+              "negativeCases": 1,
+              "unchangedCases": 30
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.0169921875,
+              "bootstrap95Percent": [
+                -0.04101562499999999,
+                -0.0005859374999999997
+              ],
+              "positiveCases": 1,
+              "negativeCases": 5,
+              "unchangedCases": 26
+            },
+            "New hider total learning vs initial": {
+              "mean": -0.0011718749999999993,
+              "bootstrap95Percent": [
+                -0.0109375,
+                0.006250000000000002
+              ],
+              "positiveCases": 2,
+              "negativeCases": 1,
+              "unchangedCases": 29
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.2396484375,
+              "bootstrap95Percent": [
+                0.1427685546875,
+                0.3451171875
+              ],
+              "positiveCases": 17,
+              "negativeCases": 0,
+              "unchangedCases": 15
+            }
+          }
+        },
+        "open": {
+          "maps": 32,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.05625,
+              "bootstrap95Percent": [
+                -0.0789111328125,
+                0.19453613281249993
+              ],
+              "positiveCases": 14,
+              "negativeCases": 16,
+              "unchangedCases": 2
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.07656250000000002,
+              "bootstrap95Percent": [
+                -0.030859374999999998,
+                0.19102050781249996
+              ],
+              "positiveCases": 18,
+              "negativeCases": 12,
+              "unchangedCases": 2
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.058789062499999996,
+              "bootstrap95Percent": [
+                -0.008398437500000005,
+                0.12754394531249996
+              ],
+              "positiveCases": 12,
+              "negativeCases": 6,
+              "unchangedCases": 14
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": 0.013476562500000004,
+              "bootstrap95Percent": [
+                -0.07851562499999999,
+                0.10175781250000002
+              ],
+              "positiveCases": 17,
+              "negativeCases": 10,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": 0.014062499999999992,
+              "bootstrap95Percent": [
+                -0.054101562500000006,
+                0.088671875
+              ],
+              "positiveCases": 13,
+              "negativeCases": 13,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.0712890625,
+              "bootstrap95Percent": [
+                0.0224609375,
+                0.1291015625
+              ],
+              "positiveCases": 12,
+              "negativeCases": 11,
+              "unchangedCases": 9
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.013085937500000006,
+              "bootstrap95Percent": [
+                -0.05878906249999999,
+                0.09082519531249994
+              ],
+              "positiveCases": 12,
+              "negativeCases": 9,
+              "unchangedCases": 11
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.021484375000000003,
+              "bootstrap95Percent": [
+                -0.053906249999999996,
+                0.007812499999999998
+              ],
+              "positiveCases": 5,
+              "negativeCases": 8,
+              "unchangedCases": 19
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.0177734375,
+              "bootstrap95Percent": [
+                -0.081640625,
+                0.033593750000000006
+              ],
+              "positiveCases": 9,
+              "negativeCases": 5,
+              "unchangedCases": 18
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.1544921875,
+              "bootstrap95Percent": [
+                0.0341796875,
+                0.28223144531249994
+              ],
+              "positiveCases": 15,
+              "negativeCases": 8,
+              "unchangedCases": 9
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.4484375,
+              "bootstrap95Percent": [
+                0.33828125,
+                0.5542968749999999
+              ],
+              "positiveCases": 28,
+              "negativeCases": 1,
+              "unchangedCases": 3
+            }
+          }
+        }
+      },
+      "size": {
+        "6": {
+          "maps": 18,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": -0.0038194444444444586,
+              "bootstrap95Percent": [
+                -0.15868055555555557,
+                0.14444444444444443
+              ],
+              "positiveCases": 7,
+              "negativeCases": 8,
+              "unchangedCases": 3
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.013888888888888888,
+              "bootstrap95Percent": [
+                -0.11146701388888888,
+                0.16180555555555554
+              ],
+              "positiveCases": 8,
+              "negativeCases": 7,
+              "unchangedCases": 3
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.008680555555555552,
+              "bootstrap95Percent": [
+                -0.05868055555555555,
+                0.0847222222222222
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 14
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": 0.09583333333333335,
+              "bootstrap95Percent": [
+                -0.031605902777777785,
+                0.22604166666666664
+              ],
+              "positiveCases": 11,
+              "negativeCases": 4,
+              "unchangedCases": 3
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.053819444444444454,
+              "bootstrap95Percent": [
+                -0.17118055555555559,
+                0.07813368055555542
+              ],
+              "positiveCases": 4,
+              "negativeCases": 9,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.015625,
+              "bootstrap95Percent": [
+                -0.078828125,
+                0.11944444444444444
+              ],
+              "positiveCases": 8,
+              "negativeCases": 7,
+              "unchangedCases": 3
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.12465277777777778,
+              "bootstrap95Percent": [
+                0.009019097222222229,
+                0.26669270833333303
+              ],
+              "positiveCases": 10,
+              "negativeCases": 3,
+              "unchangedCases": 5
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.02499999999999999,
+              "bootstrap95Percent": [
+                -0.09791666666666665,
+                0.03541666666666667
+              ],
+              "positiveCases": 3,
+              "negativeCases": 3,
+              "unchangedCases": 12
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.027083333333333334,
+              "bootstrap95Percent": [
+                -0.10520833333333332,
+                0.03195312499999987
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 14
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.2517361111111111,
+              "bootstrap95Percent": [
+                0.07638020833333335,
+                0.429861111111111
+              ],
+              "positiveCases": 8,
+              "negativeCases": 3,
+              "unchangedCases": 7
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.3315972222222222,
+              "bootstrap95Percent": [
+                0.20485243055555552,
+                0.47153645833333313
+              ],
+              "positiveCases": 15,
+              "negativeCases": 0,
+              "unchangedCases": 3
+            }
+          }
+        },
+        "7": {
+          "maps": 18,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.1388888888888889,
+              "bootstrap95Percent": [
+                -0.011111111111111112,
+                0.2947916666666667
+              ],
+              "positiveCases": 9,
+              "negativeCases": 6,
+              "unchangedCases": 3
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.05104166666666667,
+              "bootstrap95Percent": [
+                -0.08506944444444443,
+                0.1878559027777776
+              ],
+              "positiveCases": 8,
+              "negativeCases": 6,
+              "unchangedCases": 4
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": -0.03298611111111111,
+              "bootstrap95Percent": [
+                -0.07916666666666666,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 3,
+              "unchangedCases": 15
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": 0.007291666666666667,
+              "bootstrap95Percent": [
+                -0.0909722222222222,
+                0.1065972222222222
+              ],
+              "positiveCases": 8,
+              "negativeCases": 5,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": 0.002083333333333339,
+              "bootstrap95Percent": [
+                -0.04444444444444443,
+                0.05069444444444445
+              ],
+              "positiveCases": 6,
+              "negativeCases": 4,
+              "unchangedCases": 8
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.034027777777777775,
+              "bootstrap95Percent": [
+                -0.021875000000000002,
+                0.09999999999999998
+              ],
+              "positiveCases": 8,
+              "negativeCases": 4,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.035069444444444445,
+              "bootstrap95Percent": [
+                -0.036805555555555536,
+                0.12291666666666666
+              ],
+              "positiveCases": 7,
+              "negativeCases": 6,
+              "unchangedCases": 5
+            },
+            "New hider grab/lock benefit": {
+              "mean": 0.000347222222222221,
+              "bootstrap95Percent": [
+                -0.009375000000000003,
+                0.010416666666666666
+              ],
+              "positiveCases": 1,
+              "negativeCases": 1,
+              "unchangedCases": 16
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.005208333333333329,
+              "bootstrap95Percent": [
+                -0.03125000000000001,
+                0.01111111111111112
+              ],
+              "positiveCases": 3,
+              "negativeCases": 1,
+              "unchangedCases": 14
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.25902777777777775,
+              "bootstrap95Percent": [
+                0.04270833333333333,
+                0.4788281249999999
+              ],
+              "positiveCases": 10,
+              "negativeCases": 3,
+              "unchangedCases": 5
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.2934027777777778,
+              "bootstrap95Percent": [
+                0.14791666666666667,
+                0.44896701388888877
+              ],
+              "positiveCases": 11,
+              "negativeCases": 2,
+              "unchangedCases": 5
+            }
+          }
+        },
+        "8": {
+          "maps": 15,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.05041666666666666,
+              "bootstrap95Percent": [
+                -0.05083333333333333,
+                0.17291666666666664
+              ],
+              "positiveCases": 6,
+              "negativeCases": 6,
+              "unchangedCases": 3
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.1120833333333333,
+              "bootstrap95Percent": [
+                -0.011666666666666681,
+                0.24541666666666667
+              ],
+              "positiveCases": 9,
+              "negativeCases": 4,
+              "unchangedCases": 2
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.021249999999999998,
+              "bootstrap95Percent": [
+                0.0,
+                0.050416666666666665
+              ],
+              "positiveCases": 3,
+              "negativeCases": 0,
+              "unchangedCases": 12
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.054166666666666675,
+              "bootstrap95Percent": [
+                -0.15792708333333333,
+                0.034999999999999996
+              ],
+              "positiveCases": 5,
+              "negativeCases": 5,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.08833333333333335,
+              "bootstrap95Percent": [
+                -0.20541666666666666,
+                0.003749999999999991
+              ],
+              "positiveCases": 4,
+              "negativeCases": 6,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.004166666666666661,
+              "bootstrap95Percent": [
+                -0.06041666666666666,
+                0.04624999999999999
+              ],
+              "positiveCases": 6,
+              "negativeCases": 5,
+              "unchangedCases": 4
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": -0.09999999999999996,
+              "bootstrap95Percent": [
+                -0.22166666666666668,
+                -0.0058333333333333275
+              ],
+              "positiveCases": 3,
+              "negativeCases": 7,
+              "unchangedCases": 5
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.016666666666666673,
+              "bootstrap95Percent": [
+                -0.04625000000000001,
+                0.006666666666666665
+              ],
+              "positiveCases": 2,
+              "negativeCases": 4,
+              "unchangedCases": 9
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.010416666666666663,
+              "bootstrap95Percent": [
+                -0.053750000000000006,
+                0.02250000000000001
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 11
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.33958333333333335,
+              "bootstrap95Percent": [
+                0.16666666666666666,
+                0.5241770833333332
+              ],
+              "positiveCases": 9,
+              "negativeCases": 0,
+              "unchangedCases": 6
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.2191666666666667,
+              "bootstrap95Percent": [
+                0.08582291666666668,
+                0.3579166666666667
+              ],
+              "positiveCases": 8,
+              "negativeCases": 1,
+              "unchangedCases": 6
+            }
+          }
+        },
+        "9": {
+          "maps": 15,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": -0.04041666666666667,
+              "bootstrap95Percent": [
+                -0.21833333333333332,
+                0.13792708333333317
+              ],
+              "positiveCases": 7,
+              "negativeCases": 7,
+              "unchangedCases": 1
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.12708333333333335,
+              "bootstrap95Percent": [
+                -0.049177083333333316,
+                0.31501041666666657
+              ],
+              "positiveCases": 7,
+              "negativeCases": 5,
+              "unchangedCases": 3
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.05125,
+              "bootstrap95Percent": [
+                0.0008333333333333304,
+                0.11083333333333334
+              ],
+              "positiveCases": 4,
+              "negativeCases": 1,
+              "unchangedCases": 10
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.15458333333333332,
+              "bootstrap95Percent": [
+                -0.3304166666666666,
+                0.004166666666666674
+              ],
+              "positiveCases": 5,
+              "negativeCases": 7,
+              "unchangedCases": 3
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.025833333333333323,
+              "bootstrap95Percent": [
+                -0.15334374999999995,
+                0.08333333333333333
+              ],
+              "positiveCases": 6,
+              "negativeCases": 7,
+              "unchangedCases": 2
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 3.7007434154171884e-18,
+              "bootstrap95Percent": [
+                -0.10084374999999997,
+                0.08041666666666665
+              ],
+              "positiveCases": 8,
+              "negativeCases": 4,
+              "unchangedCases": 3
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": -0.002500000000000006,
+              "bootstrap95Percent": [
+                -0.15584375,
+                0.13583333333333333
+              ],
+              "positiveCases": 6,
+              "negativeCases": 5,
+              "unchangedCases": 4
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.0037500000000000016,
+              "bootstrap95Percent": [
+                -0.009583333333333336,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 2,
+              "unchangedCases": 13
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.04499999999999999,
+              "bootstrap95Percent": [
+                -0.13666666666666666,
+                0.005843749999999853
+              ],
+              "positiveCases": 1,
+              "negativeCases": 5,
+              "unchangedCases": 9
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.23374999999999999,
+              "bootstrap95Percent": [
+                0.07583333333333334,
+                0.42584374999999985
+              ],
+              "positiveCases": 7,
+              "negativeCases": 2,
+              "unchangedCases": 6
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.37166666666666665,
+              "bootstrap95Percent": [
+                0.21250000000000002,
+                0.5354166666666665
+              ],
+              "positiveCases": 13,
+              "negativeCases": 1,
+              "unchangedCases": 1
+            }
+          }
+        },
+        "10": {
+          "maps": 15,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": -0.018750000000000006,
+              "bootstrap95Percent": [
+                -0.11333333333333331,
+                0.06999999999999999
+              ],
+              "positiveCases": 5,
+              "negativeCases": 6,
+              "unchangedCases": 4
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.008750000000000004,
+              "bootstrap95Percent": [
+                -0.05541666666666666,
+                0.09001041666666655
+              ],
+              "positiveCases": 5,
+              "negativeCases": 4,
+              "unchangedCases": 6
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.04375,
+              "bootstrap95Percent": [
+                0.0,
+                0.11249999999999999
+              ],
+              "positiveCases": 2,
+              "negativeCases": 0,
+              "unchangedCases": 13
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.032916666666666664,
+              "bootstrap95Percent": [
+                -0.1495833333333333,
+                0.07708333333333332
+              ],
+              "positiveCases": 4,
+              "negativeCases": 7,
+              "unchangedCases": 4
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.04083333333333332,
+              "bootstrap95Percent": [
+                -0.11374999999999999,
+                0.006250000000000001
+              ],
+              "positiveCases": 2,
+              "negativeCases": 7,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.09375000000000001,
+              "bootstrap95Percent": [
+                -0.21333333333333335,
+                -0.00791666666666667
+              ],
+              "positiveCases": 3,
+              "negativeCases": 8,
+              "unchangedCases": 4
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.0008333333333333397,
+              "bootstrap95Percent": [
+                -0.12749999999999997,
+                0.11041666666666666
+              ],
+              "positiveCases": 5,
+              "negativeCases": 4,
+              "unchangedCases": 6
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.03083333333333333,
+              "bootstrap95Percent": [
+                -0.06958333333333333,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 3,
+              "unchangedCases": 12
+            },
+            "New seeker grab/lock benefit": {
+              "mean": 0.026249999999999996,
+              "bootstrap95Percent": [
+                -0.001666666666666668,
+                0.06708333333333333
+              ],
+              "positiveCases": 2,
+              "negativeCases": 1,
+              "unchangedCases": 12
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.26333333333333336,
+              "bootstrap95Percent": [
+                0.10458333333333333,
+                0.4483333333333333
+              ],
+              "positiveCases": 8,
+              "negativeCases": 0,
+              "unchangedCases": 7
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.27875,
+              "bootstrap95Percent": [
+                0.11458333333333333,
+                0.4600104166666666
+              ],
+              "positiveCases": 8,
+              "negativeCases": 1,
+              "unchangedCases": 6
+            }
+          }
+        },
+        "12": {
+          "maps": 15,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.014583333333333337,
+              "bootstrap95Percent": [
+                -0.08,
+                0.11499999999999998
+              ],
+              "positiveCases": 7,
+              "negativeCases": 4,
+              "unchangedCases": 4
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.02166666666666665,
+              "bootstrap95Percent": [
+                -0.08458333333333336,
+                0.10916666666666663
+              ],
+              "positiveCases": 6,
+              "negativeCases": 3,
+              "unchangedCases": 6
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.027916666666666663,
+              "bootstrap95Percent": [
+                -0.025,
+                0.10874999999999999
+              ],
+              "positiveCases": 1,
+              "negativeCases": 1,
+              "unchangedCases": 13
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.012916666666666668,
+              "bootstrap95Percent": [
+                -0.13249999999999998,
+                0.08625000000000001
+              ],
+              "positiveCases": 6,
+              "negativeCases": 5,
+              "unchangedCases": 4
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.01791666666666666,
+              "bootstrap95Percent": [
+                -0.05208333333333331,
+                0.007927083333333208
+              ],
+              "positiveCases": 5,
+              "negativeCases": 4,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.01583333333333333,
+              "bootstrap95Percent": [
+                -0.007083333333333334,
+                0.05708333333333333
+              ],
+              "positiveCases": 1,
+              "negativeCases": 4,
+              "unchangedCases": 10
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": -0.03666666666666666,
+              "bootstrap95Percent": [
+                -0.16,
+                0.04125
+              ],
+              "positiveCases": 5,
+              "negativeCases": 3,
+              "unchangedCases": 7
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.01791666666666667,
+              "bootstrap95Percent": [
+                -0.053750000000000006,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 1,
+              "unchangedCases": 14
+            },
+            "New seeker grab/lock benefit": {
+              "mean": 0.004583333333333336,
+              "bootstrap95Percent": [
+                0.0,
+                0.013750000000000007
+              ],
+              "positiveCases": 1,
+              "negativeCases": 0,
+              "unchangedCases": 14
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.11416666666666667,
+              "bootstrap95Percent": [
+                0.004572916666666675,
+                0.2708333333333333
+              ],
+              "positiveCases": 4,
+              "negativeCases": 1,
+              "unchangedCases": 10
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.3466666666666667,
+              "bootstrap95Percent": [
+                0.19166666666666668,
+                0.5129166666666667
+              ],
+              "positiveCases": 10,
+              "negativeCases": 0,
+              "unchangedCases": 5
+            }
+          }
+        }
+      },
+      "objects": {
+        "1\u20133": {
+          "maps": 27,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.01342592592592592,
+              "bootstrap95Percent": [
+                -0.05555555555555555,
+                0.07800925925925926
+              ],
+              "positiveCases": 13,
+              "negativeCases": 10,
+              "unchangedCases": 4
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.024537037037037038,
+              "bootstrap95Percent": [
+                -0.06064814814814815,
+                0.11180555555555555
+              ],
+              "positiveCases": 13,
+              "negativeCases": 8,
+              "unchangedCases": 6
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": -0.003935185185185187,
+              "bootstrap95Percent": [
+                -0.03796296296296297,
+                0.02222222222222223
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 23
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.030787037037037043,
+              "bootstrap95Percent": [
+                -0.11204282407407408,
+                0.04144097222222213
+              ],
+              "positiveCases": 9,
+              "negativeCases": 13,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.02152777777777778,
+              "bootstrap95Percent": [
+                -0.07130208333333334,
+                0.02800925925925926
+              ],
+              "positiveCases": 10,
+              "negativeCases": 11,
+              "unchangedCases": 6
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.009722222222222224,
+              "bootstrap95Percent": [
+                -0.04282407407407408,
+                0.01805555555555555
+              ],
+              "positiveCases": 9,
+              "negativeCases": 13,
+              "unchangedCases": 5
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.03657407407407407,
+              "bootstrap95Percent": [
+                -0.026163194444444447,
+                0.11828703703703702
+              ],
+              "positiveCases": 9,
+              "negativeCases": 8,
+              "unchangedCases": 10
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.003703703703703705,
+              "bootstrap95Percent": [
+                -0.01805555555555556,
+                0.006944444444444444
+              ],
+              "positiveCases": 1,
+              "negativeCases": 1,
+              "unchangedCases": 25
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.01180555555555555,
+              "bootstrap95Percent": [
+                -0.036574074074074064,
+                0.00416666666666667
+              ],
+              "positiveCases": 2,
+              "negativeCases": 5,
+              "unchangedCases": 20
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.18819444444444444,
+              "bootstrap95Percent": [
+                0.07152199074074073,
+                0.31852430555555544
+              ],
+              "positiveCases": 13,
+              "negativeCases": 3,
+              "unchangedCases": 11
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.4574074074074074,
+              "bootstrap95Percent": [
+                0.33981481481481485,
+                0.5719907407407407
+              ],
+              "positiveCases": 22,
+              "negativeCases": 0,
+              "unchangedCases": 5
+            }
+          }
+        },
+        "7\u201310": {
+          "maps": 33,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.05852272727272727,
+              "bootstrap95Percent": [
+                -0.06232007575757576,
+                0.18106060606060606
+              ],
+              "positiveCases": 15,
+              "negativeCases": 10,
+              "unchangedCases": 8
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.03409090909090907,
+              "bootstrap95Percent": [
+                -0.04678030303030303,
+                0.1195170454545453
+              ],
+              "positiveCases": 13,
+              "negativeCases": 10,
+              "unchangedCases": 10
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.02045454545454545,
+              "bootstrap95Percent": [
+                -0.029734848484848482,
+                0.07803030303030302
+              ],
+              "positiveCases": 5,
+              "negativeCases": 4,
+              "unchangedCases": 24
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": -0.1053030303030303,
+              "bootstrap95Percent": [
+                -0.21287878787878786,
+                -0.0066240530303030894
+              ],
+              "positiveCases": 10,
+              "negativeCases": 11,
+              "unchangedCases": 12
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.032954545454545445,
+              "bootstrap95Percent": [
+                -0.11136363636363636,
+                0.048295454545454544
+              ],
+              "positiveCases": 4,
+              "negativeCases": 12,
+              "unchangedCases": 17
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": -0.02462121212121212,
+              "bootstrap95Percent": [
+                -0.08693181818181818,
+                0.026704545454545446
+              ],
+              "positiveCases": 9,
+              "negativeCases": 8,
+              "unchangedCases": 16
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": -0.06439393939393938,
+              "bootstrap95Percent": [
+                -0.17538352272727273,
+                0.04147727272727274
+              ],
+              "positiveCases": 8,
+              "negativeCases": 12,
+              "unchangedCases": 13
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.013446969696969699,
+              "bootstrap95Percent": [
+                -0.03617424242424243,
+                0.0035984848484848456
+              ],
+              "positiveCases": 3,
+              "negativeCases": 5,
+              "unchangedCases": 25
+            },
+            "New seeker grab/lock benefit": {
+              "mean": -0.020075757575757577,
+              "bootstrap95Percent": [
+                -0.06591382575757576,
+                0.009848484848484843
+              ],
+              "positiveCases": 3,
+              "negativeCases": 3,
+              "unchangedCases": 27
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.2941287878787879,
+              "bootstrap95Percent": [
+                0.13938920454545453,
+                0.4528503787878787
+              ],
+              "positiveCases": 14,
+              "negativeCases": 4,
+              "unchangedCases": 15
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.16931818181818184,
+              "bootstrap95Percent": [
+                0.0797348484848485,
+                0.2697064393939393
+              ],
+              "positiveCases": 16,
+              "negativeCases": 3,
+              "unchangedCases": 14
+            }
+          }
+        },
+        "4\u20136": {
+          "maps": 32,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.002734375000000004,
+              "bootstrap95Percent": [
+                -0.09668457031249998,
+                0.10429687499999998
+              ],
+              "positiveCases": 11,
+              "negativeCases": 15,
+              "unchangedCases": 6
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": 0.115625,
+              "bootstrap95Percent": [
+                0.005664062500000004,
+                0.2318359375
+              ],
+              "positiveCases": 16,
+              "negativeCases": 9,
+              "unchangedCases": 7
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.0361328125,
+              "bootstrap95Percent": [
+                0.008398437500000001,
+                0.07168457031249993
+              ],
+              "positiveCases": 5,
+              "negativeCases": 1,
+              "unchangedCases": 26
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": 0.071484375,
+              "bootstrap95Percent": [
+                -0.016015625,
+                0.1544921875
+              ],
+              "positiveCases": 18,
+              "negativeCases": 7,
+              "unchangedCases": 7
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.04824218749999999,
+              "bootstrap95Percent": [
+                -0.1142578125,
+                0.0060546874999999984
+              ],
+              "positiveCases": 13,
+              "negativeCases": 11,
+              "unchangedCases": 8
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.018554687500000007,
+              "bootstrap95Percent": [
+                -0.05879394531249999,
+                0.09277832031249993
+              ],
+              "positiveCases": 14,
+              "negativeCases": 9,
+              "unchangedCases": 9
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.052148437500000006,
+              "bootstrap95Percent": [
+                -0.016997070312499987,
+                0.119921875
+              ],
+              "positiveCases": 17,
+              "negativeCases": 6,
+              "unchangedCases": 9
+            },
+            "New hider grab/lock benefit": {
+              "mean": -0.029296875,
+              "bootstrap95Percent": [
+                -0.07148437499999999,
+                0.005859374999999998
+              ],
+              "positiveCases": 2,
+              "negativeCases": 8,
+              "unchangedCases": 22
+            },
+            "New seeker grab/lock benefit": {
+              "mean": 0.0009765624999999983,
+              "bootstrap95Percent": [
+                -0.046093749999999996,
+                0.0396484375
+              ],
+              "positiveCases": 6,
+              "negativeCases": 3,
+              "unchangedCases": 23
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.2263671875,
+              "bootstrap95Percent": [
+                0.120703125,
+                0.3421875
+              ],
+              "positiveCases": 16,
+              "negativeCases": 2,
+              "unchangedCases": 14
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.2958984375,
+              "bootstrap95Percent": [
+                0.19980468750000002,
+                0.39511718749999997
+              ],
+              "positiveCases": 23,
+              "negativeCases": 2,
+              "unchangedCases": 7
+            }
+          }
+        },
+        "0": {
+          "maps": 4,
+          "contrasts": {
+            "Hider change vs fixed mixed seeker": {
+              "mean": 0.034374999999999996,
+              "bootstrap95Percent": [
+                -0.0921875,
+                0.1953125
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 0
+            },
+            "Hider change vs fixed original seeker": {
+              "mean": -0.06874999999999998,
+              "bootstrap95Percent": [
+                -0.30937499999999996,
+                0.14062500000000003
+              ],
+              "positiveCases": 1,
+              "negativeCases": 2,
+              "unchangedCases": 1
+            },
+            "Hider change vs fixed initial seeker": {
+              "mean": 0.0,
+              "bootstrap95Percent": [
+                0.0,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 0,
+              "unchangedCases": 4
+            },
+            "Seeker change vs fixed original hider": {
+              "mean": 0.01406250000000002,
+              "bootstrap95Percent": [
+                -0.05937499999999997,
+                0.09843750000000001
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 0
+            },
+            "Seeker change vs fixed initial hider": {
+              "mean": -0.078125,
+              "bootstrap95Percent": [
+                -0.19531249999999997,
+                -0.006249999999999999
+              ],
+              "positiveCases": 0,
+              "negativeCases": 3,
+              "unchangedCases": 1
+            },
+            "Seeker change vs fixed warm-start hider": {
+              "mean": 0.0359375,
+              "bootstrap95Percent": [
+                -0.024999999999999994,
+                0.11718749999999999
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 0
+            },
+            "Seeker change vs fixed intermediate hider": {
+              "mean": 0.06718750000000001,
+              "bootstrap95Percent": [
+                -0.024999999999999994,
+                0.159375
+              ],
+              "positiveCases": 2,
+              "negativeCases": 2,
+              "unchangedCases": 0
+            },
+            "New hider grab/lock benefit": {
+              "mean": 0.0,
+              "bootstrap95Percent": [
+                0.0,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 0,
+              "unchangedCases": 4
+            },
+            "New seeker grab/lock benefit": {
+              "mean": 0.0,
+              "bootstrap95Percent": [
+                0.0,
+                0.0
+              ],
+              "positiveCases": 0,
+              "negativeCases": 0,
+              "unchangedCases": 4
+            },
+            "New hider total learning vs initial": {
+              "mean": 0.35624999999999996,
+              "bootstrap95Percent": [
+                0.1109375,
+                0.5453125
+              ],
+              "positiveCases": 3,
+              "negativeCases": 0,
+              "unchangedCases": 1
+            },
+            "New seeker total learning vs initial": {
+              "mean": 0.5218750000000001,
+              "bootstrap95Percent": [
+                0.271875,
+                0.803125
+              ],
+              "positiveCases": 4,
+              "negativeCases": 0,
+              "unchangedCases": 0
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "evaluate_sustained.py": "84163bcd7f13c8e5e2b5ac08c287be8fc5c1866064ca2ad313abd5531456a740",
+      "persistent_evaluate.py": "c2f0cf0c4410662b5a38f8c407192c18f72a94cab9966e878646beafc8567996",
+      "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+      "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+      "actor.py": "6a31e52ac1ce51578fa16c3e240264cb70df3c2af48f9b0b1c9222247a8e71db",
+      "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+    }
+  }
+}

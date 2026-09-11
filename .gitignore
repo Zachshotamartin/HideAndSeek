@@ -4,6 +4,9 @@ test-results/
 .DS_Store
 
 training/runs/
-training/__pycache__/
+__pycache__/
 
 .venv/
+
+.venv-physics/
+output/

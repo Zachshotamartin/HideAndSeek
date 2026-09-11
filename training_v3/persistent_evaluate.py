@@ -1,0 +1,229 @@
+"""Read-only validation of the persistent-button pilot and fixed opponents.
+
+All modes use role-specific common random tapes for the same maps. Disabling
+tools changes the physical buttons, not the actor's requested controller state;
+ordinary physical pushing remains enabled. No scoring or training is changed.
+"""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import numpy as np
+import torch
+from actor import PhysicalActor
+from persistent_actor import PersistentActor, advance_buttons, augment, FORMAT
+from physics import PhysicsEnv, DT
+
+torch.set_num_threads(1)
+
+
+def plain(value):
+    if isinstance(value, np.ndarray): return value.tolist()
+    if isinstance(value, np.generic): return value.item()
+    raise TypeError(type(value).__name__)
+
+
+def load(path):
+    saved = torch.load(path, map_location='cpu', weights_only=False)
+    persistent = saved['format'] == FORMAT
+    models = [PersistentActor() if persistent else PhysicalActor(208) for _ in range(2)]
+    for model, state in zip(models, saved['models']):
+        model.load_state_dict(state); model.eval()
+    return models, saved
+
+
+def sample(model, physical, memory, buttons, generator):
+    persistent = isinstance(model, PersistentActor)
+    blind = physical[7] < .5 and physical[5] < 1
+    if blind: buttons = np.zeros(2, np.float32)
+    observation = augment(physical, buttons) if persistent else physical
+    normal, tools, _, memory = model(torch.from_numpy(observation[None]), memory)
+    tape = generator.random(8)
+    action = np.zeros(5, np.float32)
+    for axis in range(3):
+        noise = math.sqrt(-2 * math.log(max(1e-12, tape[axis * 2]))) * math.cos(2 * math.pi * tape[axis * 2 + 1])
+        action[axis] = math.tanh(float(normal.mean[0, axis]) + float(normal.scale[0, axis]) * noise)
+    if persistent:
+        probabilities = tools.probs[0].numpy()
+        commands = np.asarray([min(2, np.searchsorted(np.cumsum(probabilities[t]), tape[6 + t], side='right')) for t in range(2)])
+        buttons = advance_buttons(buttons, commands, blind)
+    else:
+        buttons = (tape[6:] < tools.probs[0].numpy()).astype(np.float32)
+        commands = np.where(buttons, 1, 2)
+    action[3:] = buttons
+    if blind: action.fill(0); buttons.fill(0)
+    return action, memory, buttons, commands
+
+
+def runs(values, enabled=lambda value: value >= 0):
+    lengths=[]; previous=None; length=0
+    for value in values:
+        if value != previous:
+            if length: lengths.append(length)
+            length=0
+        if enabled(value): length+=1
+        previous=value
+    if length: lengths.append(length)
+    return lengths
+
+
+def episode(models, seed, scenario, mode, trace=False, arena_config=None):
+    configuration=dict(size=8,n_boxes=3,n_ramps=1)
+    if arena_config is not None:
+        if set(arena_config)-set(configuration):raise ValueError('Only size and prop counts may vary in evaluation')
+        configuration.update(arena_config)
+    env=PhysicsEnv(seed=seed, scenario=scenario, **configuration,
+                   disable_tools=mode=='no-tools')
+    physical=env.observe(); memory=[torch.zeros(1,model.hidden_size) for model in models]
+    buttons=np.zeros((2,2),np.float32)
+    random=[np.random.default_rng(seed+912341),np.random.default_rng(seed+2912341)]
+    histories=[[],[]]; frames=[env.trace()] if trace else None
+    with torch.no_grad():
+        for tick in range(env.prep+env.play):
+            actions=np.zeros((2,5),np.float32); commands=[]
+            for role, model in enumerate(models):
+                actions[role],memory[role],buttons[role],chosen=sample(model,physical[role],memory[role],buttons[role],random[role])
+                commands.append(chosen.tolist())
+                if mode=='no-hider-tools' and role==0 or mode=='no-seeker-tools' and role==1:
+                    actions[role,3:]=0
+            physical,reward,done,info=env.step(actions)
+            wall=[False,False]; prop=[False,False]
+            for contact in env.data.contact:
+                if contact.dist>0: continue
+                for role in range(2):
+                    geom=env.agent_geoms[role]
+                    other=contact.geom2 if contact.geom1==geom else contact.geom1 if contact.geom2==geom else -1
+                    if other>=0:
+                        wall[role]|=env.model.geom_group[other]==1
+                        prop[role]|=env.model.geom_group[other]==3
+            for role in range(2):
+                speed=float(np.linalg.norm(env.data.qvel[role*4:role*4+2]))
+                histories[role].append(dict(grip=env.grips[role],buttons=buttons[role].tolist(),commands=commands[role],
+                    wall=bool(wall[role]),prop=bool(prop[role]),speed=speed,
+                    wallPress=bool(wall[role] and speed<.1 and np.linalg.norm(env.actions[role,:2])>.5),
+                    yawRate=float(env.data.qvel[role*4+3]), action=env.actions[role].tolist()))
+            if trace:
+                frame=env.trace();frame['controller']=dict(buttons=buttons.copy(),commands=commands)
+                frames.append(frame)
+            if done: break
+    roles=[]
+    for role, history in enumerate(histories):
+        grip=runs([row['grip'] for row in history])
+        holding=[runs([row['buttons'][tool] for row in history],lambda value:value==1) for tool in range(2)]
+        action=np.asarray([row['action'] for row in history])
+        roles.append(dict(gripDurationsTicks=grip,requestedHoldDurationsTicks=holding,
+            wallPressFrames=sum(row['wallPress'] for row in history),
+            playWallPressFrames=sum(row['wallPress'] for row in history[env.prep:]),
+            propContactFrames=sum(row['prop'] for row in history),
+            meanSpeed=float(np.mean([row['speed'] for row in history])),
+            absoluteTurns=float(sum(abs(row['yawRate'])*DT for row in history)/(2*math.pi)),
+            saturatedXYFraction=float((np.abs(action[:,:2])>.98).mean()),
+            commandCounts=[[sum(row['commands'][tool]==command for row in history[(env.prep if role else 0):])
+                for command in range(3)] for tool in range(2)]))
+    result=dict(seed=seed,scenario=scenario,mode=mode,hiddenFraction=info['hidden']/info['play_steps'],
+        propShieldedFraction=info['shielded']/info['play_steps'],propDisplacement=sum(info['object_displacement']),
+        info=info,roles=roles)
+    if arena_config is not None:result.update(arenaConfig=configuration,actualObjectCount=len(env.arena['objects']))
+    if trace: result.update(arena=env.arena,frames=frames)
+    env.close()
+    return result
+
+
+def summarize(records, contrast_definitions=None):
+    summary={}
+    for mode in dict.fromkeys(row['mode'] for row in records):
+        group=[row for row in records if row['mode']==mode]
+        summary[mode]={key:float(np.mean([row[key] for row in group])) for key in
+            ['hiddenFraction','propShieldedFraction','propDisplacement']}
+        summary[mode]['roles']=[]
+        for role in range(2):
+            details=[row['roles'][role] for row in group]
+            grip=[length for row in details for length in row['gripDurationsTicks']]
+            holding=[[length for row in details for length in row['requestedHoldDurationsTicks'][tool]] for tool in range(2)]
+            summary[mode]['roles'].append(dict(gripCount=len(grip),
+                medianGripSeconds=float(np.median(grip)*DT) if grip else 0,
+                meanGripSeconds=float(np.mean(grip)*DT) if grip else 0,
+                maxGripSeconds=float(max(grip)*DT) if grip else 0,
+                fractionGripsShorterThanThreeTicks=float(np.mean(np.asarray(grip)<3)) if grip else 0,
+                requestedHoldMedianSeconds=[float(np.median(values)*DT) if values else 0 for values in holding],
+                meanPlayWallPressFrames=float(np.mean([row['playWallPressFrames'] for row in details])),
+                meanAbsoluteTurns=float(np.mean([row['absoluteTurns'] for row in details])),
+                meanSpeed=float(np.mean([row['meanSpeed'] for row in details])),
+                commandCounts=np.sum([row['commandCounts'] for row in details],axis=0).tolist()))
+    byseed={}
+    for row in records: byseed.setdefault((row['seed'],row['scenario']),{})[row['mode']]=row
+    rng=np.random.default_rng(371473)
+    contrasts={}
+    contrast_modes=[
+        ('Hider tools benefit','learned','no-hider-tools'),
+        ('Seeker tools benefit','no-seeker-tools','learned'),
+        ('Pilot hider learning vs fixed initial','trained-hider-v-initial','warm-hider-v-initial'),
+        ('Pilot seeker learning vs fixed initial','warm-seeker-v-initial','trained-seeker-v-initial'),
+        ('Total hider learning vs fixed initial','trained-hider-v-initial','initial-pair'),
+        ('Total seeker learning vs fixed initial','initial-pair','trained-seeker-v-initial'),
+        ('Pilot hider vs original parent at fixed initial','trained-hider-v-initial','parent-hider-v-initial'),
+        ('Pilot seeker vs original parent at fixed initial','parent-seeker-v-initial','trained-seeker-v-initial')]
+    if 'binary-pair' in summary:
+        contrast_modes.extend([
+            ('Pilot hider vs frozen trained binary seeker','pilot-hider-v-binary','binary-pair'),
+            ('Pilot seeker vs frozen trained binary hider','binary-pair','pilot-seeker-v-binary')])
+    if contrast_definitions is not None:
+        contrast_modes=contrast_definitions
+    for label,left,right in contrast_modes:
+        values=np.asarray([rows[left]['hiddenFraction']-rows[right]['hiddenFraction'] for rows in byseed.values()])
+        boot=rng.choice(values,size=(10000,len(values)),replace=True).mean(axis=1)
+        contrasts[label]=dict(mean=float(values.mean()),bootstrap95Percent=np.quantile(boot,[.025,.975]).tolist(),
+            positiveCases=int((values>0).sum()),negativeCases=int((values<0).sum()),unchangedCases=int((values==0).sum()))
+    return summary,contrasts
+
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--checkpoint',required=True);parser.add_argument('--warm-start',required=True)
+    parser.add_argument('--initial',required=True);parser.add_argument('--parent',required=True)
+    parser.add_argument('--output',required=True);parser.add_argument('--episodes-per-scenario',type=int,default=12)
+    parser.add_argument('--seed',type=int,default=1500010000)
+    parser.add_argument('--strong-baseline',help='Optional additional frozen trained binary pair and role comparisons')
+    args=parser.parse_args()
+    if not 1500000000<=args.seed<1900000000: raise ValueError('Pilot uses validation seeds only')
+    learned,saved=load(args.checkpoint);warm,_=load(args.warm_start);initial,initial_saved=load(args.initial);parent,_=load(args.parent)
+    if initial_saved['decisions']!=0: raise ValueError('Initial must have zero experience')
+    compared={'learned':learned,'no-hider-tools':learned,'no-seeker-tools':learned,'no-tools':learned,
+        'warm-start':warm,'initial-pair':initial,
+        'trained-hider-v-initial':[learned[0],initial[1]],'trained-seeker-v-initial':[initial[0],learned[1]],
+        'warm-hider-v-initial':[warm[0],initial[1]],'warm-seeker-v-initial':[initial[0],warm[1]],
+        'parent-hider-v-initial':[parent[0],initial[1]],'parent-seeker-v-initial':[initial[0],parent[1]]}
+    strong_metadata=None
+    if args.strong_baseline:
+        strong,strong_saved=load(args.strong_baseline)
+        if strong_saved.get('physicsSHA256') != saved['provenance']['physicsSHA256']:
+            raise ValueError('The trained binary comparison must use the same physical environment')
+        compared.update({'binary-pair':strong,'pilot-hider-v-binary':[learned[0],strong[1]],
+                         'pilot-seeker-v-binary':[strong[0],learned[1]]})
+        strong_metadata=dict(checkpointSHA256=hashlib.sha256(Path(args.strong_baseline).read_bytes()).hexdigest(),
+            decisions=strong_saved['decisions'],format=strong_saved['format'],physicsSHA256=strong_saved['physicsSHA256'])
+    destination=Path(args.output);destination.mkdir(parents=True,exist_ok=True)
+    records=[]
+    for scenario_index,scenario in enumerate(['shelter','rooms','open']):
+        for index in range(args.episodes_per_scenario):
+            seed=args.seed+scenario_index*1000+index
+            for mode,models in compared.items():
+                records.append(episode(models,seed,scenario,mode))
+            (destination/'episodes.partial.json').write_text(json.dumps(records,separators=(',',':'),default=plain)+'\n')
+        subset=[row for row in records if row['scenario']==scenario]
+        print(json.dumps(dict(scenario=scenario,hiddenMeans={mode:float(np.mean([row['hiddenFraction'] for row in subset if row['mode']==mode])) for mode in compared})),flush=True)
+    summary,contrasts=summarize(records)
+    report=dict(format='persistent-button-pilot-validation-v1',checkpointSHA256=hashlib.sha256(Path(args.checkpoint).read_bytes()).hexdigest(),
+        parentSHA256=hashlib.sha256(Path(args.parent).read_bytes()).hexdigest(),provenance=saved['provenance'],
+        parentDecisions=saved['parentDecisions'],pilotDecisions=saved['pilotDecisions'],seedStart=args.seed,
+        seedUsage='Repeated validation maps, not untouched final-test data. Training seeds are below 2**30.',
+        sampling='Independent role-specific seeded uniform tapes; Box–Muller Gaussian plus categorical inverse CDF. Same tapes across modes.',
+        initial='Actual zero-experience original backbone with new uniform categorical head. Identical initial actors are fixed in all role comparisons.',
+        additionalFrozenTrainedBaseline=strong_metadata,
+        episodesPerScenario=args.episodes_per_scenario,summary=summary,contrasts=contrasts,episodes=records)
+    (destination/'evaluation.json').write_text(json.dumps(report,indent=2,default=plain)+'\n')
+    print(json.dumps(contrasts,indent=2),flush=True)
+
+
+if __name__=='__main__': main()

@@ -1,0 +1,71 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "entity-search-diagnostic",
+  "sourceReportSHA256": "0c236f7afd1026c83bf99f40db984f5b35d32384fd1927efd68a983209671a4f",
+  "sourceReportRelativePath": "entity-failure-audit/report.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "read-only-entity-order-failure-comparison-v1",
+    "checkpointSHA256": "f6dd7f187232b3ae17f0bb562c7aab1cc332c28cb996dff593248c5ab9e88e7c",
+    "hiderSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+    "sourceReportSHA256": "e2f8b52e342bb8245d8259959a96071ac01220a2c0abb35e309fa7f39f377d84",
+    "newReadOnlyActorDecisions": 15360,
+    "exactCachedReplays": 32,
+    "optimizerSteps": 0,
+    "groups": {
+      "completeMisses": {
+        "maps": 20,
+        "mapsWithZeroProps": 0,
+        "mapsWithNoPersistentSlotChanges": 4,
+        "counts": {
+          "playFrames": 3200,
+          "noVisibleObjects": 1003,
+          "oneVisibleObject": 1199,
+          "multiObjectFrames": 998,
+          "sameVisibleSetRankSwaps": 11,
+          "persistentEntitySlotChanges": 145
+        },
+        "eventFraction": {
+          "noVisibleObjects": 0.3134375,
+          "oneVisibleObject": 0.3746875,
+          "multiObjectFrames": 0.311875,
+          "sameVisibleSetRankSwaps": 0.0034375,
+          "persistentEntitySlotChanges": 0.0453125
+        },
+        "swappedEntitySetKL": {
+          "count": 998,
+          "mean": 0.11669289219670662,
+          "p95": 0.4892115667462349
+        }
+      },
+      "sawHider": {
+        "maps": 12,
+        "mapsWithZeroProps": 0,
+        "mapsWithNoPersistentSlotChanges": 3,
+        "counts": {
+          "playFrames": 1920,
+          "noVisibleObjects": 758,
+          "oneVisibleObject": 905,
+          "multiObjectFrames": 257,
+          "sameVisibleSetRankSwaps": 1,
+          "persistentEntitySlotChanges": 39
+        },
+        "eventFraction": {
+          "noVisibleObjects": 0.39479166666666665,
+          "oneVisibleObject": 0.4713541666666667,
+          "multiObjectFrames": 0.13385416666666666,
+          "sameVisibleSetRankSwaps": 0.0005208333333333333,
+          "persistentEntitySlotChanges": 0.0203125
+        },
+        "swappedEntitySetKL": {
+          "count": 257,
+          "mean": 0.11077955102453783,
+          "p95": 0.39333472847938517
+        }
+      }
+    },
+    "interpretation": "Descriptive association in32 fixed development rooms, not causality. Slot-swap inference changes neither game state nor evaluated actions.",
+    "sourceSHA256": "c7dfa76515d8802682a0c31f2155817c267089726290b6a81135df89c0a54ecf"
+  }
+}

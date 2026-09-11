@@ -1,0 +1,1777 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "league-4m",
+  "sourceReportSHA256": "8988cea23b32d775d23d51521937779c1246038adafa76418eec787d9a394e64",
+  "sourceReportRelativePath": "validation-4m/evaluation.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "matched-larger-batch-league-validation-v1",
+    "checkpoints": {
+      "A": {
+        "sha256": "90b5ad68f9f045bedcd2ad131dd2478ee7eaf465119f7ade1327c8f1c6232850",
+        "training": {
+          "parentDecisions": 37036032,
+          "criticWarmupDecisions": 1966080,
+          "totalPolicyInteractions": 3997696,
+          "currentPolicyDecisions": [
+            1998848,
+            1998848
+          ],
+          "historicalPolicyDecisions": [
+            0,
+            0
+          ],
+          "activePolicySamples": [
+            1998848,
+            1331200
+          ],
+          "actorUpdateDecisions": 3997696,
+          "decisions": 42999808
+        },
+        "provenance": {
+          "parentSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+          "parentDecisions": 37036032,
+          "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+          "criticFitSHA256": "91ebc0f76d7e2206a550bd02464d71834d368d4b507770d8dadf3589c76fe126",
+          "initialSHA256": "b0638b43059be7676141cb23e0b85b548801bd217c8ed2070cf969267a6d950b",
+          "criticWarmupDecisions": 1966080,
+          "history": [
+            {
+              "file": "local-artifact/warm-start.pt",
+              "sha256": "e28dcb93a11e46d93266b4ad6a058052ca90fab93a08a33fee0c1a7eb2324394",
+              "decisions": 22937600
+            },
+            {
+              "file": "local-artifact/checkpoint-6291456.pt",
+              "sha256": "6373c587672cac080a8e9329c30e919f0bab77c89ac8f0aaa450d637f2e9690d",
+              "decisions": 29229056
+            },
+            {
+              "file": "local-artifact/checkpoint-14098432.pt",
+              "sha256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+              "decisions": 37036032
+            }
+          ],
+          "actorInput": "Unchanged restricted140 observations; no opponent identity or central state",
+          "rule": "Only original zero-sum visibility reward; unchanged physical grab/lock state semantics",
+          "comparisons": "Equal total interaction budget; B has fewer current-actor samples, reported separately",
+          "sourceHistory": [
+            {
+              "train_league.py": "e35518221ee5b2ba99152e09052cfa65ff48479aa204158086e480f83b77d792",
+              "league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+              "central_persistent_train.py": "0a594254bdc1fbd524aa3acb737b7d83a68d15748bd63cd30a61db5c71afed20",
+              "residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+              "central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+              "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+              "env_pool.py": "1583820dbc2a5e67c82349e81724efa2f94df1ca32d313315951595f63a538cc",
+              "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+            },
+            {
+              "train_league.py": "d5b0f63ec6eb632e5ea12e83b394871d33b99e873bfc5627367c2e28fac5337f",
+              "league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+              "central_persistent_train.py": "0a594254bdc1fbd524aa3acb737b7d83a68d15748bd63cd30a61db5c71afed20",
+              "residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+              "central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+              "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+              "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+              "fit_central_value.py": "7351a99336cb7b6e54ff48246459b82217f169890a49e62d90e10e8470be85a3",
+              "env_pool.py": "1583820dbc2a5e67c82349e81724efa2f94df1ca32d313315951595f63a538cc",
+              "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+            }
+          ],
+          "resumes": [
+            {
+              "afterInteractions": 65536,
+              "worldsRestarted": 128,
+              "reason": "Explicit process restart; memories/buttons reset. No claim of exact uninterrupted rollout parity."
+            }
+          ]
+        }
+      },
+      "B": {
+        "sha256": "fd2a1ff31093bb0936748a441749ee478ca14e707e614792814b0b4380745e78",
+        "training": {
+          "parentDecisions": 37036032,
+          "criticWarmupDecisions": 1966080,
+          "totalPolicyInteractions": 3997696,
+          "currentPolicyDecisions": [
+            1501472,
+            1498960
+          ],
+          "historicalPolicyDecisions": [
+            497376,
+            499888
+          ],
+          "activePolicySamples": [
+            1501472,
+            998240
+          ],
+          "actorUpdateDecisions": 3000432,
+          "decisions": 42999808
+        },
+        "provenance": {
+          "parentSHA256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+          "parentDecisions": 37036032,
+          "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+          "criticFitSHA256": "91ebc0f76d7e2206a550bd02464d71834d368d4b507770d8dadf3589c76fe126",
+          "initialSHA256": "b0638b43059be7676141cb23e0b85b548801bd217c8ed2070cf969267a6d950b",
+          "criticWarmupDecisions": 1966080,
+          "history": [
+            {
+              "file": "local-artifact/warm-start.pt",
+              "sha256": "e28dcb93a11e46d93266b4ad6a058052ca90fab93a08a33fee0c1a7eb2324394",
+              "decisions": 22937600
+            },
+            {
+              "file": "local-artifact/checkpoint-6291456.pt",
+              "sha256": "6373c587672cac080a8e9329c30e919f0bab77c89ac8f0aaa450d637f2e9690d",
+              "decisions": 29229056
+            },
+            {
+              "file": "local-artifact/checkpoint-14098432.pt",
+              "sha256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+              "decisions": 37036032
+            }
+          ],
+          "actorInput": "Unchanged restricted140 observations; no opponent identity or central state",
+          "rule": "Only original zero-sum visibility reward; unchanged physical grab/lock state semantics",
+          "comparisons": "Equal total interaction budget; B has fewer current-actor samples, reported separately",
+          "sourceHistory": [
+            {
+              "train_league.py": "e35518221ee5b2ba99152e09052cfa65ff48479aa204158086e480f83b77d792",
+              "league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+              "central_persistent_train.py": "0a594254bdc1fbd524aa3acb737b7d83a68d15748bd63cd30a61db5c71afed20",
+              "residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+              "central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+              "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+              "env_pool.py": "1583820dbc2a5e67c82349e81724efa2f94df1ca32d313315951595f63a538cc",
+              "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+            },
+            {
+              "train_league.py": "d5b0f63ec6eb632e5ea12e83b394871d33b99e873bfc5627367c2e28fac5337f",
+              "league_ppo.py": "98ed761456385eee7f8aff1625a502bb229bda0c512e72833a358df4918589b7",
+              "central_persistent_train.py": "0a594254bdc1fbd524aa3acb737b7d83a68d15748bd63cd30a61db5c71afed20",
+              "residual_critic.py": "b037e27241c15a460ebee63aadd1bf8dc76971acd7596b7359dbb30977e10088",
+              "central_critic.py": "d3c3861d95aadfaca6009780e61c6f1f18f3b3a863dbb871817a81b5091fbc11",
+              "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+              "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+              "fit_central_value.py": "7351a99336cb7b6e54ff48246459b82217f169890a49e62d90e10e8470be85a3",
+              "env_pool.py": "1583820dbc2a5e67c82349e81724efa2f94df1ca32d313315951595f63a538cc",
+              "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+            }
+          ],
+          "resumes": [
+            {
+              "afterInteractions": 65536,
+              "worldsRestarted": 128,
+              "reason": "Explicit process restart; memories/buttons reset. No claim of exact uninterrupted rollout parity."
+            }
+          ]
+        }
+      },
+      "parent": {
+        "sha256": "375fd147ae2af5c284b15e4c898342a5256db5295907e302b530da0b61763075",
+        "training": {
+          "parentDecisions": 22937600,
+          "criticWarmupDecisions": 0,
+          "totalPolicyInteractions": 0,
+          "currentPolicyDecisions": 0,
+          "historicalPolicyDecisions": 0,
+          "activePolicySamples": 0,
+          "actorUpdateDecisions": 0,
+          "decisions": 37036032
+        },
+        "provenance": {
+          "parentSHA256": "9ebbab58a8b77e15fd052654a8252385063b308ada605e9ddf7b7ac5e33113c6",
+          "parentDecisions": 22937600,
+          "parentUpdates": 3500,
+          "parentFormat": "original-mujoco-recurrent-ppo-v1",
+          "initialSourceSHA256": "971e36212955fbf237694af787b0041b5ab807855da7b8ee3bae1b39ee951e8c",
+          "initialSourceDecisions": 0,
+          "optimizerReset": true,
+          "newToolHead": "Exactly uniform zero logits; no Keep/Press/Release prior",
+          "copiedParameters": "Encoder first138columns+bias, GRU, movement, log_std, value; new2columns zero",
+          "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+          "sourceSHA256": {
+            "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+            "persistent_train.py": "a405fb9e5d929f08a05526b737cd824042666b2e12e4d3af2f5cc0b8707f6040",
+            "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+            "env_pool.py": "d14c5dc74519049a4d0f2d2cf2e3a6e17bf1048f5c4e595a2da8862b3cebcd40"
+          },
+          "continuations": [
+            {
+              "checkpointSHA256": "5a48a0391614c1039a4f264472bfc72a9d0715099f25c1be28d0b3aa64da73ba",
+              "pilotDecisions": 2097152,
+              "optimizerRestored": true,
+              "rolloutEnvironmentsRestarted": true,
+              "sourceSHA256": {
+                "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+                "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+                "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+                "env_pool.py": "d14c5dc74519049a4d0f2d2cf2e3a6e17bf1048f5c4e595a2da8862b3cebcd40"
+              }
+            }
+          ]
+        }
+      },
+      "initial": {
+        "sha256": "b0638b43059be7676141cb23e0b85b548801bd217c8ed2070cf969267a6d950b",
+        "training": {
+          "parentDecisions": 0,
+          "criticWarmupDecisions": 0,
+          "totalPolicyInteractions": 0,
+          "currentPolicyDecisions": 0,
+          "historicalPolicyDecisions": 0,
+          "activePolicySamples": 0,
+          "actorUpdateDecisions": 0,
+          "decisions": 0
+        },
+        "provenance": {
+          "parentSHA256": "971e36212955fbf237694af787b0041b5ab807855da7b8ee3bae1b39ee951e8c",
+          "parentDecisions": 0,
+          "parentUpdates": 0,
+          "parentFormat": "original-mujoco-recurrent-ppo-v1",
+          "initialSourceSHA256": "971e36212955fbf237694af787b0041b5ab807855da7b8ee3bae1b39ee951e8c",
+          "initialSourceDecisions": 0,
+          "optimizerReset": true,
+          "newToolHead": "Exactly uniform zero logits; no Keep/Press/Release prior",
+          "copiedParameters": "Encoder first138columns+bias, GRU, movement, log_std, value; new2columns zero",
+          "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+          "sourceSHA256": {
+            "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+            "persistent_train.py": "a405fb9e5d929f08a05526b737cd824042666b2e12e4d3af2f5cc0b8707f6040",
+            "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+            "env_pool.py": "d14c5dc74519049a4d0f2d2cf2e3a6e17bf1048f5c4e595a2da8862b3cebcd40"
+          }
+        }
+      }
+    },
+    "seedStart": 1500110000,
+    "episodesPerScenario": 12,
+    "evaluationActorDecisions": 380160,
+    "scope": "Fixed development cohort: three scenarios at8m, three boxes and one ramp. No final-test or full supported-range claim.",
+    "sampling": "Identical independent role-specific uniform tapes per map across all22 conditions; Gaussian movement plus categorical commands.",
+    "ablation": "Grab/lock disabled for named roles only; requested controller states unchanged, physical pushing remains enabled.",
+    "privacy": "No centralized critic or full-scene state enters inference; actual restricted actor inputs and recurrent memory only.",
+    "rejectedForRoleRegression": {
+      "A": [
+        "A: Hider change vs fixed initial seeker"
+      ],
+      "B": [
+        "B: Hider change vs fixed initial seeker"
+      ]
+    },
+    "decision": "No automatic promotion. Negative role intervals reject candidates; inconclusive intervals cannot establish useful tools.",
+    "summary": {
+      "parent-pair": {
+        "hiddenFraction": 0.5968749999999999,
+        "propShieldedFraction": 0.03524305555555555,
+        "propDisplacement": 0.375274703625664,
+        "roles": [
+          {
+            "gripCount": 29,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.27862068965517245,
+            "maxGripSeconds": 0.88,
+            "fractionGripsShorterThanThreeTicks": 0.4482758620689655,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 51.55555555555556,
+            "meanAbsoluteTurns": 2.6645784823261187,
+            "meanSpeed": 0.5763843892755925,
+            "commandCounts": [
+              [
+                2605,
+                2331,
+                3704
+              ],
+              [
+                1848,
+                4643,
+                2149
+              ]
+            ]
+          },
+          {
+            "gripCount": 47,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.4204255319148936,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.3191489361702128,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 1.2222222222222223,
+            "meanAbsoluteTurns": 2.6596093455142635,
+            "meanSpeed": 0.6180490245813172,
+            "commandCounts": [
+              [
+                1618,
+                1953,
+                2189
+              ],
+              [
+                3082,
+                1130,
+                1548
+              ]
+            ]
+          }
+        ]
+      },
+      "initial-pair": {
+        "hiddenFraction": 0.5486111111111112,
+        "propShieldedFraction": 0.06805555555555555,
+        "propDisplacement": 0.016160741958693325,
+        "roles": [
+          {
+            "gripCount": 8,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.42,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.375,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.1111111111111111,
+            "meanAbsoluteTurns": 3.202513803361183,
+            "meanSpeed": 0.431125800787174,
+            "commandCounts": [
+              [
+                2843,
+                2889,
+                2908
+              ],
+              [
+                2891,
+                2849,
+                2900
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.0,
+            "meanAbsoluteTurns": 2.198272453531589,
+            "meanSpeed": 0.2891486170850499,
+            "commandCounts": [
+              [
+                1922,
+                1884,
+                1954
+              ],
+              [
+                1879,
+                1971,
+                1910
+              ]
+            ]
+          }
+        ]
+      },
+      "parent-hider-v-initial": {
+        "hiddenFraction": 0.9868055555555555,
+        "propShieldedFraction": 0.012847222222222222,
+        "propDisplacement": 0.3598462623984263,
+        "roles": [
+          {
+            "gripCount": 35,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.27885714285714286,
+            "maxGripSeconds": 0.88,
+            "fractionGripsShorterThanThreeTicks": 0.5142857142857142,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 63.44444444444444,
+            "meanAbsoluteTurns": 2.3956602522450896,
+            "meanSpeed": 0.43474269046690683,
+            "commandCounts": [
+              [
+                2614,
+                2492,
+                3534
+              ],
+              [
+                1740,
+                5013,
+                1887
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.0,
+            "meanAbsoluteTurns": 2.2020177824841944,
+            "meanSpeed": 0.28936106371052056,
+            "commandCounts": [
+              [
+                1922,
+                1884,
+                1954
+              ],
+              [
+                1879,
+                1971,
+                1910
+              ]
+            ]
+          }
+        ]
+      },
+      "parent-seeker-v-initial": {
+        "hiddenFraction": 0.2774305555555555,
+        "propShieldedFraction": 0.040624999999999994,
+        "propDisplacement": 0.07166950850381226,
+        "roles": [
+          {
+            "gripCount": 8,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.42,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.375,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.1111111111111111,
+            "meanAbsoluteTurns": 3.202321616735042,
+            "meanSpeed": 0.43107226400393706,
+            "commandCounts": [
+              [
+                2843,
+                2889,
+                2908
+              ],
+              [
+                2891,
+                2849,
+                2900
+              ]
+            ]
+          },
+          {
+            "gripCount": 36,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.3755555555555556,
+            "maxGripSeconds": 1.76,
+            "fractionGripsShorterThanThreeTicks": 0.4444444444444444,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 3.0277777777777777,
+            "meanAbsoluteTurns": 2.144919565154196,
+            "meanSpeed": 0.46116532864180027,
+            "commandCounts": [
+              [
+                1172,
+                3171,
+                1417
+              ],
+              [
+                2631,
+                1722,
+                1407
+              ]
+            ]
+          }
+        ]
+      },
+      "A/learned": {
+        "hiddenFraction": 0.5180555555555554,
+        "propShieldedFraction": 0.049131944444444436,
+        "propDisplacement": 0.3947154709613277,
+        "roles": [
+          {
+            "gripCount": 66,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.21454545454545454,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.6212121212121212,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 40.083333333333336,
+            "meanAbsoluteTurns": 2.7678417508978703,
+            "meanSpeed": 0.6097756291778587,
+            "commandCounts": [
+              [
+                3087,
+                2430,
+                3123
+              ],
+              [
+                2301,
+                3906,
+                2433
+              ]
+            ]
+          },
+          {
+            "gripCount": 28,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2714285714285714,
+            "maxGripSeconds": 0.96,
+            "fractionGripsShorterThanThreeTicks": 0.5357142857142857,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 6.388888888888889,
+            "meanAbsoluteTurns": 2.520287125359514,
+            "meanSpeed": 0.5595501519892815,
+            "commandCounts": [
+              [
+                1797,
+                2089,
+                1874
+              ],
+              [
+                2723,
+                1452,
+                1585
+              ]
+            ]
+          }
+        ]
+      },
+      "A/no-hider-tools": {
+        "hiddenFraction": 0.5236111111111109,
+        "propShieldedFraction": 0.041145833333333326,
+        "propDisplacement": 0.5693657883180049,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 41.55555555555556,
+            "meanAbsoluteTurns": 2.867222022499101,
+            "meanSpeed": 0.6580831037258745,
+            "commandCounts": [
+              [
+                3095,
+                2404,
+                3141
+              ],
+              [
+                2306,
+                3879,
+                2455
+              ]
+            ]
+          },
+          {
+            "gripCount": 23,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.271304347826087,
+            "maxGripSeconds": 0.96,
+            "fractionGripsShorterThanThreeTicks": 0.4782608695652174,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 5.75,
+            "meanAbsoluteTurns": 2.5716299707735515,
+            "meanSpeed": 0.5643114233494413,
+            "commandCounts": [
+              [
+                1803,
+                2060,
+                1897
+              ],
+              [
+                2742,
+                1437,
+                1581
+              ]
+            ]
+          }
+        ]
+      },
+      "A/no-seeker-tools": {
+        "hiddenFraction": 0.5194444444444444,
+        "propShieldedFraction": 0.051562500000000004,
+        "propDisplacement": 0.4092823081687568,
+        "roles": [
+          {
+            "gripCount": 76,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2336842105263158,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.5789473684210527,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 41.47222222222222,
+            "meanAbsoluteTurns": 2.766710342628546,
+            "meanSpeed": 0.6133036281393348,
+            "commandCounts": [
+              [
+                3083,
+                2436,
+                3121
+              ],
+              [
+                2295,
+                3915,
+                2430
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 4.527777777777778,
+            "meanAbsoluteTurns": 2.635508508141767,
+            "meanSpeed": 0.5692968397150738,
+            "commandCounts": [
+              [
+                1779,
+                2100,
+                1881
+              ],
+              [
+                2721,
+                1460,
+                1579
+              ]
+            ]
+          }
+        ]
+      },
+      "A/no-tools": {
+        "hiddenFraction": 0.5262152777777777,
+        "propShieldedFraction": 0.043750000000000004,
+        "propDisplacement": 0.5400290473161601,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 42.083333333333336,
+            "meanAbsoluteTurns": 2.8767005426569883,
+            "meanSpeed": 0.6625427157617347,
+            "commandCounts": [
+              [
+                3090,
+                2418,
+                3132
+              ],
+              [
+                2299,
+                3883,
+                2458
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 3.9444444444444446,
+            "meanAbsoluteTurns": 2.6617077423467097,
+            "meanSpeed": 0.5728605965230171,
+            "commandCounts": [
+              [
+                1793,
+                2065,
+                1902
+              ],
+              [
+                2742,
+                1443,
+                1575
+              ]
+            ]
+          }
+        ]
+      },
+      "A/hider-v-parent": {
+        "hiddenFraction": 0.5664930555555555,
+        "propShieldedFraction": 0.043402777777777776,
+        "propDisplacement": 0.43036386111549696,
+        "roles": [
+          {
+            "gripCount": 37,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.23567567567567568,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.4864864864864865,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 42.333333333333336,
+            "meanAbsoluteTurns": 2.7345820684823887,
+            "meanSpeed": 0.5791535738864046,
+            "commandCounts": [
+              [
+                3072,
+                2458,
+                3110
+              ],
+              [
+                2282,
+                3980,
+                2378
+              ]
+            ]
+          },
+          {
+            "gripCount": 67,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.3271641791044776,
+            "maxGripSeconds": 1.6,
+            "fractionGripsShorterThanThreeTicks": 0.4925373134328358,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.8055555555555556,
+            "meanAbsoluteTurns": 2.5790653309003417,
+            "meanSpeed": 0.5963744688031786,
+            "commandCounts": [
+              [
+                1573,
+                2065,
+                2122
+              ],
+              [
+                3026,
+                1177,
+                1557
+              ]
+            ]
+          }
+        ]
+      },
+      "A/seeker-v-parent": {
+        "hiddenFraction": 0.5319444444444446,
+        "propShieldedFraction": 0.030208333333333337,
+        "propDisplacement": 0.4264305925331493,
+        "roles": [
+          {
+            "gripCount": 38,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.23578947368421052,
+            "maxGripSeconds": 0.88,
+            "fractionGripsShorterThanThreeTicks": 0.5526315789473685,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 50.888888888888886,
+            "meanAbsoluteTurns": 2.7341113979294756,
+            "meanSpeed": 0.5971857116674726,
+            "commandCounts": [
+              [
+                2587,
+                2287,
+                3766
+              ],
+              [
+                1866,
+                4563,
+                2211
+              ]
+            ]
+          },
+          {
+            "gripCount": 10,
+            "medianGripSeconds": 0.2,
+            "meanGripSeconds": 0.24800000000000003,
+            "maxGripSeconds": 0.48,
+            "fractionGripsShorterThanThreeTicks": 0.5,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 6.083333333333333,
+            "meanAbsoluteTurns": 2.547332903458984,
+            "meanSpeed": 0.5663936299532382,
+            "commandCounts": [
+              [
+                1810,
+                2042,
+                1908
+              ],
+              [
+                2731,
+                1452,
+                1577
+              ]
+            ]
+          }
+        ]
+      },
+      "A/hider-v-initial": {
+        "hiddenFraction": 0.9373263888888891,
+        "propShieldedFraction": 0.03437500000000001,
+        "propDisplacement": 0.37083963424042976,
+        "roles": [
+          {
+            "gripCount": 45,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.27911111111111114,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.5333333333333333,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 52.333333333333336,
+            "meanAbsoluteTurns": 2.54816720061688,
+            "meanSpeed": 0.4959359392011249,
+            "commandCounts": [
+              [
+                3128,
+                2655,
+                2857
+              ],
+              [
+                2182,
+                4314,
+                2144
+              ]
+            ]
+          },
+          {
+            "gripCount": 7,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 0.1142857142857143,
+            "maxGripSeconds": 0.24,
+            "fractionGripsShorterThanThreeTicks": 0.8571428571428571,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.0,
+            "meanAbsoluteTurns": 2.1926067472970034,
+            "meanSpeed": 0.2901810686902137,
+            "commandCounts": [
+              [
+                1922,
+                1884,
+                1954
+              ],
+              [
+                1879,
+                1971,
+                1910
+              ]
+            ]
+          }
+        ]
+      },
+      "A/seeker-v-initial": {
+        "hiddenFraction": 0.2831597222222222,
+        "propShieldedFraction": 0.04114583333333333,
+        "propDisplacement": 0.050963856104473355,
+        "roles": [
+          {
+            "gripCount": 8,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.42,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.375,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.1111111111111111,
+            "meanAbsoluteTurns": 3.202111650359087,
+            "meanSpeed": 0.43095260374271493,
+            "commandCounts": [
+              [
+                2843,
+                2889,
+                2908
+              ],
+              [
+                2891,
+                2849,
+                2900
+              ]
+            ]
+          },
+          {
+            "gripCount": 56,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.43,
+            "maxGripSeconds": 1.92,
+            "fractionGripsShorterThanThreeTicks": 0.32142857142857145,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 6.277777777777778,
+            "meanAbsoluteTurns": 2.1162946066380686,
+            "meanSpeed": 0.4353187292329339,
+            "commandCounts": [
+              [
+                1426,
+                3022,
+                1312
+              ],
+              [
+                2394,
+                1871,
+                1495
+              ]
+            ]
+          }
+        ]
+      },
+      "B/learned": {
+        "hiddenFraction": 0.5394097222222223,
+        "propShieldedFraction": 0.03125,
+        "propDisplacement": 0.47830167511129346,
+        "roles": [
+          {
+            "gripCount": 24,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2366666666666667,
+            "maxGripSeconds": 0.72,
+            "fractionGripsShorterThanThreeTicks": 0.5416666666666666,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 46.611111111111114,
+            "meanAbsoluteTurns": 2.64564842298278,
+            "meanSpeed": 0.594983985097576,
+            "commandCounts": [
+              [
+                2419,
+                2966,
+                3255
+              ],
+              [
+                2835,
+                3961,
+                1844
+              ]
+            ]
+          },
+          {
+            "gripCount": 37,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2681081081081081,
+            "maxGripSeconds": 1.52,
+            "fractionGripsShorterThanThreeTicks": 0.7027027027027027,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.6388888888888888,
+            "meanAbsoluteTurns": 2.6001434874293454,
+            "meanSpeed": 0.5914500417329087,
+            "commandCounts": [
+              [
+                1719,
+                2019,
+                2022
+              ],
+              [
+                2426,
+                1470,
+                1864
+              ]
+            ]
+          }
+        ]
+      },
+      "B/no-hider-tools": {
+        "hiddenFraction": 0.5342013888888889,
+        "propShieldedFraction": 0.0375,
+        "propDisplacement": 0.6535106911900695,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 44.44444444444444,
+            "meanAbsoluteTurns": 2.7986334606534844,
+            "meanSpeed": 0.6605960308207133,
+            "commandCounts": [
+              [
+                2421,
+                2930,
+                3289
+              ],
+              [
+                2867,
+                3896,
+                1877
+              ]
+            ]
+          },
+          {
+            "gripCount": 40,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.272,
+            "maxGripSeconds": 1.52,
+            "fractionGripsShorterThanThreeTicks": 0.7,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.6388888888888888,
+            "meanAbsoluteTurns": 2.6268197729545313,
+            "meanSpeed": 0.5918374938413583,
+            "commandCounts": [
+              [
+                1714,
+                2013,
+                2033
+              ],
+              [
+                2425,
+                1472,
+                1863
+              ]
+            ]
+          }
+        ]
+      },
+      "B/no-seeker-tools": {
+        "hiddenFraction": 0.5350694444444445,
+        "propShieldedFraction": 0.029340277777777774,
+        "propDisplacement": 0.4752168138011918,
+        "roles": [
+          {
+            "gripCount": 24,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.2366666666666667,
+            "maxGripSeconds": 0.72,
+            "fractionGripsShorterThanThreeTicks": 0.5416666666666666,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 46.583333333333336,
+            "meanAbsoluteTurns": 2.658474060401554,
+            "meanSpeed": 0.6040281688701105,
+            "commandCounts": [
+              [
+                2420,
+                2964,
+                3256
+              ],
+              [
+                2833,
+                3960,
+                1847
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.6666666666666667,
+            "meanAbsoluteTurns": 2.6329239333050944,
+            "meanSpeed": 0.5972631424432044,
+            "commandCounts": [
+              [
+                1719,
+                2017,
+                2024
+              ],
+              [
+                2423,
+                1475,
+                1862
+              ]
+            ]
+          }
+        ]
+      },
+      "B/no-tools": {
+        "hiddenFraction": 0.5369791666666667,
+        "propShieldedFraction": 0.03836805555555555,
+        "propDisplacement": 0.7496760680979758,
+        "roles": [
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 44.416666666666664,
+            "meanAbsoluteTurns": 2.8051017996941727,
+            "meanSpeed": 0.6688958142934012,
+            "commandCounts": [
+              [
+                2419,
+                2928,
+                3293
+              ],
+              [
+                2862,
+                3903,
+                1875
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.6666666666666667,
+            "meanAbsoluteTurns": 2.674250766437853,
+            "meanSpeed": 0.5994565404692231,
+            "commandCounts": [
+              [
+                1716,
+                2001,
+                2043
+              ],
+              [
+                2426,
+                1472,
+                1862
+              ]
+            ]
+          }
+        ]
+      },
+      "B/hider-v-parent": {
+        "hiddenFraction": 0.5944444444444444,
+        "propShieldedFraction": 0.040624999999999994,
+        "propDisplacement": 0.49592819018904966,
+        "roles": [
+          {
+            "gripCount": 29,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.19862068965517243,
+            "maxGripSeconds": 0.72,
+            "fractionGripsShorterThanThreeTicks": 0.6206896551724138,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 47.80555555555556,
+            "meanAbsoluteTurns": 2.626445131827216,
+            "meanSpeed": 0.5858222402031191,
+            "commandCounts": [
+              [
+                2425,
+                2965,
+                3250
+              ],
+              [
+                2816,
+                4004,
+                1820
+              ]
+            ]
+          },
+          {
+            "gripCount": 35,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.256,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.6285714285714286,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 2.888888888888889,
+            "meanAbsoluteTurns": 2.6583390965069835,
+            "meanSpeed": 0.6095367705657552,
+            "commandCounts": [
+              [
+                1611,
+                1956,
+                2193
+              ],
+              [
+                3086,
+                1125,
+                1549
+              ]
+            ]
+          }
+        ]
+      },
+      "B/seeker-v-parent": {
+        "hiddenFraction": 0.5475694444444444,
+        "propShieldedFraction": 0.036111111111111115,
+        "propDisplacement": 0.42410792380080786,
+        "roles": [
+          {
+            "gripCount": 42,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.24761904761904763,
+            "maxGripSeconds": 0.88,
+            "fractionGripsShorterThanThreeTicks": 0.5952380952380952,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 54.138888888888886,
+            "meanAbsoluteTurns": 2.616553119323075,
+            "meanSpeed": 0.5715292694738328,
+            "commandCounts": [
+              [
+                2592,
+                2303,
+                3745
+              ],
+              [
+                1860,
+                4579,
+                2201
+              ]
+            ]
+          },
+          {
+            "gripCount": 26,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.28307692307692306,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.6153846153846154,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 2.25,
+            "meanAbsoluteTurns": 2.562038700454893,
+            "meanSpeed": 0.5899341275268294,
+            "commandCounts": [
+              [
+                1725,
+                1988,
+                2047
+              ],
+              [
+                2433,
+                1436,
+                1891
+              ]
+            ]
+          }
+        ]
+      },
+      "B/hider-v-initial": {
+        "hiddenFraction": 0.9251736111111113,
+        "propShieldedFraction": 0.029861111111111116,
+        "propDisplacement": 0.4055446071544266,
+        "roles": [
+          {
+            "gripCount": 18,
+            "medianGripSeconds": 0.08,
+            "meanGripSeconds": 0.19555555555555557,
+            "maxGripSeconds": 0.72,
+            "fractionGripsShorterThanThreeTicks": 0.7222222222222222,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.32
+            ],
+            "meanPlayWallPressFrames": 60.25,
+            "meanAbsoluteTurns": 2.3743729108194263,
+            "meanSpeed": 0.46538138971139315,
+            "commandCounts": [
+              [
+                2404,
+                3253,
+                2983
+              ],
+              [
+                2667,
+                4315,
+                1658
+              ]
+            ]
+          },
+          {
+            "gripCount": 0,
+            "medianGripSeconds": 0,
+            "meanGripSeconds": 0,
+            "maxGripSeconds": 0,
+            "fractionGripsShorterThanThreeTicks": 0,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.0,
+            "meanAbsoluteTurns": 2.198107051117527,
+            "meanSpeed": 0.28900672241908515,
+            "commandCounts": [
+              [
+                1922,
+                1884,
+                1954
+              ],
+              [
+                1879,
+                1971,
+                1910
+              ]
+            ]
+          }
+        ]
+      },
+      "B/seeker-v-initial": {
+        "hiddenFraction": 0.2625,
+        "propShieldedFraction": 0.03784722222222223,
+        "propDisplacement": 0.06208032698019669,
+        "roles": [
+          {
+            "gripCount": 8,
+            "medianGripSeconds": 0.32,
+            "meanGripSeconds": 0.42,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.375,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 0.1111111111111111,
+            "meanAbsoluteTurns": 3.202118559290492,
+            "meanSpeed": 0.4308659804610715,
+            "commandCounts": [
+              [
+                2843,
+                2889,
+                2908
+              ],
+              [
+                2891,
+                2849,
+                2900
+              ]
+            ]
+          },
+          {
+            "gripCount": 30,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.32266666666666666,
+            "maxGripSeconds": 1.68,
+            "fractionGripsShorterThanThreeTicks": 0.36666666666666664,
+            "requestedHoldMedianSeconds": [
+              0.24,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 2.0277777777777777,
+            "meanAbsoluteTurns": 2.153763700417644,
+            "meanSpeed": 0.46137883432830445,
+            "commandCounts": [
+              [
+                1238,
+                3112,
+                1410
+              ],
+              [
+                1973,
+                2129,
+                1658
+              ]
+            ]
+          }
+        ]
+      },
+      "A-hider/B-seeker": {
+        "hiddenFraction": 0.5321180555555555,
+        "propShieldedFraction": 0.048784722222222215,
+        "propDisplacement": 0.41769579436123133,
+        "roles": [
+          {
+            "gripCount": 30,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.26666666666666666,
+            "maxGripSeconds": 1.28,
+            "fractionGripsShorterThanThreeTicks": 0.5333333333333333,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 39.94444444444444,
+            "meanAbsoluteTurns": 2.8148433878238244,
+            "meanSpeed": 0.6129977816133118,
+            "commandCounts": [
+              [
+                3084,
+                2429,
+                3127
+              ],
+              [
+                2289,
+                3908,
+                2443
+              ]
+            ]
+          },
+          {
+            "gripCount": 33,
+            "medianGripSeconds": 0.24,
+            "meanGripSeconds": 0.32484848484848483,
+            "maxGripSeconds": 1.12,
+            "fractionGripsShorterThanThreeTicks": 0.48484848484848486,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.16
+            ],
+            "meanPlayWallPressFrames": 1.7777777777777777,
+            "meanAbsoluteTurns": 2.6023920306978603,
+            "meanSpeed": 0.5936505153683229,
+            "commandCounts": [
+              [
+                1675,
+                2069,
+                2016
+              ],
+              [
+                2360,
+                1533,
+                1867
+              ]
+            ]
+          }
+        ]
+      },
+      "B-hider/A-seeker": {
+        "hiddenFraction": 0.5350694444444444,
+        "propShieldedFraction": 0.042708333333333334,
+        "propDisplacement": 0.46457336738816096,
+        "roles": [
+          {
+            "gripCount": 46,
+            "medianGripSeconds": 0.12,
+            "meanGripSeconds": 0.20173913043478262,
+            "maxGripSeconds": 0.8,
+            "fractionGripsShorterThanThreeTicks": 0.717391304347826,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 46.02777777777778,
+            "meanAbsoluteTurns": 2.700828406067162,
+            "meanSpeed": 0.6166340402106035,
+            "commandCounts": [
+              [
+                2433,
+                2920,
+                3287
+              ],
+              [
+                2853,
+                3919,
+                1868
+              ]
+            ]
+          },
+          {
+            "gripCount": 46,
+            "medianGripSeconds": 0.16,
+            "meanGripSeconds": 0.3652173913043478,
+            "maxGripSeconds": 2.08,
+            "fractionGripsShorterThanThreeTicks": 0.5434782608695652,
+            "requestedHoldMedianSeconds": [
+              0.16,
+              0.24
+            ],
+            "meanPlayWallPressFrames": 5.777777777777778,
+            "meanAbsoluteTurns": 2.5736208521452313,
+            "meanSpeed": 0.5522030256765978,
+            "commandCounts": [
+              [
+                1833,
+                2009,
+                1918
+              ],
+              [
+                2770,
+                1430,
+                1560
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "contrasts": {
+      "A: Hider grab/lock benefit": {
+        "mean": -0.005555555555555552,
+        "bootstrap95Percent": [
+          -0.03697916666666666,
+          0.029518229166666618
+        ],
+        "positiveCases": 2,
+        "negativeCases": 7,
+        "unchangedCases": 27
+      },
+      "A: Seeker grab/lock benefit": {
+        "mean": 0.001388888888888884,
+        "bootstrap95Percent": [
+          -0.04149739583333334,
+          0.04704861111111111
+        ],
+        "positiveCases": 3,
+        "negativeCases": 5,
+        "unchangedCases": 28
+      },
+      "A: Hider change vs fixed parent seeker": {
+        "mean": -0.030381944444444444,
+        "bootstrap95Percent": [
+          -0.09600694444444444,
+          0.03055555555555555
+        ],
+        "positiveCases": 11,
+        "negativeCases": 19,
+        "unchangedCases": 6
+      },
+      "A: Seeker change vs fixed parent hider": {
+        "mean": 0.06493055555555556,
+        "bootstrap95Percent": [
+          -0.014756944444444444,
+          0.14618923611111098
+        ],
+        "positiveCases": 18,
+        "negativeCases": 11,
+        "unchangedCases": 7
+      },
+      "A: Hider change vs fixed initial seeker": {
+        "mean": -0.049479166666666664,
+        "bootstrap95Percent": [
+          -0.08975694444444444,
+          -0.014236111111111107
+        ],
+        "positiveCases": 2,
+        "negativeCases": 8,
+        "unchangedCases": 26
+      },
+      "A: Seeker change vs fixed initial hider": {
+        "mean": -0.005729166666666668,
+        "bootstrap95Percent": [
+          -0.05833767361111109,
+          0.049305555555555554
+        ],
+        "positiveCases": 8,
+        "negativeCases": 12,
+        "unchangedCases": 16
+      },
+      "A: Total hider learning vs initial": {
+        "mean": 0.38871527777777776,
+        "bootstrap95Percent": [
+          0.25763454861111107,
+          0.5199652777777778
+        ],
+        "positiveCases": 25,
+        "negativeCases": 2,
+        "unchangedCases": 9
+      },
+      "A: Total seeker learning vs initial": {
+        "mean": 0.26545138888888886,
+        "bootstrap95Percent": [
+          0.16735677083333333,
+          0.36580295138888885
+        ],
+        "positiveCases": 25,
+        "negativeCases": 3,
+        "unchangedCases": 8
+      },
+      "B: Hider grab/lock benefit": {
+        "mean": 0.005208333333333333,
+        "bootstrap95Percent": [
+          -0.03020833333333333,
+          0.049305555555555554
+        ],
+        "positiveCases": 3,
+        "negativeCases": 3,
+        "unchangedCases": 30
+      },
+      "B: Seeker grab/lock benefit": {
+        "mean": -0.004340277777777778,
+        "bootstrap95Percent": [
+          -0.012326388888888892,
+          0.0015625000000000005
+        ],
+        "positiveCases": 1,
+        "negativeCases": 3,
+        "unchangedCases": 32
+      },
+      "B: Hider change vs fixed parent seeker": {
+        "mean": -0.0024305555555555578,
+        "bootstrap95Percent": [
+          -0.06979166666666665,
+          0.07222222222222222
+        ],
+        "positiveCases": 12,
+        "negativeCases": 16,
+        "unchangedCases": 8
+      },
+      "B: Seeker change vs fixed parent hider": {
+        "mean": 0.04930555555555557,
+        "bootstrap95Percent": [
+          -0.03073784722222222,
+          0.13194878472222218
+        ],
+        "positiveCases": 19,
+        "negativeCases": 13,
+        "unchangedCases": 4
+      },
+      "B: Hider change vs fixed initial seeker": {
+        "mean": -0.06163194444444445,
+        "bootstrap95Percent": [
+          -0.12083333333333332,
+          -0.009374999999999998
+        ],
+        "positiveCases": 1,
+        "negativeCases": 9,
+        "unchangedCases": 26
+      },
+      "B: Seeker change vs fixed initial hider": {
+        "mean": 0.014930555555555555,
+        "bootstrap95Percent": [
+          -0.04722222222222223,
+          0.08020833333333333
+        ],
+        "positiveCases": 11,
+        "negativeCases": 8,
+        "unchangedCases": 17
+      },
+      "B: Total hider learning vs initial": {
+        "mean": 0.3765625,
+        "bootstrap95Percent": [
+          0.2331553819444445,
+          0.5249999999999999
+        ],
+        "positiveCases": 23,
+        "negativeCases": 4,
+        "unchangedCases": 9
+      },
+      "B: Total seeker learning vs initial": {
+        "mean": 0.2861111111111111,
+        "bootstrap95Percent": [
+          0.18732638888888886,
+          0.39062499999999994
+        ],
+        "positiveCases": 29,
+        "negativeCases": 3,
+        "unchangedCases": 4
+      },
+      "B minus A: Hider vs same parent seeker": {
+        "mean": 0.02795138888888889,
+        "bootstrap95Percent": [
+          -0.023263888888888883,
+          0.08211805555555556
+        ],
+        "positiveCases": 17,
+        "negativeCases": 11,
+        "unchangedCases": 8
+      },
+      "B minus A: Seeker vs same parent hider": {
+        "mean": -0.015624999999999997,
+        "bootstrap95Percent": [
+          -0.08350694444444444,
+          0.05208767361111106
+        ],
+        "positiveCases": 12,
+        "negativeCases": 18,
+        "unchangedCases": 6
+      },
+      "B minus A: Hider vs same initial seeker": {
+        "mean": -0.012152777777777781,
+        "bootstrap95Percent": [
+          -0.07013888888888888,
+          0.03333333333333333
+        ],
+        "positiveCases": 7,
+        "negativeCases": 6,
+        "unchangedCases": 23
+      },
+      "B minus A: Seeker vs same initial hider": {
+        "mean": 0.02065972222222221,
+        "bootstrap95Percent": [
+          -0.026566840277777788,
+          0.07361111111111111
+        ],
+        "positiveCases": 15,
+        "negativeCases": 7,
+        "unchangedCases": 14
+      }
+    },
+    "sources": {
+      "evaluate_league.py": "fda0639eb6f7fdfa58ecb9332764aeeda776bafb58dea10e5ed4613d39581cee",
+      "persistent_evaluate.py": "56931063b9cd338c2ad6f51c7be6c9dd4df55ba61b6a5f3724b4071173de524f",
+      "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+      "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+      "actor.py": "6a31e52ac1ce51578fa16c3e240264cb70df3c2af48f9b0b1c9222247a8e71db",
+      "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+    }
+  }
+}

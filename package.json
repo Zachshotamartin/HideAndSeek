@@ -12,24 +12,30 @@
     "public",
     "evaluation.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5181",
-    "build": "vite build",
+    "build": "node scripts/build-mujoco-csp.mjs --check && vite build",
     "test": "node --test tests/*.test.js",
     "train": "node scripts/train.mjs",
+    "train:continuous": "node scripts/train-continuous.mjs",
     "test:browser": "node scripts/browser-test.mjs",
-    "capture": "node scripts/capture.mjs"
+    "test:csp": "node scripts/test-csp.mjs",
+    "capture": "node scripts/capture.mjs",
+    "train:saved": "node scripts/train-saved.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "vite": "^8.2.1"
   },
   "dependencies": {
+    "@mujoco/mujoco": "3.13.0",
+    "@zachshotamartin/stick-figure": "https://codeload.github.com/Zachshotamartin/StickFigure/tar.gz/7078d772105203785686e90eff4e97b68972ae61",
     "three": "^0.180.0"
   }
 }
