@@ -1,7 +1,7 @@
 """Matched training ablations, followed by exact continuation of the full system.
 No browser asset promotion, tool-use reward, or agent monitoring is involved.
 """
-import argparse,fcntl,json,os,signal,subprocess,sys
+import argparse,fcntl,json,os,signal,subprocess,sys,time
 from pathlib import Path
 import numpy as np
 from checkpoint_store import atomic_json,utc_now
@@ -33,10 +33,14 @@ def main(a):
   if a.heldout:command+=['--heldout',a.heldout]
   if pilot:command+=['--stop-after-updates',str(a.pilot_updates)]
   save(phase='training',current=name,stage='pilot' if pilot else 'continuation')
-  with (out/(name+'.log')).open('a') as log:
-   child=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,env={**os.environ,'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1'});save(childPID=child.pid)
-   code=child.wait();child=None
-  if code and not stop:raise RuntimeError(f'{name} failed; see log')
+  for attempt in range(3):
+   with (out/(name+'.log')).open('a') as log:
+    child=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,env={**os.environ,'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1'});save(childPID=child.pid,attempt=attempt)
+    code=child.wait();child=None
+   if not code or stop:return
+   # The controller resumes from its own latest checkpoint; a repeatable failure stops the suite.
+   save(phase='retrying',lastExitCode=code);time.sleep(30)
+  raise RuntimeError(f'{name} failed three times; see log')
  try:
   for variant in VARIANTS:
    for seed in a.seeds:

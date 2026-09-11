@@ -25,6 +25,15 @@ class PoolTests(unittest.TestCase):
         pool.processes[0].terminate();pool.processes[0].join()
         with self.assertRaises(PhysicsPoolError):pool.step(np.zeros((1,2,6)))
         self.assertTrue(pool.closed);pool.close()
+    def test_diverged_world_ends_its_episode_instead_of_crashing(self):
+        with PhysicsEnvPool([dict(seed=9,scenario='open',n_boxes=1,n_ramps=0,prep=1,play=20)],workers=1) as pool:
+            snap=pool.snapshot();world=snap['worlds'][0];nq=len(world['attributes']['initial_objects'])*4+8
+            world['integration'][1+nq:1+nq+8]=1e12  # integration state is [time, qpos, qvel, ...]; velocities beyond mjMAXVAL trigger MuJoCo's silent instability reset
+            pool.restore(snap)
+            obs,reward,done,infos=pool.step(np.zeros((1,2,6)))
+            self.assertTrue(done[0]);self.assertTrue(infos[0].get('diverged'));np.testing.assert_array_equal(reward[0],[0,0]);self.assertTrue(np.isfinite(obs).all())
+            fresh=pool.reset_at([0],[10]);self.assertTrue(np.isfinite(fresh).all())
+            obs,reward,done,infos=pool.step(np.zeros((1,2,6)));self.assertFalse(done[0]);self.assertFalse(infos[0].get('diverged',False))
     def test_bad_startup_cleans_up(self):
         with self.assertRaises(PhysicsPoolError):PhysicsEnvPool([dict(scenario='not-an-arena')],workers=1)
 

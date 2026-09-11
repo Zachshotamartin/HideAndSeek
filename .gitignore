@@ -10,3 +10,4 @@ __pycache__/
 
 .venv-physics/
 output/
+MUJOCO_LOG.TXT

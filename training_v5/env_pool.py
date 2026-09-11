@@ -17,6 +17,15 @@ import numpy as np
 class PhysicsPoolError(RuntimeError):
     pass
 
+UNSTABLE_WARNINGS=('mjWARN_BADQPOS','mjWARN_BADQVEL','mjWARN_BADQACC')
+
+def unstable(env):
+    """MuJoCo silently resets an unstable world to its XML pose and only leaves a
+    warning counter behind; the physical contract stays byte-identical, so the
+    check lives here, next to the recovery, instead of inside physics.py."""
+    import mujoco
+    return any(env.data.warning[getattr(mujoco.mjtWarning,name)].number for name in UNSTABLE_WARNINGS)
+
 def _worker(connection, configs, with_central_state=False, ignore_parent_signals=False):
     if ignore_parent_signals:
         # The continuous-training parent owns Ctrl-C and saves after a complete
@@ -42,7 +51,19 @@ def _worker(connection, configs, with_central_state=False, ignore_parent_signals
             request,operation,payload=connection.recv()
             if operation=='close':break
             if operation=='step':
-                rows=[env.step(action) for env,action in zip(envs,payload)]
+                rows=[]
+                for env,action in zip(envs,payload):
+                    try:
+                        row=env.step(action)
+                        if unstable(env):raise RuntimeError('Physics diverged: MuJoCo instability reset')
+                        rows.append(row)
+                    except RuntimeError as error:
+                        if 'diverged' not in str(error):raise
+                        # A blown-up world ends its episode with zero reward for both
+                        # roles (still zero-sum) and is rebuilt on the same layout so the
+                        # trainer's ordinary reset path replaces it; the event is reported.
+                        info=dict(env.info(),diverged=True);env.reset(seed=env.arena['seed'])
+                        rows.append((np.zeros_like(env.observe()),np.zeros(2),True,info))
                 result=(np.stack([row[0] for row in rows]),np.stack([row[1] for row in rows]),np.asarray([row[2] for row in rows],dtype=bool),[row[3] for row in rows])
                 if with_central_state:
                     result=(*result,[central_state(env,(env.actions[:,3:5]>.5).astype(np.float32)) for env in envs])

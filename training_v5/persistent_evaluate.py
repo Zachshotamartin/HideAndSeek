@@ -14,6 +14,7 @@ import torch
 from actor import PhysicalActor
 from persistent_actor import PersistentActor, advance_buttons, augment, FORMAT
 from physics import PhysicsEnv, DT
+from env_pool import unstable
 
 torch.set_num_threads(1)
 BLACKOUT_STEPS = 24  # 1.9 s without the opponent block after the seeker's first sight
@@ -81,7 +82,7 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
     buttons=np.zeros((2,2),np.float32)
     random=[np.random.default_rng(seed+912341),np.random.default_rng(seed+2912341)]
     histories=[[],[]]; frames=[env.trace()] if trace else None
-    first_sight=None; blackout_ticks=0
+    first_sight=None; blackout_ticks=0; diverged=False
     with torch.no_grad():
         for tick in range(env.prep+env.play):
             actions=np.zeros((2,6),np.float32); commands=[]
@@ -99,6 +100,8 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
                 if mode=='no-hider-tools' and role==0 or mode=='no-seeker-tools' and role==1:
                     actions[role,3:5]=0
             physical,reward,done,info=env.step(actions)
+            if unstable(env):
+                diverged=True;break
             wall=[False,False]; prop=[False,False]
             for contact in env.data.contact:
                 if contact.dist>0: continue
@@ -140,7 +143,7 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
                 for command in range(3)] for tool in range(2)]))
     result=dict(seed=seed,scenario=scenario,mode=mode,hiddenFraction=info['hidden']/info['play_steps'],
         propShieldedFraction=info['shielded']/info['play_steps'],propDisplacement=sum(info['object_displacement']),
-        info=info,roles=roles,blackoutTicks=blackout_ticks,firstSightTick=first_sight)
+        info=info,roles=roles,blackoutTicks=blackout_ticks,firstSightTick=first_sight,diverged=diverged)
     if arena_config is not None:result.update(arenaConfig=configuration,actualObjectCount=len(env.arena['objects']))
     if trace: result.update(arena=env.arena,frames=frames)
     env.close()

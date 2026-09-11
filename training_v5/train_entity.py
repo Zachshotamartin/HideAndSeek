@@ -210,7 +210,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
             dones = torch.zeros(h,n)
             rollout_started = time.monotonic()
             unscaled = np.zeros(2)
-            behavior = np.zeros(10); behavior_count=0
+            behavior = np.zeros(10); behavior_count=0; diverged=0
             for step in range(h):
                 for role in range(2):
                     memories[role] *= 1 - starts[:,None]
@@ -248,6 +248,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
                     recent.extend(infos[index]['hidden']/infos[index]['play_steps'] for index in finished)
                     recent = recent[-256:]
                     episodes += len(finished)
+                    diverged += sum(1 for index in finished if infos[index].get('diverged'))
                     for index in finished:
                         r=infos[index]; behavior[6:8]+=np.asarray(r['path'])/max(1,r['play_steps']); behavior[8:]+=np.asarray(r['grabs'])/max(1,r['play_steps'])
                     seeds = [int(world_generator.integers(1,2**30)) for _ in finished]
@@ -284,7 +285,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
                 rolloutSeconds=rollout_seconds,optimizerSeconds=optimizer_seconds,
                 hider=actor_stats[0],seeker=actor_stats[1],critic=value_stats,
                 meanHiddenFraction=float(np.mean(recent)) if recent else None,
-                unscaledRewardSum=unscaled.tolist())
+                unscaledRewardSum=unscaled.tolist(),divergedEpisodes=diverged)
             if (update + 1) % args.snapshot_every == 0:
                 pair = [copy.deepcopy(m).eval().requires_grad_(False) for m in models]
                 histories.append(pair)
