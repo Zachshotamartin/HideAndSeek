@@ -1,1 +1,74 @@
-{"format":"original-mujoco-relational-jump-policy-pair-v4","file":"physical-policy-trained-f1d9d76504ec.json","sha256":"f1d9d76504ecb79959d0b0f09c23e5560bee30c8c3fcce77799057e85c017a6c","observationSize":210,"physicsObservationSize":208,"checkpoints":[{"id":"trained","label":"Best evaluated \u00b7 10.5M new interactions","file":"physical-policy-trained-f1d9d76504ec.json","bytes":24014375,"sha256":"f1d9d76504ecb79959d0b0f09c23e5560bee30c8c3fcce77799057e85c017a6c","training":{"decisions":210444288,"totalPolicyInteractions":10485760,"currentPolicyDecisions":[3658880,5242160],"activePolicySamples":[3658880,3141200],"seconds":5234.185729791876},"checkpointSHA256":"8ed111aceff1af18dd14de1aa9eec3b405175946394a68e7b0e740015b738d60","parityFixture":"tests/fixtures/policy-trained-native.json","parityFixtureSHA256":"ecf47e8fe6340ab21ea8a369527c6db23963c0d22f92f9b41850d2af9140c1be"},{"id":"initial","label":"Before training \u00b7 jump enabled","file":"physical-policy-initial-42b3a76e6a98.json","training":{"decisions":0},"bytes":22743572,"sha256":"42b3a76e6a98b9028e14b22f891ce0a958064c7645190893183bd84cd4ee07aa","checkpointSHA256":"2d76cde339d056f2a41f3b606ef0062bfece194531b54a471f5e5d87bf335660","parityFixture":"tests/fixtures/policy-initial-native.json","parityFixtureSHA256":"8df487fd8882ffc4e38eb90ccddaa7e5973d02495e4232aa3ade85870f992b8d"}],"training":{"decisions":210444288,"totalPolicyInteractions":10485760,"currentPolicyDecisions":[3658880,5242160],"activePolicySamples":[3658880,3141200],"seconds":5234.185729791876},"status":"LOCAL DEVELOPMENT PREVIEW","localPreview":{"only":true,"qualified":false},"actionSize":6,"evaluation":{"file":"development-v5-evaluation.json","sha256":"2b83c6fb952c743da1da80a031418f09aef6d697d99eb20f1057fa98b7833cf9","format":"hide-seek-saved-pair-fixed-opponent-evaluation-v1","shippedRole":"candidate","referenceSHA256":"8ad8c554a2f53889d2dbb2a6f12112102694a4f8a9dc80e9ba77962cc79d2607","candidateSHA256":"8ed111aceff1af18dd14de1aa9eec3b405175946394a68e7b0e740015b738d60","maps":168,"episodes":2016,"note":"The shipped pair is the evaluated candidate; development evidence, not qualification."},"bytes":24014375}
+{
+  "format": "original-mujoco-relational-jump-policy-pair-v4",
+  "file": "physical-policy-trained-212d96f061d1.json",
+  "sha256": "212d96f061d15e892edea116be629f9d2daf970e39b385e80271bcb5b2529275",
+  "observationSize": 210,
+  "physicsObservationSize": 208,
+  "checkpoints": [
+    {
+      "id": "trained",
+      "label": "Best evaluated \u00b7 41.9M new interactions",
+      "file": "physical-policy-trained-212d96f061d1.json",
+      "bytes": 24004302,
+      "sha256": "212d96f061d15e892edea116be629f9d2daf970e39b385e80271bcb5b2529275",
+      "training": {
+        "decisions": 241901568,
+        "totalPolicyInteractions": 41943040,
+        "currentPolicyDecisions": [
+          14834120,
+          20969253
+        ],
+        "activePolicySamples": [
+          14834120,
+          13896053
+        ],
+        "seconds": 20063.737610208103
+      },
+      "checkpointSHA256": "b0256265876ba2072e90c8ff85e101d2df05cb59d70c6fde947c0a1e34b71b6e",
+      "parityFixture": "tests/fixtures/policy-trained-native.json",
+      "parityFixtureSHA256": "e0f1676f0a381078de6ac21473362019cd410510dd0a451faf58d3f7c58d0db9"
+    },
+    {
+      "id": "initial",
+      "label": "Before training \u00b7 jump enabled",
+      "file": "physical-policy-initial-42b3a76e6a98.json",
+      "training": {
+        "decisions": 0
+      },
+      "bytes": 22743572,
+      "sha256": "42b3a76e6a98b9028e14b22f891ce0a958064c7645190893183bd84cd4ee07aa",
+      "checkpointSHA256": "2d76cde339d056f2a41f3b606ef0062bfece194531b54a471f5e5d87bf335660",
+      "parityFixture": "tests/fixtures/policy-initial-native.json",
+      "parityFixtureSHA256": "8df487fd8882ffc4e38eb90ccddaa7e5973d02495e4232aa3ade85870f992b8d"
+    }
+  ],
+  "training": {
+    "decisions": 241901568,
+    "totalPolicyInteractions": 41943040,
+    "currentPolicyDecisions": [
+      14834120,
+      20969253
+    ],
+    "activePolicySamples": [
+      14834120,
+      13896053
+    ],
+    "seconds": 20063.737610208103
+  },
+  "status": "DEVELOPMENT",
+  "actionSize": 6,
+  "evaluation": {
+    "file": "development-evaluation-694409deb349.json",
+    "sha256": "694409deb349692e77901d98d44b12a8fc18ad6a577d7d924f4f016aef32826a",
+    "bytes": 8523895,
+    "format": "hide-seek-saved-pair-fixed-opponent-evaluation-v1",
+    "candidateSHA256": "b0256265876ba2072e90c8ff85e101d2df05cb59d70c6fde947c0a1e34b71b6e",
+    "referenceSHA256": "bcccc88efe6d980e0993db6a7674978f3289dda00ee1d0c6a56a7bb5224ffc16",
+    "shippedRole": "candidate",
+    "note": "Length-balanced development selection; not qualification.",
+    "maps": 168,
+    "episodes": 2016
+  },
+  "bytes": 24004302,
+  "qualified": false
+}

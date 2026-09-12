@@ -1,6 +1,6 @@
-export const PHYSICAL_POLICY_FILE = "models/physical-policy-trained-f1d9d76504ec.json";
+export const PHYSICAL_POLICY_FILE = "models/physical-policy-trained-212d96f061d1.json";
 export const PHYSICAL_POLICY_DETAILS = {
-  "training": "Frozen development pair: 10,485,760 new self-play interactions in the shorter-round comparison. Both policies use recurrent memory and restricted physical observations. Training continues separately.",
-  "evaluation": "Selected from completed fixed-opponent evaluations: mean utility 0.546. At least one role improved with a 95% bootstrap interval excluding zero, with no clear regression in the other. This is development evidence, not a claim of mastered tool use.",
+  "training": "Saved pair after 41,943,040 new self-play interactions in the current training run. Each agent uses its own sensors and recurrent memory. Training continues separately.",
+  "evaluation": "Selected checkpoint: length-balanced fixed-opponent utility 0.619. The hider has a statistically clear improvement; the seeker remains imperfect. Development evaluation, not final qualification.",
   "modes": "Both sight overlays are shown. Playback continues until paused or reset. Each agent can move, turn, grab, lock and jump onto low objects."
 };

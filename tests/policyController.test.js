@@ -26,8 +26,8 @@ function fixture(format = PERSISTENT_FORMAT) {
 
 test('shipped v4 actors retain strict integrity and explicit development provenance', () => {
   assert.equal(manifest.format, 'original-mujoco-relational-jump-policy-pair-v4');
-  assert.equal(manifest.status, 'LOCAL DEVELOPMENT PREVIEW');
-  assert.equal(manifest.localPreview.qualified, false);
+  assert.equal(manifest.status, 'DEVELOPMENT');
+  assert.equal(manifest.qualified, false);
   assert.equal(manifest.physicsObservationSize, 208);
   assert.equal(manifest.observationSize, 210);
   assert.equal(manifest.actionSize, 6);

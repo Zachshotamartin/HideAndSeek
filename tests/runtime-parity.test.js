@@ -16,7 +16,7 @@ for(const entry of manifest.checkpoints)test(`${entry.id} v4 policy matches inde
   assert.equal(hash(bytes),entry.parityFixtureSHA256);
   const fixture=JSON.parse(bytes),modelBytes=read('public/models/'+entry.file);
   assert.equal(fixture.modelSHA256,hash(modelBytes));
-  for(const [file,sha]of Object.entries(fixture.sources))assert.equal(hash(read('training_v4/'+file)),sha,`Native fixture source changed: ${file}`);
+  for(const [file,sha]of Object.entries(fixture.sources))assert.equal(hash(read((fixture.sourceRoot ?? 'training_v4/')+file)),sha,`Native fixture source changed: ${file}`);
   const policies=createPolicyControllers(JSON.parse(modelBytes));let rows=0,blind=0,resets=0;
   for(const rollout of fixture.rollouts){
     const states=policies.map(p=>p.initialState());
