@@ -78,5 +78,39 @@ class LeagueTests(unittest.TestCase):
         self.assertAlmostEqual(left['approximateKL'],right['approximateKL'],places=6)
         for name,value in model.state_dict().items():torch.testing.assert_close(value,other.state_dict()[name],atol=1e-7,rtol=1e-6)
 
+    def test_burn_in_runs_through_prefix_and_stored_memories(self):
+        class Counting(PersistentActor):
+            calls=0
+            def forward(self,o,m): Counting.calls+=1; return super().forward(o,m)
+        def batch(h,n):
+            observed=torch.randn(h,n,210); observed[:,:,5]=1
+            raw=torch.randn(h,n,6); raw[:,:,4:]=0
+            return [observed,torch.randn(h,n,64),torch.zeros(h,n),raw,torch.zeros(h,n)]
+        def update(h,seq,burn,prefix):
+            torch.manual_seed(5); model=Counting(); Counting.calls=0
+            stats=actor_update(model,torch.optim.Adam(model.parameters(),lr=1e-4),batch(h,2),torch.randn(h,2),torch.ones(h,2,dtype=torch.bool),0,
+                epochs=1,sequence_length=seq,sequence_batch=2,burn_in=burn,prefix=prefix)
+            return Counting.calls,stats['burnInSteps']
+        prefix=(torch.randn(4,2,210),torch.randn(4,2,64),torch.zeros(4,2))
+        # Without a prefix the first sequence cannot be warmed; with one, every sequence is.
+        self.assertEqual(update(16,16,4,None),(16,0))
+        self.assertEqual(update(16,16,4,prefix),(20,8))
+        self.assertEqual(update(16,8,4,None),(20,8))
+        self.assertEqual(update(16,8,4,prefix),(24,16))
+        with self.assertRaises(ValueError):update(16,16,4,(torch.randn(3,2,210),torch.randn(3,2,64),torch.zeros(3,2)))
+    def test_burn_in_prefix_yields_recomputed_start_memory(self):
+        torch.manual_seed(9); model=PersistentActor()
+        prefix=(torch.randn(3,1,210),torch.randn(3,1,64),torch.tensor([[1.],[0.],[0.]]))
+        seen=[]
+        original=model.forward
+        def spy(o,m): seen.append(m.clone()); return original(o,m)
+        model.forward=spy
+        observed=torch.randn(2,1,210); observed[:,:,5]=1; raw=torch.randn(2,1,6); raw[:,:,4:]=0
+        actor_update(model,torch.optim.Adam(model.parameters(),lr=0.),[observed,torch.randn(2,1,64),torch.zeros(2,1),raw,torch.zeros(2,1)],torch.ones(2,1),
+            torch.ones(2,1,dtype=torch.bool),0,epochs=1,sequence_length=2,sequence_batch=1,burn_in=3,prefix=prefix)
+        with torch.no_grad():
+            memory=torch.zeros(1,64)  # the prefix starts an episode, so its stored memory is discarded
+            for step in range(3):memory=original(prefix[0][step],memory*(1-prefix[2][step][:,None]))[-1]
+        torch.testing.assert_close(seen[3],memory)
 
 if __name__=='__main__':unittest.main()

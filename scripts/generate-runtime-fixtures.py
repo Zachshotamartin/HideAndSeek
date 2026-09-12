@@ -46,11 +46,13 @@ for entry in manifest['checkpoints']:
  rollouts=[]
  with torch.no_grad():
   for deterministic in [False,True]:
-   e=PhysicsEnv(arena=arena,prep=4,play=40);memory=[torch.zeros(1,256) for _ in actors];buttons=np.zeros((2,2),np.float32);tapes=[Tape(717+r) for r in range(2)];rows=[]
-   for t in range(16):
+   # 132 steps per mode with a 24-step preparation (blind seeker rows) and a
+   # mid-rollout memory reset: 528 rows, 48 blind rows and 8 resets per fixture.
+   e=PhysicsEnv(arena=arena,prep=24,play=120);memory=[torch.zeros(1,256) for _ in actors];buttons=np.zeros((2,2),np.float32);tapes=[Tape(717+r) for r in range(2)];rows=[]
+   for t in range(132):
     physical=e.observe();actions=[]
     for role,a in enumerate(actors):
-     reset=t in (0,8)
+     reset=t in (0,66)
      if reset:memory[role].zero_();buttons[role].fill(0)
      blind=physical[role,7]<.5 and physical[role,5]<1
      previous=np.zeros(2,np.float32) if blind else buttons[role].copy()
@@ -67,7 +69,12 @@ for entry in manifest['checkpoints']:
     e.step(actions)
    rollouts.append(dict(deterministic=deterministic,rows=rows))
  fixture=ROOT/'tests/fixtures'/('policy-'+entry['id']+'-native.json')
- write(fixture,dict(modelSHA256=digest(path),sources=sources,rollouts=rollouts))
- entry.update(bytes=path.stat().st_size,sha256=digest(path),checkpointSHA256=model['localPreview']['checkpointSHA256'],parityFixture=str(fixture.relative_to(ROOT)),parityFixtureSHA256=digest(fixture))
+ counts=dict(rows=sum(len(r['rows']) for r in rollouts),blind=sum(1 for r in rollouts for row in r['rows'] if row['observation'][7]<.5 and row['observation'][5]<1),resets=sum(1 for r in rollouts for row in r['rows'] if row['reset']))
+ assert counts['rows']>=500 and counts['blind']>=40 and counts['resets']>=8,counts
+ write(fixture,dict(modelSHA256=digest(path),sources=sources,counts=counts,rollouts=rollouts))
+ entry.update(bytes=path.stat().st_size,sha256=digest(path),checkpointSHA256=model.get('localPreview',model.get('provenance',{}))['checkpointSHA256'],parityFixture=str(fixture.relative_to(ROOT)),parityFixtureSHA256=digest(fixture))
+evidence=public/'development-v5-evaluation.json';report=json.loads(evidence.read_text())
+if report['checkpointSHA256']!=manifest['checkpoints'][0]['checkpointSHA256']:raise SystemExit('The shipped export must be the evaluated candidate')
+manifest['evaluation']=dict(file=evidence.name,sha256=digest(evidence),format=report['format'],shippedRole='candidate',referenceSHA256=report['referenceSHA256'],candidateSHA256=report['checkpointSHA256'],maps=len(report['maps']),episodes=len(report['episodes']),note='The shipped pair is the evaluated candidate; development evidence, not qualification.')
 manifest['sha256']=digest(public/manifest['file']);write(public/'MANIFEST.json',manifest)
 print('Generated v4 physical and live-weight policy fixtures; refreshed manifest integrity metadata.')

@@ -40,13 +40,48 @@ test('shipped v4 actors retain strict integrity and explicit development provena
     assert.equal(model.physicsObservationSize, 208);
     assert.equal(model.observationSize, 210);
     assert.equal(model.actionSize, 6);
-    assert.equal(model.localPreview.qualified, false);
-    assert.equal(model.localPreview.checkpointSHA256, entry.checkpointSHA256);
+    assert.equal(model.qualified ?? model.localPreview?.qualified, false);
+    assert.equal((model.provenance ?? model.localPreview).checkpointSHA256, entry.checkpointSHA256);
     assert.deepEqual(model.training, entry.training);
     assert.equal(createPolicyControllers(model).length, 2);
     assert(model.actors.every(actor => !Object.keys(actor.weights).some(k => /^(value|critic)\./.test(k))));
   }
   assert.equal(initial.training.decisions, 0);
+});
+
+test('bundled development evaluation evidence is hash-pinned, names the shipped export as its candidate and reproduces its contrasts', () => {
+  const evidence = manifest.evaluation;
+  assert(evidence, 'manifest must carry the evaluation evidence entry');
+  const bytes = readFileSync(asset(evidence.file)), report = JSON.parse(bytes);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), evidence.sha256);
+  assert.equal(evidence.shippedRole, 'candidate');
+  assert.equal(report.checkpointSHA256, manifest.checkpoints[0].checkpointSHA256);
+  assert.equal(report.referenceSHA256, evidence.referenceSHA256);
+  assert.equal(report.checkpointSHA256, evidence.candidateSHA256);
+  assert.equal(report.maps.length, evidence.maps);
+  assert.equal(report.episodes.length, evidence.episodes);
+  assert.equal(report.episodes.length % report.maps.length, 0);
+  assert.match(evidence.note, /not qualification/i);
+  const intervals=['Hider change','Seeker change'].map(k=>report.contrasts[k].bootstrap95Percent);
+  assert(intervals.some(([lo])=>lo>0));assert(intervals.every(([,hi])=>hi>=0));
+  const byMap = new Map();
+  for (const row of report.episodes) {
+    const key = `${row.seed}:${row.scenario}`;
+    if (!byMap.has(key)) byMap.set(key, {});
+    byMap.get(key)[row.mode] = row.hiddenFraction;
+  }
+  assert.equal(byMap.size, report.maps.length);
+  const definitions = { 'Hider change': ['candidate-hider', 'reference'], 'Seeker change': ['reference', 'candidate-seeker'],
+    'Hider grab/lock benefit': ['candidate-pair', 'no-hider-tools'], 'Seeker grab/lock benefit': ['no-seeker-tools', 'candidate-pair'] };
+  for (const [label, [left, right]] of Object.entries(definitions)) {
+    const result = report.contrasts[label];
+    assert(result, label);
+    let sum = 0, positive = 0, negative = 0;
+    for (const rows of byMap.values()) { const d = rows[left] - rows[right]; sum += d; if (d > 0) positive++; if (d < 0) negative++; }
+    assert(Math.abs(sum / byMap.size - result.mean) < 1e-9, label);
+    assert.equal(positive, result.positiveCases); assert.equal(negative, result.negativeCases);
+    assert(result.bootstrap95Percent[0] <= result.mean && result.mean <= result.bootstrap95Percent[1]);
+  }
 });
 
 test('persistent controls feed back own requested buttons and reset each actor independently', () => {

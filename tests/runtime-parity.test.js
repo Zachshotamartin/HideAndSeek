@@ -32,5 +32,6 @@ for(const entry of manifest.checkpoints)test(`${entry.id} v4 policy matches inde
       states[row.role]=result.state;rows++;
     }
   }
-  assert.equal(rows,64);assert.equal(resets,8);assert.equal(blind,8);
+  assert.deepEqual({rows,blind,resets},fixture.counts);
+  assert(rows>=500&&blind>=40&&resets>=8,'parity coverage must include hundreds of rows, dozens of blind rows and repeated resets');
 });
