@@ -41,7 +41,7 @@ RESUME_FIELDS = ['encoder', 'arm', 'envs', 'horizon', 'sequence_length', 'burn_i
                  'kl_limit', 'seed', 'variant']
 SOURCE_NAMES = ['train_entity.py', 'entity_actor.py', 'actor.py', 'league_ppo.py', 'central_persistent_train.py',
                 'residual_critic.py', 'central_critic.py', 'persistent_actor.py', 'persistent_train.py',
-                'fit_central_value.py', 'env_pool.py', 'physics.py', 'protocol.py', 'snapshots.py']
+                'fit_central_value.py', 'env_pool.py', 'physics.py', 'protocol.py', 'snapshots.py', 'capture.py']
 RECENT_ONLY_VARIANTS = ('baseline', 'recent-only')
 
 

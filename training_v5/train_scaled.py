@@ -37,18 +37,19 @@ DEFAULT_SEED = 1091252
 BATCH = 65536                     # interactions per PPO update
 SNAPSHOT_INTERVAL = 1048576       # immutable full-state checkpoints about every million interactions
 EVALUATION_INTERVAL = 5242880
-PROTOCOL_FORMAT = 'hide-seek-balanced-long-league-v5.1'
+PROTOCOL_FORMAT = 'hide-seek-capture-long-league-v5.3'
 PROTOCOL_FIELDS = ['variant', 'seed', 'arm', 'envs', 'workers', 'horizon', 'sequence_length', 'burn_in', 'snapshot_every',
                    'archive_limit', 'sequence_batch', 'critic_batch_size', 'epochs', 'learning_rate', 'critic_learning_rate',
                    'entropy', 'kl_limit', 'target_interactions']
 COMPARISONS = ('Unchanged environment and sensor contract. Longer randomized episodes, balanced active sampling, diverse '
                'archives and real recurrent burn-in. Inherited weights, fresh optimizers. Current versus fixed migrated '
                'reference, a held-out opponent outside the league, and counterfactual tools-disabled evaluations; not an '
-               'isolated architecture ablation.')
+               'isolated architecture ablation. v5.3 adds the capture rule: a seeker within reach and in sight ends play '
+               'and is credited with the remaining steps, so seeking is rewarded rather than keeping a distant line of sight.')
 TRAINING_DESCRIPTION = ('Relational attention; 10 object slots; 30 rays; visibility-only reward; refreshed self-play. V5.1 '
                         'balanced active samples, 15/30/60s randomized play, diverse opponent archive, 128-step sequences '
                         'with 32-step burn-in through the previous rollout; 0.1 tool entropy scale; bounded grounded jump; '
-                        '2.2m walls.')
+                        '2.2m walls; capture ends play (v5.3).')
 
 
 def resolve_source_history(source, source_path):
@@ -153,7 +154,7 @@ def write_protocol(prepared, args, parent, large, source_path, cohort_hash, hist
     protocol = dict(format=PROTOCOL_FORMAT, physicsSHA256=parent['provenance']['physicsSHA256'],
                     training={k: getattr(args, k) for k in PROTOCOL_FIELDS}, sourceCheckpointSHA256=file_hash(source_path),
                     comparisons=COMPARISONS, architecture=architecture,
-                    reward='Visibility-only zero-sum; zero preparation reward; no tool bonuses.', toolEntropyScale=0.1,
+                    reward='Visibility-only zero-sum with capture credit for the remaining play; zero preparation reward; no tool bonuses.', toolEntropyScale=0.1,
                     selfPlay='70% current-current, 30% active-sample-balanced historical; fixed anchor, latest eight and behavioral diversity',
                     evaluation=dict(sourceCohortSHA256=cohort_hash, longPlayMaps=24, heldOutOpponent=heldout is not None),
                     assets={}, history=[])

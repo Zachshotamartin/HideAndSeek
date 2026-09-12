@@ -13,7 +13,7 @@ from persistent_train import file_hash
 
 ACTORS = None
 SCENARIOS = ['shelter', 'rooms', 'open', 'connected-rooms', 'corridors', 'multi-exit']
-SOURCE_NAMES = ['evaluate_saved.py', 'persistent_evaluate.py', 'entity_actor.py', 'persistent_actor.py', 'actor.py', 'physics.py']
+SOURCE_NAMES = ['evaluate_saved.py', 'persistent_evaluate.py', 'entity_actor.py', 'persistent_actor.py', 'actor.py', 'physics.py', 'capture.py']
 SEED_RANGE = (1500000000, 1900000000)   # development seeds; final-test seeds are reserved
 SIZE_RANGE = (6, 12)
 BOX_LIMIT = 8

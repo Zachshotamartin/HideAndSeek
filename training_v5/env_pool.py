@@ -17,6 +17,11 @@ from multiprocessing.connection import wait
 
 import numpy as np
 
+try:
+    from .capture import resolve_capture
+except ImportError:
+    from capture import resolve_capture
+
 UNSTABLE_WARNINGS = ('mjWARN_BADQPOS', 'mjWARN_BADQVEL', 'mjWARN_BADQACC')
 MAX_WORKERS = 16
 TIMEOUT_RANGE = (1, 300)
@@ -68,7 +73,7 @@ def _step_one(env, action):
         row = env.step(action)
         if unstable(env):
             raise RuntimeError('Physics diverged: MuJoCo instability reset')
-        return row
+        return resolve_capture(env, *row)
     except RuntimeError as error:
         if 'diverged' not in str(error):
             raise

@@ -2,6 +2,8 @@
 
 This fork retains the v4 physical game, jump limits and restricted entity/ray observations. Reward is visibility-only, zero-sum, with zero preparation reward. Grabbing, locking, jumping and tool positioning are not rewarded or scripted.
 
+v5.3 adds a capture rule outside the physics (`capture.py`): during play, a seeker that sees the hider from within 0.7 m ends the episode and is credited with every remaining step as seen, the hider with the same steps as found. The reward is still the zero-sum visibility reward and `physics.py` is byte-identical; the rule exists because a visibility-only seeker was right to keep its distance as long as it could see the hider, which is not seeking. Promotion now uses a length-balanced utility (each play length counts once, so 144 short maps cannot outvote 24 long ones) and any clear regression at a play length blocks it; the pair published on 2026-09-11 came from the short-episode ablation and lost every 30 s and 60 s map for that reason. Evaluations also report capture rate and stuck frames per role.
+
 Changes versus v4: connected randomized rooms/corridors/multi-exit layouts, varied boxes and ramps, 15/30/60-second play episodes, 70% current self-play with active-sample-balanced historical opponents, fixed anchor/recent/behavior-diverse archive, 128-step recurrent sequences with a real 32-step burn-in that re-runs the recurrence through the previous rollout tail (v5 declared burn-in but never executed it because its sequence length equalled the horizon). The existing 256-unit recurrent entity policy is retained; a larger network is not assumed to fix strategy learning.
 
 ```

@@ -17,6 +17,8 @@ class EvaluationTests(unittest.TestCase):
                 r = episode(models, 1750500000, 'multi-exit', mode, arena_config=dict(size=8, n_boxes=2, n_ramps=1, prep=4, play=15))
                 self.assertEqual(r['info']['play_steps'], 15)
                 self.assertIn('reacquisitionSeconds', r['roles'][1])
+                self.assertIn('captured', r)
+                self.assertIn('playStuckFrames', r['roles'][0])
                 self.assertLessEqual(r['blackoutTicks'], BLACKOUT_STEPS)
                 if mode != 'seeker-blackout':
                     self.assertEqual(r['blackoutTicks'], 0)

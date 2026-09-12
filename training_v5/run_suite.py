@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from checkpoint_store import atomic_json, utc_now
+from evaluated_models import utility
 from protocol import archive_exercised
 from train_scaled import ARCHIVE_LIMIT, SNAPSHOT_EVERY, VARIANTS
 
@@ -41,6 +42,8 @@ class Suite:
             self.state = dict(config=vars(args), trials=[], publication='No automatic browser promotion')
         if self.state['config'] != vars(args):
             raise ValueError('Resume with identical suite configuration')
+        if 'full' not in args.variants:
+            raise ValueError('The full system must be among the variants; it is the arm that continues')
         if not archive_exercised(args.pilot_updates, SNAPSHOT_EVERY, 1, ARCHIVE_LIMIT):
             raise ValueError('Pilot length must exceed the opponent archive limit so the archive ablation is exercised')
         self.stop = False
@@ -105,16 +108,13 @@ class Suite:
         name = f'{variant}-seed-{seed}'
         report_path = self.out / name / 'evaluations' / str(self.args.pilot_updates * BATCH) / 'evaluation.json'
         report = json.loads(report_path.read_text())
-        hider = report['summary']['candidate-hider']['hiddenFraction']
-        seeker = 1 - report['summary']['candidate-seeker']['hiddenFraction']
-        row = dict(name=name, variant=variant, seed=seed, hiderUtility=hider, seekerUtility=seeker,
-                   score=(hider + seeker) / 2, contrasts=report['contrasts'])
+        row = dict(name=name, variant=variant, seed=seed, **utility(report), contrasts=report['contrasts'])
         self.state['trials'] = [x for x in self.state['trials'] if x['name'] != name] + [row]
         self.save(phase='pilot-evaluated')
 
     def pilots(self):
         """Every variant on every seed for the pilot budget; False when interrupted."""
-        for variant in VARIANTS:
+        for variant in self.args.variants:
             for seed in self.args.seeds:
                 self.run(variant, seed, True)
                 if self.stop:
@@ -130,7 +130,7 @@ class Suite:
         """
         trials = self.state['trials']
         comparison = {}
-        for variant in VARIANTS:
+        for variant in self.args.variants:
             scores = [r['score'] for r in trials if r['variant'] == variant]
             comparison[variant] = dict(meanUtility=float(np.mean(scores)), medianUtility=float(np.median(scores)))
         candidates = sorted([r for r in trials if r['variant'] == 'full'], key=lambda r: r['score'])
@@ -160,6 +160,7 @@ def parser():
     p.add_argument('--cohort', required=True)
     p.add_argument('--history', nargs='*', default=None)
     p.add_argument('--heldout', default=None)
+    p.add_argument('--variants', nargs='+', choices=VARIANTS, default=list(VARIANTS))
     p.add_argument('--seeds', type=int, nargs='+', default=[109310, 109311, 109312])
     p.add_argument('--pilot-updates', type=int, default=160)
     p.add_argument('--total-steps', type=int, default=1048576000)

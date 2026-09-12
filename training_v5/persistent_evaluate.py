@@ -14,6 +14,7 @@ import numpy as np
 import torch
 
 from actor import PhysicalActor
+from capture import resolve_capture
 from env_pool import unstable
 from persistent_actor import FORMAT, PersistentActor, advance_buttons, augment
 from physics import DT, PhysicsEnv
@@ -143,8 +144,9 @@ def tick_record(env, role, buttons, commands, wall, prop):
     speed = float(np.linalg.norm(env.data.qvel[role * 4:role * 4 + 2]))
     own = env.data.qpos[role * 4:role * 4 + 2]
     other = env.data.qpos[(1 - role) * 4:(1 - role) * 4 + 2]
+    pushing = np.linalg.norm(env.actions[role, :2]) > .5
     return dict(grip=env.grips[role], buttons=buttons.tolist(), commands=commands, wall=bool(wall), prop=bool(prop),
-                speed=speed, wallPress=bool(wall and speed < .1 and np.linalg.norm(env.actions[role, :2]) > .5),
+                speed=speed, wallPress=bool(wall and speed < .1 and pushing), stuck=bool(speed < .05 and pushing),
                 seesOpponent=bool(env.seen[role, 1 - role]), opponentDistance=float(np.linalg.norm(own - other)),
                 yawRate=float(env.data.qvel[role * 4 + 3]), action=env.actions[role].tolist())
 
@@ -169,6 +171,7 @@ def role_report(history, role, prep):
                 gripDurationsTicks=grip, requestedHoldDurationsTicks=holding,
                 wallPressFrames=sum(row['wallPress'] for row in history),
                 playWallPressFrames=sum(row['wallPress'] for row in history[prep:]),
+                playStuckFrames=sum(row['stuck'] for row in history[prep:]),
                 propContactFrames=sum(row['prop'] for row in history),
                 meanSpeed=float(np.mean([row['speed'] for row in history])),
                 absoluteTurns=float(sum(abs(row['yawRate']) * DT for row in history) / (2 * math.pi)),
@@ -214,6 +217,7 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
             if unstable(env):
                 diverged = True
                 break
+            physical, reward, done, info = resolve_capture(env, physical, reward, done, info)
             wall, prop = agent_contacts(env)
             for role in range(2):
                 histories[role].append(tick_record(env, role, buttons[role], commands[role], wall[role], prop[role]))
@@ -226,7 +230,8 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
     roles = [role_report(history, role, env.prep) for role, history in enumerate(histories)]
     result = dict(seed=seed, scenario=scenario, mode=mode, hiddenFraction=info['hidden'] / info['play_steps'],
                   propShieldedFraction=info['shielded'] / info['play_steps'], propDisplacement=sum(info['object_displacement']),
-                  info=info, roles=roles, blackoutTicks=blackout_ticks, firstSightTick=first_sight, diverged=diverged)
+                  info=info, roles=roles, blackoutTicks=blackout_ticks, firstSightTick=first_sight, diverged=diverged,
+                  captured=bool(info.get('captured', False)), captureSecond=None if not info.get('captured') else info['captureStep'] * DT)
     if arena_config is not None:
         result.update(arenaConfig=configuration, actualObjectCount=len(env.arena['objects']))
     if trace:
@@ -245,6 +250,7 @@ def role_summary(details):
                 fractionGripsShorterThanThreeTicks=float(np.mean(np.asarray(grip) < 3)) if grip else 0,
                 requestedHoldMedianSeconds=[float(np.median(values) * DT) if values else 0 for values in holding],
                 meanPlayWallPressFrames=float(np.mean([row['playWallPressFrames'] for row in details])),
+                meanPlayStuckFrames=float(np.mean([row.get('playStuckFrames', 0) for row in details])),
                 meanAbsoluteTurns=float(np.mean([row['absoluteTurns'] for row in details])),
                 meanSpeed=float(np.mean([row['meanSpeed'] for row in details])),
                 commandCounts=np.sum([row['commandCounts'] for row in details], axis=0).tolist())
@@ -252,6 +258,7 @@ def role_summary(details):
 
 def mode_summary(group):
     summary = {key: float(np.mean([row[key] for row in group])) for key in ['hiddenFraction', 'propShieldedFraction', 'propDisplacement']}
+    summary['captureRate'] = float(np.mean([row.get('captured', False) for row in group]))
     summary['roles'] = [role_summary([row['roles'][role] for row in group]) for role in range(2)]
     return summary
 
