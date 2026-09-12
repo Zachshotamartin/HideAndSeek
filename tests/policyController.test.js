@@ -40,8 +40,8 @@ test('shipped v4 actors retain strict integrity and explicit development provena
     assert.equal(model.physicsObservationSize, 208);
     assert.equal(model.observationSize, 210);
     assert.equal(model.actionSize, 6);
-    assert.equal(model.localPreview.qualified, false);
-    assert.equal(model.localPreview.checkpointSHA256, entry.checkpointSHA256);
+    assert.equal(model.qualified ?? model.localPreview?.qualified, false);
+    assert.equal((model.provenance ?? model.localPreview).checkpointSHA256, entry.checkpointSHA256);
     assert.deepEqual(model.training, entry.training);
     assert.equal(createPolicyControllers(model).length, 2);
     assert(model.actors.every(actor => !Object.keys(actor.weights).some(k => /^(value|critic)\./.test(k))));
@@ -49,19 +49,21 @@ test('shipped v4 actors retain strict integrity and explicit development provena
   assert.equal(initial.training.decisions, 0);
 });
 
-test('bundled development evaluation evidence is hash-pinned, names the shipped export as its reference and reproduces its contrasts', () => {
+test('bundled development evaluation evidence is hash-pinned, names the shipped export as its candidate and reproduces its contrasts', () => {
   const evidence = manifest.evaluation;
   assert(evidence, 'manifest must carry the evaluation evidence entry');
   const bytes = readFileSync(asset(evidence.file)), report = JSON.parse(bytes);
   assert.equal(createHash('sha256').update(bytes).digest('hex'), evidence.sha256);
-  assert.equal(evidence.shippedRole, 'reference');
-  assert.equal(report.referenceSHA256, manifest.checkpoints[0].checkpointSHA256);
+  assert.equal(evidence.shippedRole, 'candidate');
+  assert.equal(report.checkpointSHA256, manifest.checkpoints[0].checkpointSHA256);
   assert.equal(report.referenceSHA256, evidence.referenceSHA256);
   assert.equal(report.checkpointSHA256, evidence.candidateSHA256);
   assert.equal(report.maps.length, evidence.maps);
   assert.equal(report.episodes.length, evidence.episodes);
   assert.equal(report.episodes.length % report.maps.length, 0);
-  assert.match(evidence.note, /not promoted/i);
+  assert.match(evidence.note, /not qualification/i);
+  const intervals=['Hider change','Seeker change'].map(k=>report.contrasts[k].bootstrap95Percent);
+  assert(intervals.some(([lo])=>lo>0));assert(intervals.every(([,hi])=>hi>=0));
   const byMap = new Map();
   for (const row of report.episodes) {
     const key = `${row.seed}:${row.scenario}`;

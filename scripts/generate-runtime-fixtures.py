@@ -72,9 +72,9 @@ for entry in manifest['checkpoints']:
  counts=dict(rows=sum(len(r['rows']) for r in rollouts),blind=sum(1 for r in rollouts for row in r['rows'] if row['observation'][7]<.5 and row['observation'][5]<1),resets=sum(1 for r in rollouts for row in r['rows'] if row['reset']))
  assert counts['rows']>=500 and counts['blind']>=40 and counts['resets']>=8,counts
  write(fixture,dict(modelSHA256=digest(path),sources=sources,counts=counts,rollouts=rollouts))
- entry.update(bytes=path.stat().st_size,sha256=digest(path),checkpointSHA256=model['localPreview']['checkpointSHA256'],parityFixture=str(fixture.relative_to(ROOT)),parityFixtureSHA256=digest(fixture))
-evidence=public/'development-v4-evaluation.json';report=json.loads(evidence.read_text())
-if report['referenceSHA256']!=manifest['checkpoints'][0]['checkpointSHA256']:raise SystemExit('The shipped trained export must be the frozen reference of the bundled evaluation')
-manifest['evaluation']=dict(file=evidence.name,sha256=digest(evidence),format=report['format'],shippedRole='reference',referenceSHA256=report['referenceSHA256'],candidateSHA256=report['checkpointSHA256'],maps=len(report['maps']),episodes=len(report['episodes']),note='The shipped trained export is the frozen reference in this fixed-opponent development evaluation; the later candidate was not promoted. Not qualification evidence.')
+ entry.update(bytes=path.stat().st_size,sha256=digest(path),checkpointSHA256=model.get('localPreview',model.get('provenance',{}))['checkpointSHA256'],parityFixture=str(fixture.relative_to(ROOT)),parityFixtureSHA256=digest(fixture))
+evidence=public/'development-v5-evaluation.json';report=json.loads(evidence.read_text())
+if report['checkpointSHA256']!=manifest['checkpoints'][0]['checkpointSHA256']:raise SystemExit('The shipped export must be the evaluated candidate')
+manifest['evaluation']=dict(file=evidence.name,sha256=digest(evidence),format=report['format'],shippedRole='candidate',referenceSHA256=report['referenceSHA256'],candidateSHA256=report['checkpointSHA256'],maps=len(report['maps']),episodes=len(report['episodes']),note='The shipped pair is the evaluated candidate; development evidence, not qualification.')
 manifest['sha256']=digest(public/manifest['file']);write(public/'MANIFEST.json',manifest)
 print('Generated v4 physical and live-weight policy fixtures; refreshed manifest integrity metadata.')
