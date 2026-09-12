@@ -623,10 +623,10 @@ export function mountExperiment(element, options = {}) {
         $('.hs-loading')?.remove();
       }
     });
-  fetch(new URL('models/MANIFEST.json', assetBase), { signal: abort.signal })
+  fetch(new URL(`models/MANIFEST.json?policy=${encodeURIComponent(PHYSICAL_POLICY_FILE)}`, assetBase), { signal: abort.signal, cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : null))
     .then((manifest) => {
-      if (disposed || !Array.isArray(manifest?.checkpoints)) return;
+      if (disposed || !Array.isArray(manifest?.checkpoints) || `models/${manifest.file}` !== PHYSICAL_POLICY_FILE) return;
       for (const entry of manifest.checkpoints.slice(0, 12)) {
         if (
           !entry ||
