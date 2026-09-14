@@ -126,3 +126,7 @@ Browser tests operate the actual learned policies, complete a round, manipulate 
 `npm test` checks the committed native reference trajectories and current policy schema. `npm run test:runtime` runs focused browser loading/playback/export checks for trained and initial models. These are correctness checks, not proof of model quality; older browser qualification scenarios are separate.
 
 Regenerate native references only after investigating a contract change, using a Python environment with the pinned training dependencies: `python scripts/generate-runtime-fixtures.py`. References carry source/model hashes so drift is reported explicitly. Existing numerical parity tolerances remain unchanged.
+
+## September 13 portfolio checkpoints
+
+The default is the best eligible saved pair at 209,715,200 self-play interactions (fixed-opponent mean role utility 0.65865). The Latest comparison is a frozen 244,580,352-interaction snapshot; it is not asserted to be better. Both exports preserve the hider/seeker pair, use the existing 210-observation/6-action interface, and match native recurrent inference within 1e-5. This is a development model, with reliable useful tool behavior still unproven. Training runs separately from the browser. The manifest includes the selection checkpoint hashes and the fixed-opponent evaluation report.

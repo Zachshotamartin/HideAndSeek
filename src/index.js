@@ -92,6 +92,8 @@ export function mountExperiment(element, options = {}) {
     root.dataset.steps = sim.t;
     root.dataset.phase = sim.phase;
     root.dataset.model = modelName;
+    root.dataset.checkpoint = models[modelName]?.provenance?.checkpointSHA256 || '';
+    root.dataset.trainingSteps = models[modelName]?.training?.totalPolicyInteractions || 0;
     root.dataset.policyFormat = models[modelName]?.format || '';
     root.dataset.jumps = sim.jumpEvents.join(',');
     root.dataset.grabs = sim.grabEvents.reduce((a, b) => a + b, 0);
@@ -296,18 +298,19 @@ export function mountExperiment(element, options = {}) {
     showModelDetails(name);
   }
   function showModelDetails(name) {
+    const details = checkpointEntries.get(name)?.details || PHYSICAL_POLICY_DETAILS;
     $('.hs-training-record').textContent =
       name === 'imported'
         ? 'Imported model. Its training history and performance have not been verified.'
         : name === 'initial'
           ? 'Zero game experience: the saved random backbone with uniform Keep / Press / Release outputs. This is a reference initialization, not the pilot’s warm start.'
-          : PHYSICAL_POLICY_DETAILS.training;
+          : details.training;
     $('.hs-eval-note').textContent =
       name === 'initial'
         ? 'An actual saved initialization checkpoint; compare its decisions with the trained pair on the same arena.'
         : name === 'imported'
           ? 'Published checkpoint evaluation does not apply to imported weights.'
-          : PHYSICAL_POLICY_DETAILS.evaluation;
+          : details.evaluation;
     $('.hs-mode-note').textContent =
       name === 'trained' ? PHYSICAL_POLICY_DETAILS.modes : '';
   }

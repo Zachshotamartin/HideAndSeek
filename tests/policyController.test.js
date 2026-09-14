@@ -9,7 +9,7 @@ import { Random } from '../src/core/physics.js';
 const asset = file => new URL(`../public/models/${file}`, import.meta.url);
 const manifest = JSON.parse(readFileSync(asset('MANIFEST.json')));
 const candidate = JSON.parse(readFileSync(asset(manifest.file)));
-const initial = JSON.parse(readFileSync(asset(manifest.checkpoints[1].file)));
+const initial = JSON.parse(readFileSync(asset(manifest.checkpoints.find(entry => entry.id === 'initial').file)));
 const zero = n => Array(n).fill(0);
 const matrix = (rows, columns) => Array.from({ length: rows }, () => zero(columns));
 function fixture(format = PERSISTENT_FORMAT) {
