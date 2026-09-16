@@ -1,6 +1,8 @@
 """Training distribution only. Physics, reward and actor sensors are unchanged."""
 import numpy as np
 
+from game import preparation_steps
+
 FAMILIES = ('shelter', 'rooms', 'open', 'connected-rooms', 'corridors', 'multi-exit')
 ARENA_SIZES = [8, 9, 10, 12]
 BOX_RANGE = (2, 9)
@@ -21,16 +23,22 @@ EXTRA_SEED_BASE = 1760100000
 EXTRA_SCENARIOS = ('connected-rooms', 'corridors', 'multi-exit')
 
 
-def environment_config(rng, index=0, variant='full'):
+def environment_config(rng, index=0, variant='full', scope=None):
     """One randomized arena. Evaluation uses disjoint seeds.
 
     Randomize each reset rather than accidentally assigning the first family
-    whenever only one environment finishes.
+    whenever only one environment finishes. ``scope`` (a curriculum stage from
+    stages.py) narrows the sizes, prop counts and play lengths; preparation
+    follows the play length so long rounds leave time to build.
     """
-    return dict(scenario=str(rng.choice(FAMILIES)), size=float(rng.choice(ARENA_SIZES)),
-                n_boxes=int(rng.integers(*BOX_RANGE)), n_ramps=int(rng.integers(*RAMP_RANGE)),
-                prep=PREPARATION_STEPS,
-                play=SHORT_PLAY if variant in SHORT_VARIANTS else int(rng.choice(LONG_PLAY, p=LONG_PLAY_WEIGHTS)))
+    sizes = scope['sizes'] if scope else ARENA_SIZES
+    boxes = scope['boxes'] if scope else BOX_RANGE
+    ramps = scope['ramps'] if scope else RAMP_RANGE
+    plays, weights = (scope['play'], scope['weights']) if scope else (LONG_PLAY, LONG_PLAY_WEIGHTS)
+    play = SHORT_PLAY if variant in SHORT_VARIANTS else int(rng.choice(plays, p=weights))
+    return dict(scenario=str(rng.choice(FAMILIES)), size=float(rng.choice(sizes)),
+                n_boxes=int(rng.integers(*boxes)), n_ramps=int(rng.integers(*ramps)),
+                prep=preparation_steps(play), play=play)
 
 
 def assign_balanced_roles(rng, count, history_count, seeker_active_fraction=.8):

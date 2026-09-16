@@ -1,11 +1,11 @@
-import {createRelationalPolicies} from './relationalPolicy.js';
+import { createRelationalPolicies, RELATIONAL_FORMATS } from './relationalPolicy.js';
 import { createEntityPolicies } from './entityPolicy.js';
 import { createPhysicalPolicies } from './learnedPolicy.js';
 import { createPersistentPolicies } from './persistentPolicy.js';
 
 export const PERSISTENT_FORMAT = 'original-mujoco-persistent-buttons-ppo-v1';
 export const BINARY_FORMAT = 'original-mujoco-recurrent-ppo-v1';
-export const POLICY_FORMATS = Object.freeze(['original-mujoco-relational-jump-policy-pair-v4','original-mujoco-relational-policy-pair-v2',PERSISTENT_FORMAT, BINARY_FORMAT, 'original-mujoco-entity-policy-pair-v1']);
+export const POLICY_FORMATS = Object.freeze([...RELATIONAL_FORMATS, PERSISTENT_FORMAT, BINARY_FORMAT, 'original-mujoco-entity-policy-pair-v1']);
 const ACTOR_WEIGHTS = new Set([
   'encoder.weight', 'encoder.bias', 'memory.weight_ih', 'memory.weight_hh',
   'memory.bias_ih', 'memory.bias_hh', 'movement.weight', 'movement.bias',
@@ -16,7 +16,7 @@ const ACTOR_WEIGHTS = new Set([
 // Only an actor's own recurrent state is passed here; a training critic has no
 // place in either browser format or its inputs.
 export function createPolicyControllers(model) {
- if(['original-mujoco-relational-jump-policy-pair-v4','original-mujoco-relational-policy-pair-v2'].includes(model?.format))return createRelationalPolicies(model);
+  if (RELATIONAL_FORMATS.includes(model?.format)) return createRelationalPolicies(model);
   if (model?.format === 'original-mujoco-entity-policy-pair-v1')
     return createEntityPolicies(model).map(policy => ({
       format: model.format, observationSize: 140, physicsObservationSize: 138,

@@ -58,8 +58,10 @@ def utility(report):
         for play, block in by_length.items():
             if play != 'all' and interval_of(block['contrasts'], role)[1] < 0:
                 regressions.append(f'{role} at play {play}')
+    found = report['summary'].get('candidate-seeker', {}).get('foundRate')
     return dict(score=.5 * (hider + seeker), hiderUtility=hider, seekerUtility=seeker, byPlayLength=per_length,
-                roleRegressions=regressions, clearImprovements=improvements)
+                roleRegressions=regressions, clearImprovements=improvements,
+                seekerFoundRate=None if found is None else float(found))
 
 
 def register(candidate_path, reference_path, report_path, directory):

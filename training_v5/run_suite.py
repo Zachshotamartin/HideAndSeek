@@ -59,11 +59,12 @@ class Suite:
             self.child.send_signal(sig)
 
     # -------------------------------------------------------------- one trial
-    def finished(self, name, pilot):
+    def phase(self, name):
         status = self.out / name / 'STATUS.json'
-        if not status.exists():
-            return False
-        phase = json.loads(status.read_text())['phase']
+        return json.loads(status.read_text())['phase'] if status.exists() else None
+
+    def finished(self, name, pilot):
+        phase = self.phase(name)
         return phase == 'completed-awaiting-review' or (pilot and phase == 'pilot-complete')
 
     def command(self, variant, seed, name, pilot):
@@ -96,6 +97,11 @@ class Suite:
         self.save(phase='training', current=name, stage='pilot' if pilot else 'continuation')
         for attempt in range(ATTEMPTS):
             code = self.launch(name, command, attempt)
+            if not code and self.phase(name) == 'gate-failed-awaiting-review':
+                # The controller stopped on a gate: leave the evidence for review instead of continuing.
+                self.stop = True
+                self.save(phase='gate-failed-awaiting-review', gateFailedTrial=name)
+                return
             if not code or self.stop:
                 return
             # A repeatable failure stops the suite.
@@ -143,11 +149,14 @@ class Suite:
             signal.signal(sig, self.halt)
         try:
             if not self.pilots():
-                self.save(phase='paused', childPID=None)
+                self.save(phase=self.state.get('gateFailedTrial') and 'gate-failed-awaiting-review' or 'paused', childPID=None)
                 return
             chosen = self.select()
             self.run('full', chosen['seed'], False)
-            self.save(phase='paused' if self.stop else 'finished-awaiting-review', childPID=None)
+            if self.state.get('gateFailedTrial'):
+                self.save(phase='gate-failed-awaiting-review', childPID=None)
+            else:
+                self.save(phase='paused' if self.stop else 'finished-awaiting-review', childPID=None)
         except BaseException as error:
             self.save(phase='failed', error=repr(error), childPID=None)
             raise
@@ -162,7 +171,7 @@ def parser():
     p.add_argument('--heldout', default=None)
     p.add_argument('--variants', nargs='+', choices=VARIANTS, default=list(VARIANTS))
     p.add_argument('--seeds', type=int, nargs='+', default=[109310, 109311, 109312])
-    p.add_argument('--pilot-updates', type=int, default=160)
+    p.add_argument('--pilot-updates', type=int, default=240)
     p.add_argument('--total-steps', type=int, default=1048576000)
     return p
 

@@ -15,7 +15,7 @@ class CentralPoolTests(unittest.TestCase):
                 for key,value in central_state(world).items():
                     np.testing.assert_array_equal(pool.central_states[i][key],value)
             previous=pool.central_states
-            actions=np.zeros((3,2,5));actions[:,:,:3]=[.5,.2,-.1];actions[:,:,3:]=[1,0]
+            actions=np.zeros((3,2,6));actions[:,:,:3]=[.5,.2,-.1];actions[:,:,3:5]=[1,0]
             for _ in range(5):
                 result=pool.step(actions)
                 direct=[world.step(action) for world,action in zip(worlds,actions)]
@@ -23,7 +23,7 @@ class CentralPoolTests(unittest.TestCase):
                 np.testing.assert_allclose(result[0],np.stack([row[0] for row in direct]),atol=0,rtol=0)
                 np.testing.assert_array_equal(result[1],np.stack([row[1] for row in direct]))
                 for i,world in enumerate(worlds):
-                    for key,value in central_state(world,(world.actions[:,3:]>.5).astype(np.float32)).items():
+                    for key,value in central_state(world,(world.actions[:,3:5]>.5).astype(np.float32)).items():
                         np.testing.assert_array_equal(pool.central_states[i][key],value)
             self.assertEqual(previous[0]['global'][2],0)
             untouched=pool.central_states[0]
@@ -37,7 +37,7 @@ class CentralPoolTests(unittest.TestCase):
     def test_default_pool_retains_original_public_api(self):
         with PhysicsEnvPool([dict(seed=99)],workers=1) as pool:
             self.assertIsNone(pool.central_states)
-            self.assertEqual(len(pool.step(np.zeros((1,2,5)))),4)
+            self.assertEqual(len(pool.step(np.zeros((1,2,6)))),4)
             self.assertIsNone(pool.central_states)
 
 

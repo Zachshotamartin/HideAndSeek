@@ -32,7 +32,7 @@ class LeagueTests(unittest.TestCase):
         memories=[torch.randn(2,64),torch.randn(2,64)]
         buttons=np.zeros((2,2,2),np.float32)
         rng=torch.get_rng_state().clone()
-        _,next_memory,_,records=act_grouped(models,history,physical,memories,buttons,roles,sample=False)
+        _,next_memory,_,_,records=act_grouped(models,history,physical,memories,buttons,roles,sample=False)
         torch.testing.assert_close(rng,torch.get_rng_state(),atol=0,rtol=0)
         observed=augment(physical,buttons)
         with torch.no_grad():
@@ -42,7 +42,7 @@ class LeagueTests(unittest.TestCase):
                     _,_,value,memory=actor(torch.from_numpy(observed[row:row+1,role]),memories[role][row:row+1])
                     torch.testing.assert_close(records[role][3][row],value[0])
                     torch.testing.assert_close(next_memory[role][row],memory[0])
-        actions,new_memory,new_buttons,_=act_grouped(models,history,physical,memories,buttons,roles)
+        actions,new_memory,new_buttons,_,_=act_grouped(models,history,physical,memories,buttons,roles)
         np.testing.assert_array_equal(actions[:,1],0);np.testing.assert_array_equal(new_buttons[:,1],0)
         self.assertTrue(any(not torch.equal(old,new) for old,new in zip(memories,new_memory)))
         self.assertTrue(all(p.grad is None for pair in history for actor in pair for p in actor.parameters()))

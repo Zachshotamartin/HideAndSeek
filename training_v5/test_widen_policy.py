@@ -69,7 +69,7 @@ class WidenTests(unittest.TestCase):
         physical=np.zeros((3,2,208),np.float32);physical[:,:,5]=1
         memory=[torch.randn(3,256) for _ in range(2)]
         roles=np.array([[-1,0],[0,-1],[-1,-1]])
-        _,after,_,_=act_grouped(models,history,physical,memory,np.zeros((3,2,2),np.float32),roles,sample=False)
+        _,after,_,_,_=act_grouped(models,history,physical,memory,np.zeros((3,2,2),np.float32),roles,sample=False)
         obs=torch.zeros(1,210);obs[:,5]=1
         _,_,_,expected=history[0][1](obs,memory[1][0:1,:64])
         torch.testing.assert_close(after[1][0,:64],expected[0])

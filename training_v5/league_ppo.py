@@ -2,8 +2,10 @@
 import numpy as np
 import torch
 from torch.distributions import Normal, Categorical
-from persistent_actor import augment, advance_buttons
+from persistent_actor import advance_buttons
 from central_persistent_train import normalize_active_advantages, policy_objective
+
+NOISE = 4   # observed exploration-noise values carried per actor between steps
 
 
 def assign_roles(generator, count, arm, history_count):
@@ -26,25 +28,42 @@ def active_masks(physical, roles):
     return current, active
 
 
+def actor_input(actor, physical, buttons, noises):
+    """One actor's own observation from the worker rows: its physical prefix, buttons and any carried noise."""
+    return torch.from_numpy(actor.observe(physical, buttons, noises).copy())
+
+
 @torch.no_grad()
-def act_grouped(models, histories, physical, memories, buttons, roles, sample=True):
-    observations = augment(physical, buttons)
+def act_grouped(models, histories, physical, memories, buttons, roles, sample=True, noises=None):
+    """Act for every environment with the current or frozen actor each role slot names.
+
+    ``physical`` may be wider than an actor's schema; every actor takes the
+    prefix it was trained on. ``noises`` holds the exploration noise each role
+    carried out of the previous step; the returned array carries it forward.
+    The recorded observation of each role is the current actor's input for all
+    rows; rows played by frozen actors are masked out of every update.
+    """
     count = len(physical)
+    if noises is None:
+        noises = np.zeros((count, 2, NOISE), np.float32)
     actions = np.zeros((count, 2, 6), np.float32)
     next_memories = [memory.clone() for memory in memories]
     next_buttons = buttons.copy()
+    next_noises = noises.copy()
     records = []
     for role in range(2):
-        observed = torch.from_numpy(observations[:, role].copy())
+        observed = actor_input(models[role], physical[:, role], buttons[:, role], noises[:, role])
         raw = torch.zeros(count, 6)
         logp = torch.zeros(count)
         values = torch.zeros(count)
         for identity in np.unique(roles[:, role]):
             indices = np.flatnonzero(roles[:, role] == identity)
             actor = models[role] if identity == -1 else histories[identity][role]
+            inputs = observed[indices] if identity == -1 else actor_input(
+                actor, physical[indices, role], buttons[indices, role], noises[indices, role])
+            memory_in = memories[role][indices, :actor.hidden_size]
             if sample:
-                movement, commands, raw_group, logp_group, value, memory = actor.act(
-                    observed[indices], memories[role][indices, :actor.hidden_size])
+                movement, commands, raw_group, logp_group, value, memory, noise = actor.act_with_noise(inputs, memory_in)
                 blind = physical[indices, role, 5] < 1 if role else np.zeros(len(indices), bool)
                 next_buttons[indices, role] = advance_buttons(buttons[indices, role], commands.numpy(), blind)
                 actions[indices, role, :3] = movement.numpy()[:, :3]
@@ -53,13 +72,14 @@ def act_grouped(models, histories, physical, memories, buttons, roles, sample=Tr
                 actions[indices[blind], role] = 0
                 raw[indices] = raw_group
                 logp[indices] = logp_group
+                next_noises[indices, role] = noise.numpy()
             else:
-                _, _, value, memory = actor(observed[indices], memories[role][indices, :actor.hidden_size])
+                _, _, value, memory = actor(inputs, memory_in)
             values[indices] = value
             next_memories[role][indices] = 0
             next_memories[role][indices, :actor.hidden_size] = memory
         records.append((observed, raw, logp, values))
-    return actions, next_memories, next_buttons, records
+    return actions, next_memories, next_buttons, next_noises, records
 
 
 def actor_update(model, optimizer, batch, advantages, current_rows, role,
@@ -74,8 +94,8 @@ def actor_update(model, optimizer, batch, advantages, current_rows, role,
     inside the horizon get burn-in. Burn-in never contributes gradients.
     """
     observations, memories, starts, raw_actions, old_logps = batch
-    if observations.shape[-1] != 210 or current_rows.shape != advantages.shape:
-        raise ValueError('Restricted actor observations and exact per-row policy identity required')
+    if observations.shape[-1] != model.observation_size or current_rows.shape != advantages.shape:
+        raise ValueError('Actor observations of this schema and exact per-row policy identity required')
     if prefix is not None:
         prefix_observations, prefix_memories, prefix_starts = prefix
         if burn_in <= 0 or prefix_observations.shape != (burn_in, *observations.shape[1:]) \

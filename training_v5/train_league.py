@@ -147,7 +147,7 @@ def train(args, *, stop_requested=None, on_checkpoint=None):
             critic.eval()
             h,n = args.horizon,args.envs
             actor_buffers = [[torch.zeros(h,n,210),torch.zeros(h,n,64),torch.zeros(h,n),
-                              torch.zeros(h,n,5),torch.zeros(h,n)] for _ in range(2)]
+                              torch.zeros(h,n,6),torch.zeros(h,n)] for _ in range(2)]
             current_rows = torch.zeros(h,n,2,dtype=torch.bool)
             central = {key:torch.zeros(h,n,*shape) for key,shape in FEATURES.items()}
             before_memories = torch.zeros(h,n,2,64)

@@ -114,7 +114,7 @@ class EntityTests(unittest.TestCase):
         with torch.no_grad():
             for tick in range(100):
                 row = observed(tick)
-                row[18:114] = 0
+                row[18:178] = 0
                 old = source(row[None], old_memory)
                 new = model(row[None], new_memory)
                 old_memory, new_memory = old[3], new[3]
@@ -129,13 +129,13 @@ class EntityTests(unittest.TestCase):
         memories = [torch.randn(4, 64), torch.randn(4, 64)]
         buttons = np.zeros((4, 2, 2), np.float32)
         identities = np.array([[-1, 0], [0, -1], [-1, -1], [0, 0]])
-        _, next_memories, _, records = act_grouped(models, histories, physical, memories, buttons, identities, sample=False)
+        _, next_memories, _, _, records = act_grouped(models, histories, physical, memories, buttons, identities, sample=False)
         for row in range(4):
             for role in range(2):
                 actor = models[role] if identities[row, role] == -1 else histories[0][role]
                 direct = actor(records[role][0][row:row+1], memories[role][row:row+1])[3]
                 torch.testing.assert_close(next_memories[role][row], direct[0], atol=3e-6, rtol=3e-6)
-        actions, _, next_buttons, _ = act_grouped(models, histories, physical, memories, buttons, identities)
+        actions, _, next_buttons, _, _ = act_grouped(models, histories, physical, memories, buttons, identities)
         np.testing.assert_array_equal(actions[:2, 1], 0)
         np.testing.assert_array_equal(next_buttons[:2, 1], 0)
 

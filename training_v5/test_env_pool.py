@@ -29,7 +29,11 @@ class PoolTests(unittest.TestCase):
                 np.testing.assert_allclose(obs, np.stack([r[0] for r in expected]), rtol=0, atol=1e-7)
                 np.testing.assert_array_equal(rew, np.stack([r[1] for r in expected]))
                 np.testing.assert_array_equal(done, [r[2] for r in expected])
-                self.assertEqual(infos, [r[3] for r in expected])
+                for info in infos:
+                    self.assertEqual(len(info['blockedMotion']), 2)
+                    self.assertTrue(all(isinstance(x, bool) for x in info['blockedMotion']))
+                self.assertEqual([{k: v for k, v in info.items() if k != 'blockedMotion'} for info in infos],
+                                 [r[3] for r in expected])
             self.assertTrue(done.all())
             self.assertEqual(infos[0]['t'], 16, 'no silent auto-reset')
             reset = pool.reset_at([3, 1], [123456, 78910])
@@ -41,6 +45,29 @@ class PoolTests(unittest.TestCase):
             self.assertEqual(traces[3]['t'], 0)
             changed = pool.reset_at([2], [42], [dict(scenario='open', n_boxes=0, n_ramps=0)])
             np.testing.assert_array_equal(changed[0], PhysicsEnv(seed=42, scenario='open', n_boxes=0, n_ramps=0, prep=4, play=12).observe())
+
+    def test_game_observation_mode_matches_the_single_process_rules(self):
+        from game import PHYSICAL_OBSERVATIONS, observe
+        configs = [dict(seed=901 + i, scenario='open', size=8, n_boxes=1, n_ramps=0, prep=2, play=30) for i in range(3)]
+        single = [PhysicsEnv(**config) for config in configs]
+        with PhysicsEnvPool(configs, workers=2, observation='game') as pool:
+            self.assertEqual(pool.observations.shape, (3, 2, PHYSICAL_OBSERVATIONS))
+            np.testing.assert_array_equal(pool.observations, np.stack([observe(e) for e in single]))
+            rng = np.random.default_rng(4)
+            for _ in range(12):
+                a = random_actions(rng)[:3]
+                obs, _, done, _ = pool.step(a)
+                for e, action in zip(single, a):
+                    e.step(action)
+                np.testing.assert_allclose(obs, np.stack([observe(e) for e in single]), rtol=0, atol=1e-7)
+            reset = pool.reset_at([1], [3131])
+            single[1].reset(3131)
+            np.testing.assert_array_equal(reset[0], observe(single[1]))
+            snapshot = pool.snapshot()
+            restored = pool.restore(snapshot)
+            self.assertEqual(restored.shape, (3, 2, PHYSICAL_OBSERVATIONS))
+        with self.assertRaises(ValueError):
+            PhysicsEnvPool(configs, workers=1, observation='unknown')
 
     def test_invalid_batch_and_worker_failure_cleanup(self):
         pool = PhysicsEnvPool([dict(seed=4)], workers=1)

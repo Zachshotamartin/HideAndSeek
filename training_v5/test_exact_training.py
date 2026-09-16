@@ -3,6 +3,7 @@ import argparse
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 import torch
@@ -53,6 +54,35 @@ class ExactTraining(unittest.TestCase):
             self.assertGreater(w['log'][-1]['hider']['burnInSteps'], 0)
             self.assertEqual(w['pilotUpdates'], 2)
             self.assertEqual(len(w['leagueModels']), 3)
+
+
+    def test_curriculum_and_blocked_ablation_resume_exactly_after_resets(self):
+        def short_world(*args, **kwargs):
+            return dict(scenario='open', size=8, n_boxes=1, n_ramps=0, prep=0, play=8)
+        with tempfile.TemporaryDirectory() as folder, patch('train_entity.environment_config', short_world):
+            setup = prepared_setup(folder, target=512)
+            whole = small_arguments(setup, folder, 'whole-new')
+            split = small_arguments(setup, folder, 'split-new')
+            for args in [whole, split]:
+                args.matchmaking = 'seeker-curriculum'
+                args.blocked_cost = .02
+                protocol = json.loads(Path(args.protocol).read_text())
+                protocol['training'].update(matchmaking=args.matchmaking, blocked_cost=args.blocked_cost)
+                Path(args.protocol).write_text(json.dumps(protocol))
+            train(whole)
+            split.stop_after_updates = 1
+            train(split)
+            split.resume = str(Path(split.output) / 'latest.pt')
+            split.stop_after_updates = None
+            train(split)
+            w = torch.load(Path(whole.output) / 'latest.pt', weights_only=False)
+            s = torch.load(split.resume, weights_only=False)
+            for wm, sm in zip(w['models'], s['models']):
+                for key in wm:
+                    torch.testing.assert_close(wm[key], sm[key], atol=0, rtol=0)
+            self.assertEqual(w['matchmakingState'], s['matchmakingState'])
+            self.assertGreater(sum(w['matchmakingState']['counts']), 0)
+            self.assertEqual(w['opponentRNG'], s['opponentRNG'])
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ import unittest
 
 import torch
 
-from entity_actor import prepare_pair, FORMAT, load_pair
+from entity_actor import prepare_pair, FORMAT, TAG_FORMAT, load_pair
 from persistent_actor import PersistentActor, FORMAT as LEGACY_FORMAT
 from persistent_train import file_hash
 from residual_critic import ResidualCentralCritic, SCHEMA
@@ -42,7 +42,10 @@ class EntityTrainingTests(unittest.TestCase):
     def test_scaled_rollout_terminal_checkpoint_resume_and_protocol_guards(self):
         self.actual_rollout(True)
 
-    def actual_rollout(self, scaled):
+    def test_tag_round_schema_rollout_with_noise_and_staged_curriculum(self):
+        self.actual_rollout(False, widened=True)
+
+    def actual_rollout(self, scaled, widened=False):
         torch.manual_seed(65591)
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -51,7 +54,8 @@ class EntityTrainingTests(unittest.TestCase):
             parent = dict(format=LEGACY_FORMAT, models=[model.state_dict() for model in actors],
                 decisions=123, torchRNG=torch.get_rng_state(),
                 provenance=dict(physicsSHA256=physics, roleSources=[], sourceSelectedPairSHA256='test-parent'))
-            prepared = prepare_pair(parent, projected=True)
+            noise_rho = .7 if widened else 0.
+            prepared = prepare_pair(parent, projected=True, observation_size=220 if widened else 210, noise_rho=noise_rho)
             if scaled:
                 small,_=load_pair(prepared)
                 prepared['models']=[widen_actor(m).state_dict() for m in small]
@@ -67,21 +71,27 @@ class EntityTrainingTests(unittest.TestCase):
                 '--parent', str(root / 'entity.pt'), '--critic', str(root / 'critic.pt'),
                 '--initial', str(root / 'initial.pt'), '--history', str(root / 'initial.pt'),
                 '--output', str(root / 'run'), '--protocol', str(root / 'protocol.json'),
-                '--encoder', 'entity', '--envs', '4', '--workers', '2', '--horizon', '256',
+                '--encoder', 'entity', '--variant', 'short', '--envs', '4', '--workers', '2', '--horizon', '256',
                 '--sequence-length', '128' if scaled else '32', '--sequence-batch', '8', '--critic-batch-size', '256', '--epochs', '1',
-                '--target-interactions', '4096', '--retain-updates', '1,2'])
+                '--target-interactions', '4096', '--retain-updates', '1,2', '--noise-rho', str(noise_rho),
+                '--curriculum', 'staged' if widened else 'none'])
             settings = {name: getattr(args, name) for name in [
                 'seed', 'arm', 'envs', 'workers', 'horizon', 'sequence_length', 'sequence_batch',
                 'critic_batch_size', 'epochs', 'learning_rate', 'critic_learning_rate',
-                'entropy', 'kl_limit', 'target_interactions']}
-            protocol = dict(training=settings, physicsSHA256=physics, history=['initial'],
+                'entropy', 'kl_limit', 'target_interactions', 'noise_rho', 'curriculum']}
+            protocol = dict(reward='Zero-sum visibility with capture credit; no tool bonuses.', training=settings, physicsSHA256=physics, history=['initial'],
                 assets={name: dict(sha256=file_hash(root / (name + '.pt')))
                         for name in ['entity', 'initial', 'critic']})
             (root / 'protocol.json').write_text(json.dumps(protocol))
             with contextlib.redirect_stdout(io.StringIO()):
                 train(args, stop_requested=lambda: True)
             first = torch.load(root / 'run/latest.pt', weights_only=False)
-            self.assertEqual(first['format'], FORMAT)
+            self.assertEqual(first['format'], TAG_FORMAT if widened else FORMAT)
+            self.assertEqual(first['observationSize'], 220 if widened else 210)
+            self.assertEqual(first['noiseRho'], noise_rho)
+            self.assertEqual(first['rolloutState']['noises'].shape, (4, 2, 4))
+            self.assertEqual(first['curriculumState']['stage'], 0 if widened else 2)
+            self.assertEqual(first['log'][-1]['curriculum']['stage'], 'small' if widened else 'full')
             self.assertEqual(first['totalPolicyInteractions'], 2048)
             self.assertEqual(first['pilotEpisodes'], 4)
             self.assertEqual(sum(first['currentPolicyDecisions']) +
@@ -98,7 +108,7 @@ class EntityTrainingTests(unittest.TestCase):
             self.assertEqual(second['pilotEpisodes'], 8)
             self.assertEqual(second['decisions'], 4219)
             self.assertEqual(len(second['provenance']['resumes']), 1)
-            self.assertEqual(second['provenance']['resumes'][0]['worldsRestarted'], 4)
+            self.assertEqual(second['provenance']['resumes'][0]['worldsRestarted'], 0)
             for previous, current in zip(first['optimizers'], second['optimizers']):
                 self.assertGreater(max(value['step'] for value in current['state'].values()),
                                    max(value['step'] for value in previous['state'].values()))

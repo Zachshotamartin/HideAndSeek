@@ -3,7 +3,8 @@
 ``PhysicsEnvPool(configs, workers=4)`` partitions independent environments
 across persistent spawn workers. ``step(actions)`` returns terminal
 observations unchanged. ``reset_at(indices, seeds, overrides=None)`` performs
-only caller-requested resets. Every request has an ID; worker failures close
+only caller-requested resets. ``observation='game'`` returns the tag-round
+actor observation (physics plus the game.py extras) instead of bare physics. Every request has an ID; worker failures close
 the pool instead of returning a partial batch. Instances must be used from a
 guarded Python main entry point.
 """
@@ -23,6 +24,7 @@ except ImportError:
     from capture import resolve_capture
 
 UNSTABLE_WARNINGS = ('mjWARN_BADQPOS', 'mjWARN_BADQVEL', 'mjWARN_BADQACC')
+OBSERVATION_MODES = ('physics', 'game')
 MAX_WORKERS = 16
 TIMEOUT_RANGE = (1, 300)
 POLL_SECONDS = 1.0
@@ -62,7 +64,18 @@ def _import_physics(with_central_state):
     return PhysicsEnv, central_state
 
 
-def _step_one(env, action):
+def _import_observer(observation):
+    """The worker-side observation function: bare physics or the tag-round actor view."""
+    if observation == 'physics':
+        return lambda env: env.observe()
+    if __package__:
+        from .game import observe
+    else:
+        from game import observe
+    return observe
+
+
+def _step_one(env, action, observe):
     """One environment step; a blown-up world ends its episode instead of crashing.
 
     The episode ends with zero reward for both roles (still zero-sum) and the
@@ -73,17 +86,20 @@ def _step_one(env, action):
         row = env.step(action)
         if unstable(env):
             raise RuntimeError('Physics diverged: MuJoCo instability reset')
-        return resolve_capture(env, *row)
+        from motion_diagnostics import blocked_roles
+        _, reward, done, info = resolve_capture(env, *row)
+        info = dict(info, blockedMotion=blocked_roles(env))
+        return observe(env), reward, done, info
     except RuntimeError as error:
         if 'diverged' not in str(error):
             raise
         info = dict(env.info(), diverged=True)
         env.reset(seed=env.arena['seed'])
-        return np.zeros_like(env.observe()), np.zeros(2), True, info
+        return np.zeros_like(observe(env)), np.zeros(2), True, info
 
 
-def _step_all(envs, actions, central_state):
-    rows = [_step_one(env, action) for env, action in zip(envs, actions)]
+def _step_all(envs, actions, central_state, observe):
+    rows = [_step_one(env, action, observe) for env, action in zip(envs, actions)]
     result = (np.stack([row[0] for row in rows]), np.stack([row[1] for row in rows]),
               np.asarray([row[2] for row in rows], dtype=bool), [row[3] for row in rows])
     if central_state:
@@ -91,33 +107,33 @@ def _step_all(envs, actions, central_state):
     return result
 
 
-def _reset_some(envs, configs, payload, PhysicsEnv, central_state):
+def _reset_some(envs, configs, payload, PhysicsEnv, central_state, observe):
     result = []
     for local, seed, overrides in payload:
         if overrides:
             configs[local] = {**configs[local], **overrides, 'seed': int(seed)}
             envs[local].close()
             envs[local] = PhysicsEnv(**configs[local])
-            observation = envs[local].observe()
         else:
-            observation = envs[local].reset(seed=int(seed))
+            envs[local].reset(seed=int(seed))
+        observation = observe(envs[local])
         result.append((local, observation, central_state(envs[local])) if central_state else (local, observation))
     return result
 
 
-def _restore_all(envs, payload, central_state):
+def _restore_all(envs, payload, central_state, observe):
     from snapshots import restore
     for env in envs:
         env.close()
     envs = [restore(record) for record in payload]
     if central_state:
-        result = [(env.observe(), central_state(env, pressed_tools(env))) for env in envs]
+        result = [(observe(env), central_state(env, pressed_tools(env))) for env in envs]
     else:
-        result = [(env.observe(), None) for env in envs]
+        result = [(observe(env), None) for env in envs]
     return envs, result
 
 
-def _worker(connection, configs, with_central_state=False, ignore_parent_signals=False):
+def _worker(connection, configs, with_central_state=False, ignore_parent_signals=False, observation='physics'):
     if ignore_parent_signals:
         # The continuous-training parent owns Ctrl-C and saves after a complete
         # update. Workers must finish the in-flight batch rather than die first.
@@ -127,8 +143,9 @@ def _worker(connection, configs, with_central_state=False, ignore_parent_signals
     request = 0
     try:
         PhysicsEnv, central_state = _import_physics(with_central_state)
+        observe = _import_observer(observation)
         envs = [PhysicsEnv(**config) for config in configs]
-        initial = np.stack([env.observe() for env in envs])
+        initial = np.stack([observe(env) for env in envs])
         if with_central_state:
             initial = (initial, [central_state(env) for env in envs])
         connection.send((0, 'ok', initial))
@@ -137,14 +154,14 @@ def _worker(connection, configs, with_central_state=False, ignore_parent_signals
             if operation == 'close':
                 break
             if operation == 'step':
-                result = _step_all(envs, payload, central_state)
+                result = _step_all(envs, payload, central_state, observe)
             elif operation == 'reset':
-                result = _reset_some(envs, configs, payload, PhysicsEnv, central_state)
+                result = _reset_some(envs, configs, payload, PhysicsEnv, central_state, observe)
             elif operation == 'snapshot':
                 from snapshots import dump
                 result = [dump(env) for env in envs]
             elif operation == 'restore':
-                envs, result = _restore_all(envs, payload, central_state)
+                envs, result = _restore_all(envs, payload, central_state, observe)
             elif operation == 'trace':
                 result = [env.trace() for env in envs]
             else:
@@ -168,9 +185,12 @@ def _worker(connection, configs, with_central_state=False, ignore_parent_signals
 
 
 class PhysicsEnvPool:
-    def __init__(self, configs, workers=4, timeout=60.0, with_central_state=False, ignore_parent_signals=False):
+    def __init__(self, configs, workers=4, timeout=60.0, with_central_state=False, ignore_parent_signals=False,
+                 observation='physics'):
         if not configs or not isinstance(configs, (list, tuple)):
             raise ValueError('Provide a non-empty sequence of environment configuration dictionaries')
+        if observation not in OBSERVATION_MODES:
+            raise ValueError(f'Observation mode must be one of {OBSERVATION_MODES}')
         if not isinstance(workers, int) or workers < 1 or workers > MAX_WORKERS:
             raise ValueError('Use 1–16 workers')
         if not TIMEOUT_RANGE[0] <= timeout <= TIMEOUT_RANGE[1]:
@@ -186,6 +206,7 @@ class PhysicsEnvPool:
         self.groups = []
         self.locations = {}
         self.with_central_state = bool(with_central_state)
+        self.observation = observation
         self.central_states = None
         try:
             self._start_workers(ignore_parent_signals)
@@ -204,7 +225,8 @@ class PhysicsEnvPool:
             group = [int(i) for i in indices]
             parent, child = ctx.Pipe()
             process = ctx.Process(target=_worker,
-                                  args=(child, [self.configs[i] for i in group], self.with_central_state, ignore_parent_signals),
+                                  args=(child, [self.configs[i] for i in group], self.with_central_state, ignore_parent_signals,
+                                        self.observation),
                                   name=f'hide-seek-physics-{worker}', daemon=True)
             self.connections.append(parent)
             self.processes.append(process)

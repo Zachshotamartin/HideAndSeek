@@ -120,7 +120,7 @@ class InteractionTests(unittest.TestCase):
         mem = [torch.zeros(2, models[0].hidden_size) for _ in range(2)]
         buttons = np.zeros((2, 2, 2), np.float32)
         roles = np.full((2, 2), -1)
-        actions, states, buttons, records = act_grouped(models, [], obs, mem, buttons, roles)
+        actions, states, buttons, _, records = act_grouped(models, [], obs, mem, buttons, roles)
         self.assertEqual(actions.shape, (2, 2, 6))
         e.step(actions[0])
         ob, raw, logp, _ = records[0]

@@ -16,16 +16,16 @@ from residual_critic import ResidualCentralCritic, SCHEMA
 
 class ContinuousTrainingTests(unittest.TestCase):
     def test_group_interrupt_archives_complete_state_and_resume_adds_fresh_rollout(self):
-        self.exercise_launcher([sys.executable, 'training/train_continuous.py'])
+        self.exercise_launcher([sys.executable, 'training_v5/train_continuous.py'])
 
     def test_node_launcher_waits_for_safe_group_interrupt_and_resumes(self):
-        self.exercise_launcher(['node', 'scripts/train-continuous.mjs'])
+        self.exercise_launcher(['node', 'scripts/train-continuous.mjs', '--trainer-version', 'v5'])
 
     def test_group_sigterm_saves_before_workers_exit(self):
-        self.exercise_launcher([sys.executable, 'training/train_continuous.py'], signal.SIGTERM)
+        self.exercise_launcher([sys.executable, 'training_v5/train_continuous.py'], signal.SIGTERM)
 
     def test_node_launcher_handles_group_sigterm(self):
-        self.exercise_launcher(['node', 'scripts/train-continuous.mjs'], signal.SIGTERM)
+        self.exercise_launcher(['node', 'scripts/train-continuous.mjs', '--trainer-version', 'v5'], signal.SIGTERM)
 
     def exercise_launcher(self, launcher, stop_signal=signal.SIGINT):
         root = Path(__file__).resolve().parent.parent
@@ -38,7 +38,7 @@ class ContinuousTrainingTests(unittest.TestCase):
                 models=[model.state_dict() for model in models],
                 optimizers=[optimizer.state_dict() for optimizer in optimizers],
                 torchRNG=torch.get_rng_state(),
-                provenance=dict(physicsSHA256=file_hash(root / 'training/physics.py'))), parent_path)
+                provenance=dict(physicsSHA256=file_hash(root / 'training_v5/physics.py'))), parent_path)
             critic = ResidualCentralCritic(.1)
             optimizer = torch.optim.AdamW(critic.parameters(), lr=.0001)
             torch.save(dict(format=SCHEMA, parentSHA256=file_hash(parent_path), dropout=.1,
@@ -58,7 +58,7 @@ class ContinuousTrainingTests(unittest.TestCase):
                 deadline = time.monotonic() + 30
                 while not (output / 'latest.pt').exists() and process.poll() is None and time.monotonic() < deadline:
                     time.sleep(.02)
-                self.assertTrue((output / 'latest.pt').exists(), 'First durable checkpoint was not created')
+                self.assertTrue((output / 'latest.pt').exists(), process.communicate()[0] if process.poll() is not None else 'First durable checkpoint was not created')
                 # This reaches every worker as real terminal Ctrl-C does.
                 os.killpg(process.pid, stop_signal)
                 text, _ = process.communicate(timeout=30)

@@ -28,20 +28,38 @@ def advance_buttons(previous, commands, blind=False):
     return result
 
 
-def augment(observations, buttons):
+def augment(observations, buttons, noise=None, physical_size=PHYSICS_OBSERVATIONS):
+    """Actor input: the first ``physical_size`` measurements, the two own buttons, then any observed noise.
+
+    A worker may return more measurements than an older actor was trained on;
+    each actor takes the prefix its schema defines.
+    """
     observations = np.asarray(observations, dtype=np.float32)
     buttons = np.asarray(buttons, dtype=np.float32)
-    if observations.shape[:-1] != buttons.shape[:-1] or observations.shape[-1] != 208 or buttons.shape[-1] != 2:
-        raise ValueError('Expected 208 physical measurements and two own button states')
-    return np.concatenate((observations, buttons), axis=-1)
+    if observations.shape[:-1] != buttons.shape[:-1] or observations.shape[-1] < physical_size or buttons.shape[-1] != 2:
+        raise ValueError(f'Expected at least {physical_size} physical measurements and two own button states')
+    parts = [observations[..., :physical_size], buttons]
+    if noise is not None:
+        noise = np.asarray(noise, dtype=np.float32)
+        if noise.shape[:-1] != buttons.shape[:-1] or noise.shape[-1] != 4:
+            raise ValueError('Expected four observed noise values per actor')
+        parts.append(noise)
+    return np.concatenate(parts, axis=-1)
 
 
 class PersistentActor(nn.Module):
-    def __init__(self, hidden_size=64, encoder_size=96):
+    def __init__(self, hidden_size=64, encoder_size=96, observation_size=OBSERVATIONS, noise_rho=0.):
         super().__init__()
-        self.observation_size, self.hidden_size = OBSERVATIONS, hidden_size
+        self.observation_size, self.hidden_size = int(observation_size), hidden_size
         self.encoder_size = encoder_size
-        self.encoder = nn.Linear(OBSERVATIONS, encoder_size)
+        # v6 actors observe their own AR(1) exploration noise in the last four
+        # columns; the per-step distribution conditions on it, so the likelihood
+        # stays exact while exploration is coherent over a fraction of a second.
+        if not 0 <= noise_rho < 1:
+            raise ValueError('The noise correlation must lie in [0, 1)')
+        self.noise_rho = float(noise_rho)
+        self.physical_size = self.observation_size - 2 - (4 if self.noise_rho else 0)
+        self.encoder = nn.Linear(self.observation_size, encoder_size)
         self.memory = nn.GRUCell(encoder_size, hidden_size)
         self.movement = nn.Linear(hidden_size, 4)
         self.tools = nn.Linear(hidden_size, 6)
@@ -76,7 +94,12 @@ class PersistentActor(nn.Module):
 
     def forward(self, observation, memory):
         memory = self.memory(torch.tanh(self.encoder(observation)), memory)
-        normal = Normal(self.movement(memory), self.log_std.clamp(-2.5, .3).exp())
+        base = self.movement(memory)
+        scale = self.log_std.clamp(-2.5, .3).exp()
+        if self.noise_rho:
+            base = base + self.noise_rho * observation[..., -4:]
+            scale = scale * math.sqrt(1 - self.noise_rho ** 2)
+        normal = Normal(base, scale)
         tools = Categorical(logits=self.tools(memory).reshape(*memory.shape[:-1], 2, 3))
         return normal, tools, self.value(memory).squeeze(-1), memory
 
@@ -92,17 +115,31 @@ class PersistentActor(nn.Module):
             entropy += 0.1 * tools.entropy().sum(-1)
         return logp, entropy
 
-    def act(self, observation, memory, deterministic=False):
+    def act_with_noise(self, observation, memory, deterministic=False):
+        """Sample an action; also return the exploration noise carried into the next step."""
         normal, tools, value, next_memory = self(observation, memory)
-        movement = normal.mean if deterministic else normal.sample()
+        carried = self.noise_rho * observation[..., -4:] if self.noise_rho else torch.zeros_like(normal.mean)
+        base = normal.mean - carried
+        # Deterministic playback carries no noise: the head's own mean.
+        movement = base if deterministic else normal.sample()
         commands = tools.logits.argmax(-1) if deterministic else tools.sample()
         raw = torch.cat((movement, commands.float()), -1)
         logp, _ = self.statistics(normal, tools, raw, include_entropy=False)
-        return torch.tanh(movement), commands, raw, logp, value, next_memory
+        noise = (movement - base) if self.noise_rho else torch.zeros_like(movement)
+        return torch.tanh(movement), commands, raw, logp, value, next_memory, noise
+
+    def act(self, observation, memory, deterministic=False):
+        return self.act_with_noise(observation, memory, deterministic)[:6]
+
+    def observe(self, physical, buttons, noise=None):
+        """This actor's own input from a worker observation that may be wider than its schema."""
+        if self.noise_rho and noise is None:
+            raise ValueError('This actor observes its own exploration noise; pass the carried noise')
+        return augment(physical, buttons, noise if self.noise_rho else None, self.physical_size)
 
 
 def export_actor(model):
-    return {'observationSize': OBSERVATIONS, 'physicsObservationSize': PHYSICS_OBSERVATIONS,
+    return {'observationSize': model.observation_size, 'physicsObservationSize': model.physical_size,
             'hiddenSize': model.hidden_size, 'encoderSize': model.encoder_size,
             'weights': {key: value.detach().cpu().numpy().astype(np.float32).tolist()
                         for key, value in model.state_dict().items() if not key.startswith('value.')}}

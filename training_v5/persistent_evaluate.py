@@ -15,8 +15,10 @@ import torch
 
 from actor import PhysicalActor
 from capture import resolve_capture
+from game import NOISE, observe as game_observe
+from motion_diagnostics import blocked_roles
 from env_pool import unstable
-from persistent_actor import FORMAT, PersistentActor, advance_buttons, augment
+from persistent_actor import FORMAT, PHYSICS_OBSERVATIONS, PersistentActor, advance_buttons
 from physics import DT, PhysicsEnv
 
 torch.set_num_threads(1)
@@ -71,30 +73,54 @@ def gaussian(tape, axis):
     return math.sqrt(-2 * math.log(max(1e-12, tape[axis * 2]))) * math.cos(2 * math.pi * tape[axis * 2 + 1])
 
 
-def sample(model, physical, memory, buttons, generator):
+def movement_sample(model, normal, noise, tape, deterministic):
+    """Raw movement from the tape, and the exploration noise carried into the next step.
+
+    An actor that observes its noise already includes ``rho * noise`` in the
+    mean it returns; the deterministic action is the head's own mean and
+    carries no noise, exactly as the training actor does.
+    """
+    rho = float(getattr(model, 'noise_rho', 0.))
+    mean = normal.mean[0].numpy().astype(np.float64)
+    scale = normal.scale[0].numpy().astype(np.float64)
+    base = mean - rho * np.asarray(noise, np.float64)[:len(mean)]
+    if deterministic:
+        return base, np.zeros(NOISE, np.float32)
+    movement = np.array([mean[axis] + scale[axis] * gaussian(tape, axis) for axis in range(len(mean))])
+    carried = np.zeros(NOISE, np.float32)
+    if rho:
+        carried[:len(mean)] = movement - base
+    return movement, carried
+
+
+def sample(model, physical, memory, buttons, generator, deterministic=False, noise=None):
     """One stochastic action from a seeded uniform tape; identical tapes across modes."""
     persistent = isinstance(model, PersistentActor)
     blind = is_blind(physical)
     if blind:
         buttons = np.zeros(2, np.float32)
-    observation = augment(physical, buttons) if persistent else physical
+    if noise is None:
+        noise = np.zeros(NOISE, np.float32)
+    physical = np.asarray(physical, np.float32)
+    observation = model.observe(physical, buttons, noise) if persistent else physical[:PHYSICS_OBSERVATIONS]
     normal, tools, _, memory = model(torch.from_numpy(observation[None]), memory)
     tape = generator.random(TAPE_LENGTH)
+    movement, next_noise = movement_sample(model, normal, noise, tape, deterministic)
     action = np.zeros(6, np.float32)
-    for axis in range(4):
-        action[axis if axis < 3 else 5] = math.tanh(float(normal.mean[0, axis]) + float(normal.scale[0, axis]) * gaussian(tape, axis))
+    for axis, value in enumerate(movement):
+        action[axis if axis < 3 else 5] = math.tanh(float(value))
     if persistent:
         probabilities = tools.probs[0].numpy()
-        commands = np.asarray([min(2, np.searchsorted(np.cumsum(probabilities[t]), tape[8 + t], side='right')) for t in range(2)])
+        commands = (probabilities.argmax(-1) if deterministic else np.asarray([min(2, np.searchsorted(np.cumsum(probabilities[t]), tape[8 + t], side='right')) for t in range(2)]))
         buttons = advance_buttons(buttons, commands, blind)
     else:
-        buttons = (tape[8:] < tools.probs[0].numpy()).astype(np.float32)
+        buttons = ((.5 if deterministic else tape[8:]) < tools.probs[0].numpy()).astype(np.float32)
         commands = np.where(buttons, 1, 2)
     action[3:5] = buttons
     if blind:
         action.fill(0)
         buttons.fill(0)
-    return action, memory, buttons, commands
+    return action, memory, buttons, commands, next_noise
 
 
 def runs(values, enabled=lambda value: value >= 0):
@@ -146,7 +172,7 @@ def tick_record(env, role, buttons, commands, wall, prop):
     other = env.data.qpos[(1 - role) * 4:(1 - role) * 4 + 2]
     pushing = np.linalg.norm(env.actions[role, :2]) > .5
     return dict(grip=env.grips[role], buttons=buttons.tolist(), commands=commands, wall=bool(wall), prop=bool(prop),
-                speed=speed, wallPress=bool(wall and speed < .1 and pushing), stuck=bool(speed < .05 and pushing),
+                blockedMotion=blocked_roles(env)[role], speed=speed, wallPress=bool(wall and speed < .1 and pushing), stuck=bool(speed < .05 and pushing),
                 seesOpponent=bool(env.seen[role, 1 - role]), opponentDistance=float(np.linalg.norm(own - other)),
                 yawRate=float(env.data.qvel[role * 4 + 3]), action=env.actions[role].tolist())
 
@@ -172,6 +198,10 @@ def role_report(history, role, prep):
                 wallPressFrames=sum(row['wallPress'] for row in history),
                 playWallPressFrames=sum(row['wallPress'] for row in history[prep:]),
                 playStuckFrames=sum(row['stuck'] for row in history[prep:]),
+                playBlockedFrames=sum(row.get('blockedMotion', False) for row in history[prep:]),
+                visibleRetreatFrames=sum(history[t]['opponentDistance'] > history[t - 1]['opponentDistance'] + .01
+                                         for t in range(prep + 1, len(history)) if history[t - 1]['seesOpponent']),
+                sightLosses=len(gaps) + int(gap is not None),
                 propContactFrames=sum(row['prop'] for row in history),
                 meanSpeed=float(np.mean([row['speed'] for row in history])),
                 absoluteTurns=float(sum(abs(row['yawRate']) * DT for row in history) / (2 * math.pi)),
@@ -180,13 +210,21 @@ def role_report(history, role, prep):
                                 for command in range(3)] for tool in range(2)])
 
 
-def episode(models, seed, scenario, mode, trace=False, arena_config=None):
+def episode(models, seed, scenario, mode, trace=False, arena_config=None, role_modes=("sample", "sample"), fixture=None):
     """Play one seeded episode in ``mode`` and return its measurements."""
+    if len(role_modes) != 2 or any(x not in ('mean', 'sample') for x in role_modes):
+        raise ValueError('Specify mean/sample for both roles')
     configuration = evaluation_arena(arena_config)
-    env = PhysicsEnv(seed=seed, scenario=scenario, **configuration, disable_tools=mode == 'no-tools')
-    physical = env.observe()
+    arena = None
+    if fixture:
+        from behavior_fixtures import fixture_arena, target_action
+        arena = fixture_arena(fixture, seed)
+        configuration.update(prep=0)
+    env = PhysicsEnv(seed=seed, scenario=scenario, **configuration, arena=arena, disable_tools=mode == 'no-tools')
+    physical = game_observe(env)
     memory = [torch.zeros(1, model.hidden_size) for model in models]
     buttons = np.zeros((2, 2), np.float32)
+    noises = np.zeros((2, NOISE), np.float32)
     random = [np.random.default_rng(seed + offset) for offset in SEED_OFFSETS]
     histories = [[], []]
     frames = [env.trace()] if trace else None
@@ -198,6 +236,8 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
             actions = np.zeros((2, 6), np.float32)
             commands = []
             view = physical.copy()
+            if first_sight is None and env.t >= env.prep and env.seen[1, 0]:
+                first_sight = tick
             if mode == 'seeker-blackout':
                 if first_sight is None and env.seen[1, 0]:
                     first_sight = tick
@@ -209,15 +249,19 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
             for role, model in enumerate(models):
                 if mode == f'no-{["hider", "seeker"][role]}-memory':
                     memory[role].zero_()
-                actions[role], memory[role], buttons[role], chosen = sample(model, view[role], memory[role], buttons[role], random[role])
+                actions[role], memory[role], buttons[role], chosen, noises[role] = sample(
+                    model, view[role], memory[role], buttons[role], random[role], deterministic=role_modes[role] == 'mean', noise=noises[role])
                 commands.append(chosen.tolist())
                 if mode == 'no-hider-tools' and role == 0 or mode == 'no-seeker-tools' and role == 1:
                     actions[role, 3:5] = 0
-            physical, reward, done, info = env.step(actions)
+            if fixture:
+                actions[0] = target_action(fixture, env)
+                buttons[0].fill(0)
+            _, reward, done, info = env.step(actions)
             if unstable(env):
                 diverged = True
                 break
-            physical, reward, done, info = resolve_capture(env, physical, reward, done, info)
+            physical, reward, done, info = resolve_capture(env, game_observe(env), reward, done, info)
             wall, prop = agent_contacts(env)
             for role in range(2):
                 histories[role].append(tick_record(env, role, buttons[role], commands[role], wall[role], prop[role]))
@@ -231,7 +275,9 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
     result = dict(seed=seed, scenario=scenario, mode=mode, hiddenFraction=info['hidden'] / info['play_steps'],
                   propShieldedFraction=info['shielded'] / info['play_steps'], propDisplacement=sum(info['object_displacement']),
                   info=info, roles=roles, blackoutTicks=blackout_ticks, firstSightTick=first_sight, diverged=diverged,
-                  captured=bool(info.get('captured', False)), captureSecond=None if not info.get('captured') else info['captureStep'] * DT)
+                  roleModes=list(role_modes), diagnosticFixture=fixture,
+                  captured=bool(info.get('captured', False)), captureSecond=None if not info.get('captured') else info['captureStep'] * DT,
+                  seekerFound=first_sight is not None, hiderEscaped=first_sight is not None and not info.get('captured', False))
     if arena_config is not None:
         result.update(arenaConfig=configuration, actualObjectCount=len(env.arena['objects']))
     if trace:
@@ -243,7 +289,13 @@ def episode(models, seed, scenario, mode, trace=False, arena_config=None):
 def role_summary(details):
     grip = [length for row in details for length in row['gripDurationsTicks']]
     holding = [[length for row in details for length in row['requestedHoldDurationsTicks'][tool]] for tool in range(2)]
-    return dict(gripCount=len(grip),
+    reacquired = [x for row in details for x in row['reacquisitionSeconds']]
+    return dict(meanReacquisitionSeconds=float(np.mean(reacquired)) if reacquired else None,
+                unresolvedLostSightRate=float(np.mean([row['unresolvedLostSight'] for row in details])),
+                meanVisiblePursuitProgress=float(np.mean([row['visiblePursuitProgress'] for row in details])),
+                meanVisibleRetreatFrames=float(np.mean([row.get('visibleRetreatFrames', 0) for row in details])),
+                meanPlayBlockedFrames=float(np.mean([row.get('playBlockedFrames', 0) for row in details])),
+                gripCount=len(grip),
                 medianGripSeconds=float(np.median(grip) * DT) if grip else 0,
                 meanGripSeconds=float(np.mean(grip) * DT) if grip else 0,
                 maxGripSeconds=float(max(grip) * DT) if grip else 0,
@@ -258,7 +310,13 @@ def role_summary(details):
 
 def mode_summary(group):
     summary = {key: float(np.mean([row[key] for row in group])) for key in ['hiddenFraction', 'propShieldedFraction', 'propDisplacement']}
+    capture_times = [row['captureSecond'] for row in group if row.get('captured')]
+    summary['meanCaptureSeconds'] = float(np.mean(capture_times)) if capture_times else None
     summary['captureRate'] = float(np.mean([row.get('captured', False) for row in group]))
+    summary['foundRate'] = float(np.mean([row.get('seekerFound', row.get('firstSightTick') is not None) for row in group]))
+    summary['escapeRate'] = float(np.mean([row.get('hiderEscaped', False) for row in group]))
+    sightings = [row['firstSightTick'] for row in group if row.get('firstSightTick') is not None]
+    summary['meanFirstSightSeconds'] = float(np.mean(sightings) * DT) if sightings else None
     summary['roles'] = [role_summary([row['roles'][role] for row in group]) for role in range(2)]
     return summary
 

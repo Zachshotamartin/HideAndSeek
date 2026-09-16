@@ -72,14 +72,14 @@ def choose_configs(generator, count, start, namespace, used):
 def sample_restricted(models, physical, memories, buttons):
     """The only actor path: 208 restricted measurements + two own buttons."""
     observations=augment(physical,buttons)
-    count=len(physical); actions=np.zeros((count,2,5),np.float32)
+    count=len(physical); actions=np.zeros((count,2,6),np.float32)
     next_buttons=buttons.copy(); next_memories=[]; records=[]
     for role,model in enumerate(models):
         observed=torch.from_numpy(observations[:,role].copy())
         movement,commands,raw,logp,value,memory=model.act(observed,memories[role])
         blind=(physical[:,role,5]<1) if role else np.zeros(count,bool)
         next_buttons[:,role]=advance_buttons(buttons[:,role],commands.numpy(),blind)
-        actions[:,role,:3]=movement.numpy();actions[:,role,3:]=next_buttons[:,role]
+        actions[:,role,:3]=movement.numpy()[:,:3];actions[:,role,5]=movement.numpy()[:,3];actions[:,role,3:5]=next_buttons[:,role]
         actions[blind,role]=0
         next_memories.append(memory)
         records.append((observed,raw,logp,value))

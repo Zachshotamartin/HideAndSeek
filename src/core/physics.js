@@ -1,3 +1,6 @@
+import { TAG_SCHEMA, extras } from './gameRules.js';
+export const KNOWN_POSITION_SCHEMA = 'known-opponent-position-210-v1';
+export const OBSERVATION_SCHEMAS = [KNOWN_POSITION_SCHEMA, TAG_SCHEMA];
 /** Original physical hide-and-seek. Coordinates in this module are metres, Z up.
  * The renderer adapter alone converts to Three.js Y up.
  */
@@ -450,6 +453,8 @@ export function editObject(arena, index, change) {
 }
 export class PhysicsSimulation {
   constructor(mj, arena, options = {}) {
+    if (options.observationSchema !== undefined && !OBSERVATION_SCHEMAS.includes(options.observationSchema)) throw Error('Unknown opponent observation schema');
+    this.observationSchema = options.observationSchema;
     this.mj = mj;
     this.arena = arena;
     this.prep = options.prep ?? PREP;
@@ -751,6 +756,13 @@ export class PhysicsSimulation {
         ang = this.data.qpos[b * 4 + 3] - yaw;
       row.push(1, xy[0] / 6, xy[1] / 6, p[2] / 2, v[0] / 5, v[1] / 5, Math.cos(ang), Math.sin(ang));
     } else row.push(...Array(8).fill(0));
+    if (this.observationSchema === KNOWN_POSITION_SCHEMA) {
+      const delta = sub(slice(this.data.qpos, b * 4), pos);
+      const xy = local(delta, yaw);
+      row[11] = xy[0] / 6;
+      row[12] = xy[1] / 6;
+      row[13] = delta[2] / 2;
+    }
     const ids = this.arena.objects
       .map((_, i) => i)
       .filter((i) => this.objectSeen[a][i])
@@ -804,6 +816,7 @@ export class PhysicsSimulation {
         );
       row.push(d >= 0 ? clamp(d, 0, 6) / 6 : 1);
     }
+    if (this.observationSchema === TAG_SCHEMA) row.push(...extras(this, a));
     return new Float32Array(row);
   }
   syncView() {

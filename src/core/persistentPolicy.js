@@ -1,5 +1,7 @@
 // Learned Keep/Press/Release commands drive ordinary physical buttons.
 // Requested button state is part of each actor's own next observation.
+import { NOISE } from './gameRules.js';
+
 const FORMAT = 'original-mujoco-persistent-buttons-ppo-v1';
 const sigmoid = (value) => 1 / (1 + Math.exp(-value));
 const finite = (values) => values.every(Number.isFinite);
@@ -118,30 +120,45 @@ export class PersistentPolicy {
   }
 
   act(physical, state, { deterministic = false, random = Math.random } = {}) {
+    // Sizes come from the actor's own layout; the original persistent actor
+    // reads 138 physical values and no exploration noise.
+    const physicalSize = this.physicalSize ?? 138;
+    const rho = this.noiseRho ?? 0;
+    const noiseSize = rho > 0 ? NOISE : 0;
     if (
-      physical?.length !== (this.physicalSize??138) ||
+      physical?.length !== physicalSize ||
       !finite(physical) ||
       !state ||
       state.buttons?.length !== 2 ||
-      !state.buttons.every((value) => value === 0 || value === 1)
+      !state.buttons.every((value) => value === 0 || value === 1) ||
+      (noiseSize > 0 && (state.noise?.length !== noiseSize || !finite(state.noise)))
     )
       throw new Error('Invalid persistent state');
     // Seeker preparation commands are ignored, including requested button state.
     // Recurrence advances normally, matching the training actor and critic.
     const blind = physical[7] < 0.5 && physical[5] < 1;
     const previous = blind ? new Float32Array(2) : state.buttons;
-    const observation = new Float32Array((this.physicalSize??138)+2);
+    const observation = new Float32Array(physicalSize + 2 + noiseSize);
     observation.set(physical);
-    observation.set(previous, this.physicalSize??138);
+    observation.set(previous, physicalSize);
+    if (noiseSize > 0) observation.set(state.noise, physicalSize + 2);
     const prediction = this.forward(observation, state.memory);
     const dimensions = prediction.mean.length;
     const action = new Float32Array(dimensions + 2);
+    const noise = new Float32Array(noiseSize);
+    const spread = Math.sqrt(1 - rho * rho);
     for (let axis = 0; axis < dimensions; axis += 1) {
       const gaussian = deterministic
         ? 0
         : Math.sqrt(-2 * Math.log(Math.max(1e-12, random()))) * Math.cos(2 * Math.PI * random());
-      const deviation = Math.exp(Math.max(-2.5, Math.min(0.3, this.weights.log_std[axis])));
-      action[axis < 3 ? axis : 5] = Math.tanh(prediction.mean[axis] + deviation * gaussian);
+      const deviation = Math.exp(Math.max(-2.5, Math.min(0.3, this.weights.log_std[axis]))) * spread;
+      // The head's own mean is the deterministic action; sampling adds the
+      // carried noise and a fresh innovation, and the difference is carried on.
+      const base = prediction.mean[axis];
+      const carried = noiseSize > 0 ? rho * state.noise[axis] : 0;
+      const movement = deterministic ? base : base + carried + deviation * gaussian;
+      if (noiseSize > 0) noise[axis] = movement - base;
+      action[axis < 3 ? axis : 5] = Math.tanh(movement);
     }
     const commands = Int32Array.from([0, 1], (tool) =>
       sampleCommand(
@@ -153,12 +170,15 @@ export class PersistentPolicy {
     const buttons = advanceButtons(previous, commands, blind);
     action.set(buttons, 3);
     if (blind) action.fill(0);
+    const next = { memory: prediction.memory, buttons };
+    if (noiseSize > 0) next.noise = noise;
     return {
       ...prediction,
       action,
       commands,
       buttons,
-      state: { memory: prediction.memory, buttons },
+      noise,
+      state: next,
     };
   }
 }

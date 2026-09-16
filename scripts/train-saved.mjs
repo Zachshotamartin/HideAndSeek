@@ -25,9 +25,24 @@ if (!python) {
   process.exit(1);
 }
 
+// The legacy launcher stays the default; versioned native checkpoints require
+// an explicit trainer so that incompatible schemas never get mixed silently.
+const args = process.argv.slice(2);
+const versionIndex = args.indexOf('--trainer-version');
+let directory = 'training';
+if (versionIndex !== -1) {
+  const version = args[versionIndex + 1];
+  if (version !== 'v5' && version !== 'legacy') {
+    console.error('--trainer-version must be v5 or legacy');
+    process.exit(1);
+  }
+  directory = version === 'v5' ? 'training_v5' : 'training';
+  args.splice(versionIndex, 2);
+}
+
 const child = spawn(
   python,
-  ['training/train_saved.py', ...process.argv.slice(2)],
+  [`${directory}/train_saved.py`, ...args],
   { stdio: 'inherit' },
 );
 

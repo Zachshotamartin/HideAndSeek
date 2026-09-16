@@ -31,7 +31,7 @@ torch.set_num_threads(1)
 def fixture(folder):
     folder.mkdir(parents=True)
     torch.manual_seed(761511)
-    physics = file_hash(ROOT / 'training/physics.py')
+    physics = file_hash(ROOT / 'training_v5/physics.py')
     actors = [PersistentActor(), PersistentActor()]
     initial = dict(format=FORMAT, models=[actor.state_dict() for actor in actors],
         decisions=0, torchRNG=torch.get_rng_state(),
@@ -50,7 +50,7 @@ def fixture(folder):
     fields = ['seed', 'arm', 'envs', 'workers', 'horizon', 'sequence_length', 'sequence_batch',
               'critic_batch_size', 'epochs', 'learning_rate', 'critic_learning_rate',
               'entropy', 'kl_limit', 'target_interactions']
-    protocol = dict(training={name: getattr(args, name) for name in fields},
+    protocol = dict(reward='Zero-sum visibility with capture credit; no tool bonuses.', training={name: getattr(args, name) for name in fields},
         physicsSHA256=physics, history=['initial'],
         assets={name: dict(path=str(folder / (name + '.pt')), sha256=file_hash(folder / (name + '.pt')))
                 for name in ['entity', 'initial', 'critic']})
@@ -60,8 +60,8 @@ def fixture(folder):
     return folder / 'original/latest.pt'
 
 
-def command(*arguments):
-    return ['node', str(ROOT / 'scripts/train-saved.mjs'), *map(str, arguments)]
+def command(*arguments, version="v5"):
+    return ['node', str(ROOT / 'scripts/train-saved.mjs'), '--trainer-version', version, *map(str, arguments)]
 
 
 def execute(arguments, timeout=90):
@@ -137,7 +137,7 @@ class SavedWorkflowTests(unittest.TestCase):
             self.assertEqual(after['totalPolicyInteractions'], paused['totalPolicyInteractions'] + 2048)
             self.assertEqual(file_hash(archived), snapshot_hash)
             self.assertEqual(len(json.loads((moved / 'RUN.json').read_text())['sessions']), 2)
-            self.assertEqual(after['provenance']['resumes'][-1]['worldsRestarted'], 2)
+            self.assertEqual(after['provenance']['resumes'][-1]['worldsRestarted'], 0)
             self.assertFalse(Path(after['arguments']['parent']).is_absolute())
             for old, new in zip(paused['optimizers'], after['optimizers']):
                 for key, state in old['state'].items():
@@ -154,7 +154,7 @@ class SavedWorkflowTests(unittest.TestCase):
             shutil.copytree(ROOT / 'training/resume-bundle', bundle)
             output = root / 'run'
             execute(command('--resume', bundle / 'resume.pt', '--output', output,
-                            '--steps', '65536', '--snapshot-every', '65536'))
+                            '--steps', '65536', '--snapshot-every', '65536', version='legacy'))
             saved = load_native(output / 'latest.pt')
             self.assertEqual(saved['totalPolicyInteractions'], 65536)
             self.assertEqual(saved['parentDecisions'], 37036032)
@@ -170,7 +170,7 @@ class SavedWorkflowTests(unittest.TestCase):
                 arenaConfig=dict(size=6, n_boxes=1, n_ramps=0))])))
             registry = root / 'registry'
             output = root / 'evaluation'
-            execute([sys.executable, str(ROOT / 'training/evaluate_saved.py'),
+            execute([sys.executable, str(ROOT / 'training_v5/evaluate_saved.py'),
                 '--checkpoint', str(reference), '--reference', str(reference), '--cohort', str(cohort),
                 '--output', str(output), '--workers', '1', '--registry', str(registry)])
             actual = json.loads((output / 'evaluation.json').read_text())
@@ -190,7 +190,10 @@ class SavedWorkflowTests(unittest.TestCase):
                 report['summary']['candidate-hider']['hiddenFraction'] = utility
                 report['summary']['candidate-seeker']['hiddenFraction'] = 1 - utility
                 report['contrasts']['Hider change']['bootstrap95Percent'] = [-.2, upper_loss]
-                report['contrasts']['Seeker change']['bootstrap95Percent'] = [0, .2]
+                report['contrasts']['Seeker change']['bootstrap95Percent'] = [.02, .2]
+                for block in report['byPlayLength'].values():
+                    block['summary'] = copy.deepcopy(report['summary'])
+                    block['contrasts'] = copy.deepcopy(report['contrasts'])
                 report['syntheticRegistryTestOnly'] = True
                 report_path = root / f'report-{index}.json'
                 report_path.write_text(json.dumps(report))

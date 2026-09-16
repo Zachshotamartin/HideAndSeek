@@ -13,6 +13,8 @@ class ProtocolTests(unittest.TestCase):
         rows = [environment_config(r, 0) for _ in range(1000)]
         self.assertEqual({x['scenario'] for x in rows}, set(FAMILIES))
         self.assertEqual({x['play'] for x in rows}, {188, 375, 750})
+        self.assertEqual({(x['play'], x['prep']) for x in rows}, {(188, 96), (375, 150), (750, 300)})
+        self.assertEqual({x['prep'] for x in [environment_config(r, 0, 'short') for _ in range(50)]}, {96})
 
     def test_balance(self):
         roles = assign_balanced_roles(np.random.default_rng(3), 100000, 6, .8)
