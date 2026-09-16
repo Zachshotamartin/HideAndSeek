@@ -4,8 +4,9 @@ Does not load or modify training checkpoints. Uses only committed actor exports.
 import sys,json,hashlib,math
 from pathlib import Path
 import numpy as np,torch,mujoco
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'training_v5'));sys.path.insert(0,str(ROOT/'tests/fixtures/native-v5'))
-from physics import PhysicsEnv,generate_arena,OBS_DIM
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'training_v5'));sys.path.insert(0,str(ROOT/'tests/fixtures/native-known'))
+from physics import generate_arena,OBS_DIM
+from known_opponent import PhysicsEnv
 from entity_actor import EntityActor
 from persistent_actor import advance_buttons
 from sample import sample
@@ -13,14 +14,13 @@ from sample import sample
 torch.set_num_threads(1)
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def write(path,data):path.parent.mkdir(exist_ok=True,parents=True);path.write_text(json.dumps(data,separators=(',',':'),allow_nan=False)+'\n')
-sources={name:digest(ROOT/'tests/fixtures/native-v5'/name) for name in ['physics.py','entity_actor.py','persistent_actor.py','sample.py']}
+sources={name:digest(ROOT/'tests/fixtures/native-known'/name) for name in ['physics.py','entity_actor.py','persistent_actor.py','sample.py','known_opponent.py']}
 arena=generate_arena(923,'open',8,2,1)
 public=ROOT/'public/models';manifest=json.loads((public/'MANIFEST.json').read_text());manifest.update(status='DEVELOPMENT',localPreview=dict(only=False,qualified=False),actionSize=6)
 class Tape:
  def __init__(self,seed):self.rng=np.random.default_rng(seed);self.values=[]
  def random(self,n):v=self.rng.random(n);self.values=v.tolist();return v
 for entry in manifest['checkpoints']:
- if entry['id']=='initial':continue
  path=public/entry['file'];model=json.loads(path.read_text());actors=[]
  for definition in model['actors']:
   a=EntityActor(definition['hiddenSize'],definition['encoderSize'],definition['embeddingSize'])
@@ -55,7 +55,7 @@ for entry in manifest['checkpoints']:
  fixture=ROOT/'tests/fixtures'/('policy-'+entry['id']+'-native.json')
  counts=dict(rows=sum(len(r['rows']) for r in rollouts),blind=sum(1 for r in rollouts for row in r['rows'] if row['observation'][7]<.5 and row['observation'][5]<1),resets=sum(1 for r in rollouts for row in r['rows'] if row['reset']))
  assert counts['rows']>=500 and counts['blind']>=40 and counts['resets']>=8,counts
- write(fixture,dict(modelSHA256=digest(path),sourceRoot='tests/fixtures/native-v5/',sources=sources,counts=counts,rollouts=rollouts))
+ write(fixture,dict(modelSHA256=digest(path),sourceRoot='tests/fixtures/native-known/',sources=sources,counts=counts,rollouts=rollouts))
  entry.update(bytes=path.stat().st_size,sha256=digest(path),checkpointSHA256=model.get('localPreview',model.get('provenance',{}))['checkpointSHA256'],parityFixture=str(fixture.relative_to(ROOT)),parityFixtureSHA256=digest(fixture))
 write(public/'MANIFEST.json',manifest)
 print('Generated exact action and recurrence fixtures.')

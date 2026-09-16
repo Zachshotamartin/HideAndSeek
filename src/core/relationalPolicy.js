@@ -1,6 +1,7 @@
 // Original masked object-set inference with explicit actor-only validation.
 import { PersistentPolicy } from './persistentPolicy.js';
 
+export const KNOWN_POSITION_SCHEMA = 'known-opponent-position-210-v1';
 export const ENTITY_PAIR_FORMAT = 'original-mujoco-relational-policy-pair-v2';
 const ENTITY = 'object-relations-v2';
 const finite = values => values.every(Number.isFinite);
@@ -48,7 +49,9 @@ function linear(input, weight, bias) {
 const tanh = input => Float32Array.from(input, Math.tanh);
 
 export class RelationalPolicy {
-  constructor(definition) {
+  constructor(definition, observationSchema = undefined) {
+    if (observationSchema !== undefined && observationSchema !== KNOWN_POSITION_SCHEMA) throw Error('Unknown opponent observation schema');
+    this.observationSchema = observationSchema;
     validate(definition, ENTITY);
     this.weights = definition.weights;this.physicalSize=208;this.physicsObservationSize=208;this.observationSize=210;this.format=definition.encoderType==='object-relations-jump-v4'?'original-mujoco-relational-jump-policy-pair-v4':ENTITY_PAIR_FORMAT;
   }
@@ -58,7 +61,7 @@ export class RelationalPolicy {
   encode(observation) {
     if(observation.length!==210||!finite(observation))throw Error('Invalid relational observation');
     const w=this.weights,fixed=Float32Array.from([...observation.slice(0,18),...observation.slice(178)]);
-    if(fixed[10]<=.5)fixed.fill(0,11,18);
+    if(fixed[10]<=.5)fixed.fill(0,this.observationSchema === KNOWN_POSITION_SCHEMA ? 14 : 11,18);
     const result=linear(fixed,w['encoder.fixed.weight'],w['encoder.fixed.bias']);
     const objects=[];const sum=new Float64Array(256);
     for(let slot=0;slot<10;slot++){
@@ -119,5 +122,5 @@ export function createRelationalPolicies(model) {
     throw Error('Invalid relational policy pair');
   const expected = model.format === jumpFormat ? 'object-relations-jump-v4' : ENTITY;
   if (model.actors.some(actor => actor?.encoderType !== expected)) throw Error('Mixed relational action schemas');
-  return model.actors.map(d => new RelationalPolicy(d));
+  return model.actors.map(d => new RelationalPolicy(d, model.observationSchema));
 }

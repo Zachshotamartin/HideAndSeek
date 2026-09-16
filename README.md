@@ -1,5 +1,7 @@
 # Hide and Seek
 
+**Current browser release (September 15):** the [best evaluated known-position pair](PUBLICATION_2026_09_15.md), at 471.86M cumulative interactions and 0.8384 fixed-opponent development utility. Both agents know the opponent's position behind walls; actual visibility remains occlusion-dependent. The historical restricted-vision training account below describes an earlier release. The current model, task contract, native/browser parity and evidence are identified in the linked publication record.
+
 Current training implementation: [training_v5/README.md](training_v5/README.md). Browser runtime and training versions are intentionally separate while new models are evaluated. See [review status](REVIEW_STATUS.md) for known test failures and [the Claude review prompt](CLAUDE_REVIEW_PROMPT.md).
 
 An original physical learning experiment by Zachary Martin. Two recurrent neural policies play hide and seek in an editable 3D arena. The agents can accelerate in any direction, turn, push, grab, release, and lock physical props. Boxes, long planks, and ramps have real mass, inertia, friction, and collision geometry.
