@@ -9,15 +9,17 @@ import {
   OBS_DIM,
 } from './core/physics.js';
 import { createPolicyControllers, POLICY_FORMATS, BINARY_FORMAT } from './core/policyController.js';
-import { TAG_SCHEMA, ROUND_PLAY, captured, observationWidth, preparationSteps } from './core/gameRules.js';
+import { TAG_SCHEMA, ROUND_LENGTHS, ROUND_PLAY, captured, observationWidth, preparationSteps, roundSeconds } from './core/gameRules.js';
 import { PHYSICAL_POLICY_FILE, PHYSICAL_POLICY_DETAILS } from './core/policyAsset.js';
 export const metadata = {
+  // The identifier, repository and package keep their original hide-and-seek
+  // names; the game itself is tag with a hiding phase.
   id: 'hide-and-seek',
-  title: 'Hide and Seek',
-  description: 'Two learned agents move, hide, and manipulate objects in a physical arena.',
+  title: 'Tag',
+  description: 'Two learned agents play tag in a physical arena: the tagger must find and touch the hider before the round clock runs out.',
   technique: 'Original recurrent PPO self-play · MuJoCo rigid-body physics · Three.js',
   instructions: [
-    'Watch the development checkpoint, compare object interactions with tools disabled, or rearrange props and replay the same seed. Both agents’ sight is visible; drag to orbit.',
+    'Watch a round, change how long it lasts, compare object interactions with tools disabled, or rearrange props and replay the same seed. Both agents’ sight is visible; drag to orbit.',
   ],
   limitations: [
     'This development checkpoint uses an original environment and original policies inspired by the OpenAI study. Reliable useful tool strategies remain unproven; edited arenas can produce unfamiliar or unsuccessful behavior.',
@@ -29,14 +31,14 @@ export function mountExperiment(element, options = {}) {
   root.className = 'hide-seek';
   root.dataset.ready = 'false';
   root.dataset.embedded = String(Boolean(options.embedded));
-  root.innerHTML = `${options.embedded ? '' : `<header class="hs-heading"><p class="hs-eyebrow">Two agents. A physical world.</p><h1>Hide and Seek</h1><p>Give them room, cover, and movable tools. Watch what they learn to do.</p></header>`}
- <div class="hs-layout"><div class="hs-stage-column"><div class="hs-board-shell"><div class="hs-board-top"><span class="hs-round-label">ROUND 01</span><span class="hs-phase">Loading physics</span><span class="hs-seed-label">SEED 2709</span></div><div class="hs-viewport"><p class="hs-loading">Starting the physical arena…</p></div><div class="hs-board-bottom"><span><i class="hs-dot"></i>Blue · Hider</span><span class="hs-visibility">A moment to prepare</span><span><i class="hs-dot hs-seeker"></i>Red · Seeker</span></div></div>
+  root.innerHTML = `${options.embedded ? '' : `<header class="hs-heading"><p class="hs-eyebrow">Two agents. A physical world.</p><h1>Tag</h1><p>One hides behind cover it can move; the other has to find it and touch it before the clock runs out.</p></header>`}
+ <div class="hs-layout"><div class="hs-stage-column"><div class="hs-board-shell"><div class="hs-board-top"><span class="hs-round-label">ROUND 01</span><span class="hs-phase">Loading physics</span><span class="hs-seed-label">SEED 2709</span></div><div class="hs-viewport"><p class="hs-loading">Starting the physical arena…</p></div><div class="hs-board-bottom"><span><i class="hs-dot"></i>Blue · Hider</span><span class="hs-visibility">A moment to prepare</span><span><i class="hs-dot hs-seeker"></i>Red · Tagger</span></div></div>
  <div class="hs-playback"><button class="hs-primary" data-action="play" disabled>Play</button><button data-action="step" disabled>Step</button><button data-action="reset" disabled>Reset</button><label class="hs-speed">Playback<select data-field="speed"><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label></div><p class="hs-status" role="status" aria-live="polite">Loading the frozen policies and MuJoCo engine…</p>
- <div class="hs-round-stats"><div><span>Play time</span><strong data-stat="time">0.0 s</strong></div><div><span>Time hidden</span><strong data-stat="hidden">0.0 s</strong></div><div><span>Props held / locked</span><strong data-stat="tools">0 / 0</strong></div><div><span>Reward · H / S</span><strong data-stat="reward">0 / 0</strong></div></div>
+ <div class="hs-round-stats"><div><span>Play time</span><strong data-stat="time">0.0 s</strong></div><div><span>Time hidden</span><strong data-stat="hidden">0.0 s</strong></div><div><span>Props held / locked</span><strong data-stat="tools">0 / 0</strong></div><div><span>Reward · hider / tagger</span><strong data-stat="reward">0 / 0</strong></div></div>
  </div><aside class="hs-controls"><section class="hs-control-section"><div class="hs-section-heading"><span class="hs-index">01</span><h2>The agents</h2><span class="hs-ready-badge">LOADING</span></div><label>Policy checkpoint<select data-field="model" disabled><option value="trained">Development pair</option></select></label><div class="hs-two-fields"><label>Actions<select data-field="sampling"><option value="sample">Seeded sampling</option><option value="mean">Deterministic</option></select></label><label>Object interactions<select data-field="tools"><option value="on">Push, grab & lock</option><option value="off">Push only</option><option value="fixed">Fixed props</option></select></label></div><p class="hs-help">Two original recurrent neural policies. No training runs in your browser. Changing the tools resets the same scene for a causal comparison.</p><details class="hs-evaluation"><summary class="hs-eval-title">Training & measured behavior</summary><p class="hs-training-record">Loading the training record…</p><p class="hs-eval-note">Evaluation is attached to the supplied checkpoint. No result is inferred from the appearance of a round.</p><p class="hs-mode-note"></p></details></section>
- <section class="hs-control-section"><div class="hs-section-heading"><span class="hs-index">02</span><h2>The arena</h2></div><label>Layout<select data-field="scenario"><option value="shelter">Shelter & doorway</option><option value="rooms">Divided room</option><option value="connected-rooms">Connected rooms</option><option value="corridors">Corridors</option><option value="multi-exit">Multi-exit shelter</option><option value="open">Open arena</option></select></label><div class="hs-three-fields"><label>Size · metres<input data-field="size" type="number" min="6" max="12" step=".5" value="8"></label><label>Boxes / planks<input data-field="count" type="number" min="0" max="8" value="3"></label><label>Ramps<input data-field="ramps" type="number" min="0" max="2" value="1"></label></div><label>Repeatable seed<input data-field="seed" type="number" min="0" max="4294967295" value="2709"></label><div class="hs-actions"><button data-action="generate">Generate arena</button><button data-action="random">New seed</button></div><p class="hs-help">6–12 metres per side. Layouts rotate and reflect, with independent starting positions and up to ten physical props. The policies remain unchanged.</p>
+ <section class="hs-control-section"><div class="hs-section-heading"><span class="hs-index">02</span><h2>The arena</h2></div><label>Round length<select data-field="round"><option value="188">15 seconds</option><option value="375" selected>30 seconds</option><option value="750">60 seconds</option></select></label><label>Layout<select data-field="scenario"><option value="shelter">Shelter & doorway</option><option value="rooms">Divided room</option><option value="connected-rooms">Connected rooms</option><option value="corridors">Corridors</option><option value="multi-exit">Multi-exit shelter</option><option value="open">Open arena</option></select></label><div class="hs-three-fields"><label>Size · metres<input data-field="size" type="number" min="6" max="12" step=".5" value="8"></label><label>Boxes / planks<input data-field="count" type="number" min="0" max="8" value="3"></label><label>Ramps<input data-field="ramps" type="number" min="0" max="2" value="1"></label></div><label>Repeatable seed<input data-field="seed" type="number" min="0" max="4294967295" value="2709"></label><div class="hs-actions"><button data-action="generate">Generate arena</button><button data-action="random">New seed</button></div><p class="hs-help">6–12 metres per side. Layouts rotate and reflect, with independent starting positions and up to ten physical props. The policies remain unchanged.</p>
  <details class="hs-editor"><summary>Arrange the props</summary><label>Pointer mode<select data-field="edit"><option value="orbit">Orbit camera</option><option value="select">Select a prop</option><option value="place">Place a prop</option></select></label><p class="hs-help">Click a prop to select it, or click the ground to place one. Coordinates and buttons offer the same controls without a pointer. Editing resets the round.</p><label>Selected prop<select data-field="object"><option value="-1">New prop</option></select></label><label>Object type<select data-field="kind"><option value="box">Box</option><option value="plank">Long plank</option><option value="ramp">Ramp</option></select></label><div class="hs-two-fields"><label>Position X · m<input data-field="x" type="number" step=".05" value="5"></label><label>Position Y · m<input data-field="y" type="number" step=".05" value="2"></label><label>Width · m<input data-field="width" type="number" min=".15" max="2" step=".05" value=".7"></label><label>Depth · m<input data-field="depth" type="number" min=".15" max="2" step=".05" value=".7"></label><label>Height · m<input data-field="height" type="number" min=".15" max="2" step=".05" value=".7"></label><label>Rotation · degrees<input data-field="yaw" type="number" step="15" value="0"></label></div><div class="hs-actions"><button data-action="add">Add prop</button><button data-action="move">Move / resize</button><button data-action="remove">Remove</button></div></details></section>
- <details class="hs-guide" open><summary>How the game works</summary><ul><li><strong>Preparation:</strong> the blue hider gets <span class="hs-prep-seconds">${(PREP * DT).toFixed(1)}</span> seconds to move and handle props. The red seeker receives no visual information and cannot act yet.</li><li><strong>Hide and seek:</strong> <span class="hs-rule-contract">play continues until you pause or reset. There is no touch-to-tag rule.</span> During play, the hider earns +1 each decision while unseen and −1 while seen. The seeker earns the opposite.</li><li><strong>Movement:</strong> the policies choose forward / sideways force, turning torque, and a grounded jump. The jump reaches low props but is capped below wall height. Acceleration, momentum, contact, friction, and gravity are resolved by MuJoCo.</li><li><strong>Tools:</strong> each policy chooses Keep, Press, or Release for its grab and lock buttons. The requested buttons persist until changed; this is learned control, not a minimum hold timer. Nearby visible objects can be grabbed, carried or pushed, then released. A physical lock anchors a prop; only its owner can unlock it. Ramps are solid wedges that agents can climb.</li><li><strong>Vision:</strong> a forward 135° field reaches across the arena. Walls and props occlude it. Thirty short-range rays sense nearby solid geometry. <span class="hs-position-contract">Hidden opponent positions are not provided by this checkpoint.</span></li><li><strong>Learning:</strong> <span class="hs-reward-contract">the only game reward is visibility.</span> The agents are not told to build a shelter, grab a box, or follow a prescribed route. A tool may remain unused if the learned policy finds no advantage in it.</li></ul></details>
+ <details class="hs-guide" open><summary>How the game works</summary><ul><li><strong>Preparation:</strong> the blue hider gets <span class="hs-prep-seconds">${(PREP * DT).toFixed(1)}</span> seconds to move and handle props. The red tagger receives no visual information and cannot act yet.</li><li><strong>The round:</strong> <span class="hs-rule-contract">play continues until you pause or reset. There is no touch-to-tag rule.</span> During play, the hider earns +1 each decision while unseen and −1 while seen. The tagger earns the opposite.</li><li><strong>Movement:</strong> the policies choose forward / sideways force, turning torque, and a grounded jump. The jump reaches low props but is capped below wall height. Acceleration, momentum, contact, friction, and gravity are resolved by MuJoCo.</li><li><strong>Tools:</strong> each policy chooses Keep, Press, or Release for its grab and lock buttons. The requested buttons persist until changed; this is learned control, not a minimum hold timer. Nearby visible objects can be grabbed, carried or pushed, then released. A physical lock anchors a prop; only its owner can unlock it. Ramps are solid wedges that agents can climb.</li><li><strong>Vision:</strong> a forward 135° field reaches across the arena. Walls and props occlude it. Thirty short-range rays sense nearby solid geometry. <span class="hs-position-contract">Hidden opponent positions are not provided by this checkpoint.</span></li><li><strong>Learning:</strong> <span class="hs-reward-contract">the only game reward is visibility.</span> The agents are not told to build a shelter, grab a box, or follow a prescribed route. A tool may remain unused if the learned policy finds no advantage in it.</li></ul></details>
  <details class="hs-files"><summary>Files & reproducibility</summary><p class="hs-help">Save the arena, a replay of actual decisions, or the frozen neural weights. Imported weights are unverified; published evaluation applies only to the supplied checkpoint.</p><div class="hs-actions"><button data-action="export-scene" disabled>Scene PNG</button><button data-action="export-arena">Arena JSON</button><button data-action="export-replay" disabled>Replay JSON</button><button data-action="export-model" disabled>Model JSON</button><button data-action="import">Import JSON</button></div><input class="hs-file" type="file" accept=".json,application/json" hidden></details></aside></div>`;
   element.append(root);
   const $ = (s) => root.querySelector(s),
@@ -69,6 +71,22 @@ export function mountExperiment(element, options = {}) {
     checkpointEntries = new Map();
   const ROUND_PAUSE_MS = 2500;
   const tagRounds = () => policies?.[0]?.observationSchema === TAG_SCHEMA;
+  // Round length in physics steps, restricted to the lengths the policies played in training.
+  function roundPlay() {
+    const chosen = Number(field('round')?.value);
+    return ROUND_LENGTHS.includes(chosen) ? chosen : ROUND_PLAY;
+  }
+  function describeRules() {
+    const tag = tagRounds();
+    const play = tag ? roundPlay() : 0;
+    $('.hs-rule-contract').textContent = tag
+      ? `each round lasts ${roundSeconds(play)} seconds, and you can change that above. The tagger wins by touching the hider: within 0.7 m with a clear line of sight. The hider wins by surviving the clock; the next round then starts on its own.`
+      : 'play continues until you pause or reset. There is no touch-to-tag rule.';
+    $('.hs-prep-seconds').textContent = ((tag ? preparationSteps(play) : PREP) * DT).toFixed(1);
+    $('.hs-reward-contract').textContent = tag
+      ? 'the game reward is visibility plus the tag: a tag credits the tagger with the rest of the round and charges the hider the same.'
+      : 'the only game reward is visibility.';
+  }
   function say(text, error = false) {
     if (disposed) return;
     $('.hs-status').textContent = text;
@@ -131,6 +149,7 @@ export function mountExperiment(element, options = {}) {
         ? 'Play again'
         : 'Play';
     button('step').disabled = !visualReady || modelLoading || (!policies && !replay) || sim.done;
+    field('round').disabled = !tagRounds();
     button('export-replay').disabled = history.length === 0 || history.length >= 100000;
   }
   function reset(next = arena, recenter = false, keepReplay = false, invalidatePending = true) {
@@ -149,12 +168,13 @@ export function mountExperiment(element, options = {}) {
     // Tag-round policies play timed rounds with the training preparation rule;
     // earlier checkpoints keep the endless round they were shown with.
     const tag = tagRounds();
+    const play = tag ? roundPlay() : undefined;
     const nextSim = new PhysicsSimulation(mj, next, {
       disableTools: field('tools').value === 'off',
       immovable: field('tools').value === 'fixed',
       continuous: !tag,
-      prep: tag ? preparationSteps(ROUND_PLAY) : undefined,
-      play: tag ? ROUND_PLAY : undefined,
+      prep: tag ? preparationSteps(play) : undefined,
+      play,
       observationSchema: policies?.[0]?.observationSchema,
     });
     sim?.dispose();
@@ -170,6 +190,7 @@ export function mountExperiment(element, options = {}) {
     view?.setSelection(-1);
     view?.update(sim);
     refreshProps();
+    describeRules();
     refresh();
   }
   function advance() {
@@ -220,7 +241,7 @@ export function mountExperiment(element, options = {}) {
     const locks = sim.lockEvents.reduce((a, b) => a + b, 0);
     const hidden = (sim.hidden * DT).toFixed(1);
     if (sim.tagged)
-      return `Tagged after ${(Math.max(0, sim.t - sim.prep) * DT).toFixed(1)} s of play: the seeker wins this round. ${grabs} grabs and ${locks} locks occurred. Next round starts shortly.`;
+      return `Tagged after ${(Math.max(0, sim.t - sim.prep) * DT).toFixed(1)} s of play: the tagger wins this round. ${grabs} grabs and ${locks} locks occurred. Next round starts shortly.`;
     if (tagRounds())
       return `Time is up: the hider survived the ${(sim.play * DT).toFixed(0)} s round and stayed unseen for ${hidden} s. ${grabs} grabs and ${locks} locks occurred. Next round starts shortly.`;
     return `Round complete. The hider stayed unseen for ${hidden} of ${(sim.play * DT).toFixed(1)} play seconds. ${grabs} grabs and ${locks} locks occurred.`;
@@ -336,15 +357,9 @@ export function mountExperiment(element, options = {}) {
     $('.hs-position-contract').textContent = tag
       ? 'Each agent remembers where it last saw the other and how long ago; hidden positions are never provided.'
       : data.observationSchema === 'known-opponent-position-210-v1'
-        ? 'Both agents know the other’s position, even behind walls. Seeing the opponent still requires an unobstructed view in front of the seeker.'
+        ? 'Both agents know the other’s position, even behind walls. Seeing the opponent still requires an unobstructed view in front of the tagger.'
         : 'Hidden opponent positions are not provided by this checkpoint.';
-    $('.hs-rule-contract').textContent = tag
-      ? `each round lasts ${(ROUND_PLAY * DT).toFixed(0)} seconds. The seeker wins by tagging the hider: within 0.7 m with a clear line of sight. The hider wins by surviving the clock; the next round then starts on its own.`
-      : 'play continues until you pause or reset. There is no touch-to-tag rule.';
-    $('.hs-prep-seconds').textContent = ((tag ? preparationSteps(ROUND_PLAY) : PREP) * DT).toFixed(1);
-    $('.hs-reward-contract').textContent = tag
-      ? 'the game reward is visibility plus the tag: a tag credits the seeker with the rest of the round and charges the hider the same.'
-      : 'the only game reward is visibility.';
+    describeRules();
     modelName = name;
     if (!field('model').querySelector(`[value="${name}"]`)) {
       const o = document.createElement('option');
@@ -555,12 +570,14 @@ export function mountExperiment(element, options = {}) {
   const change = (e) => {
     const name = e.target.dataset.field;
     if (name === 'model') void selectCheckpoint(field('model').value);
-    if (name === 'sampling' || name === 'tools') {
+    if (name === 'sampling' || name === 'tools' || name === 'round') {
       reset();
       say(
         name === 'tools'
           ? 'Object physics updated. Compare the same arena with this intervention.'
-          : 'Action sampling changed. The replay seed reset.',
+          : name === 'round'
+            ? `Rounds now last ${roundSeconds(roundPlay())} seconds, with ${(preparationSteps(roundPlay()) * DT).toFixed(1)} seconds to prepare. The policies trained on 15, 30 and 60 second rounds.`
+            : 'Action sampling changed. The replay seed reset.',
       );
     }
     if (name === 'edit') {

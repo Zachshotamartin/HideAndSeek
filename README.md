@@ -1,8 +1,10 @@
-# Hide and Seek
+# Tag
+
+The game is tag with a hiding phase: one agent prepares behind cover it can move, the other must find it and touch it before the round clock runs out. The repository, the npm package and the asset paths keep their original `hide-and-seek` names.
 
 Current training implementation: [training_v5/README.md](training_v5/README.md). Browser runtime and training versions are intentionally separate while new models are evaluated. See [review status](REVIEW_STATUS.md) for known test failures and [the Claude review prompt](CLAUDE_REVIEW_PROMPT.md).
 
-An original physical learning experiment by Zachary Martin. Two recurrent neural policies play hide and seek in an editable 3D arena. The agents can accelerate in any direction, turn, push, grab, release, and lock physical props. Boxes, long planks, and ramps have real mass, inertia, friction, and collision geometry.
+An original physical learning experiment by Zachary Martin. Two recurrent neural policies play timed rounds of tag in an editable 3D arena. The agents can accelerate in any direction, turn, push, grab, release, and lock physical props. Boxes, long planks, and ramps have real mass, inertia, friction, and collision geometry.
 
 **Development checkpoint:** general play has improved in paired validation, but reliable useful tool strategies have not been established. This is a local development candidate, not a qualified final model or a claim of emergent construction.
 

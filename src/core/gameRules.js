@@ -11,6 +11,12 @@ export const CLOCK = 60; // seconds that scale the remaining play time
 export const PREP_FRACTION = 0.4;
 export const MINIMUM_PREP = 96;
 export const ROUND_PLAY = 375; // 30 s browser rounds
+// Round lengths the policies were trained on: 15, 30 and 60 seconds of play.
+export const ROUND_LENGTHS = [188, 375, 750];
+
+export function roundSeconds(play) {
+  return Math.round(play * 0.08);
+}
 const POSITION_SCALE = 6;
 const HEIGHT_SCALE = 2;
 

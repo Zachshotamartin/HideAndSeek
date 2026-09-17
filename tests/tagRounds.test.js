@@ -6,8 +6,8 @@ import load from '../src/vendor/mujoco-csp.js';
 import { PhysicsSimulation, generateArena } from '../src/core/physics.js';
 import { createPolicyControllers } from '../src/core/policyController.js';
 import {
-  TAG_FORMAT, TAG_SCHEMA, CAPTURE_DISTANCE, EXTRAS, NOISE, ROUND_PLAY,
-  captured, extras, observationWidth, preparationSteps,
+  TAG_FORMAT, TAG_SCHEMA, CAPTURE_DISTANCE, EXTRAS, NOISE, ROUND_LENGTHS, ROUND_PLAY,
+  captured, extras, observationWidth, preparationSteps, roundSeconds,
 } from '../src/core/gameRules.js';
 
 const fixture = JSON.parse(fs.readFileSync(new URL('./fixtures/tag-rounds-native.json', import.meta.url)));
@@ -34,6 +34,14 @@ test('preparation follows the play length and the observation width follows the 
   assert.throws(() => preparationSteps(0));
   assert.equal(observationWidth(undefined), 208);
   assert.equal(observationWidth(TAG_SCHEMA), 208 + EXTRAS);
+});
+
+test('the selectable round lengths are the ones the policies played in training', () => {
+  assert.deepEqual(ROUND_LENGTHS, [188, 375, 750]);
+  assert.ok(ROUND_LENGTHS.includes(ROUND_PLAY));
+  assert.deepEqual(ROUND_LENGTHS.map(roundSeconds), [15, 30, 60]);
+  // Preparation follows the round: the training rule, not a fixed 7.7 seconds.
+  assert.deepEqual(ROUND_LENGTHS.map(preparationSteps), [96, 150, 300]);
 });
 
 test('browser extras, last-seen memory and the capture flag match the native rollout', () => {

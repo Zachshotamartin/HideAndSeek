@@ -2,7 +2,7 @@
   "name": "@zachshotamartin/hide-and-seek",
   "version": "1.0.0",
   "type": "module",
-  "description": "Two pretrained neural policies play hide and seek in an editable 3D arena.",
+  "description": "Two pretrained neural policies play timed rounds of tag in an editable 3D arena.",
   "exports": {
     ".": "./src/index.js",
     "./style.css": "./src/style.css"
