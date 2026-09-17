@@ -665,6 +665,9 @@ export function mountExperiment(element, options = {}) {
       if (disposed || !data) return;
       models.trained = data;
       if (!policies) applyModel(data, 'trained');
+      // The arena was built before the policies arrived; a tag-round pair needs
+      // the timed round and the training preparation rule, so rebuild it once.
+      if (sim && sim.continuous === tagRounds()) reset(arena, false, true, false);
       policyStates ??= policies.map((p) => p.initialState());
       showModelDetails(modelName);
       for (const n of ['play', 'step', 'export-model']) button(n).disabled = false;
