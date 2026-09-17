@@ -11,6 +11,10 @@ const manifest = JSON.parse(readFileSync(asset('MANIFEST.json')));
 const candidate = JSON.parse(readFileSync(asset(manifest.file)));
 const initial = JSON.parse(readFileSync(asset(manifest.checkpoints[1].file)));
 const zero = n => Array(n).fill(0);
+const TAG_FORMAT = 'original-mujoco-relational-tag-rounds-pair-v6';
+const JUMP_FORMAT = 'original-mujoco-relational-jump-policy-pair-v4';
+// The shipped pair is either the v4 jump pair (210 inputs) or the v6 tag-round pair (220 inputs).
+const widthsFor = format => format === TAG_FORMAT ? { observation: 220, physics: 214 } : { observation: 210, physics: 208 };
 const matrix = (rows, columns) => Array.from({ length: rows }, () => zero(columns));
 function fixture(format = PERSISTENT_FORMAT) {
   const persistent = format === PERSISTENT_FORMAT, inputs = persistent ? 140 : 138, tools = persistent ? 6 : 2;
@@ -24,12 +28,12 @@ function fixture(format = PERSISTENT_FORMAT) {
     actors: [actor, structuredClone(actor)] };
 }
 
-test('shipped v4 actors retain strict integrity and explicit development provenance', () => {
-  assert.equal(manifest.format, 'original-mujoco-relational-jump-policy-pair-v4');
-  assert.equal(manifest.status, 'LOCAL DEVELOPMENT PREVIEW');
+test('shipped actors retain strict integrity and explicit development provenance', () => {
+  assert([JUMP_FORMAT, TAG_FORMAT].includes(manifest.format));
+  assert(['LOCAL DEVELOPMENT PREVIEW', 'DEVELOPMENT'].includes(manifest.status));
   assert.equal(manifest.localPreview.qualified, false);
-  assert.equal(manifest.physicsObservationSize, 208);
-  assert.equal(manifest.observationSize, 210);
+  assert.equal(manifest.physicsObservationSize, widthsFor(manifest.format).physics);
+  assert.equal(manifest.observationSize, widthsFor(manifest.format).observation);
   assert.equal(manifest.actionSize, 6);
   assert.deepEqual(manifest.training, candidate.training);
   for (const entry of manifest.checkpoints) {
@@ -37,8 +41,8 @@ test('shipped v4 actors retain strict integrity and explicit development provena
     assert.equal(bytes.length, entry.bytes);
     assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256);
     assert(entry.file.includes(entry.sha256.slice(0,12)));
-    assert.equal(model.physicsObservationSize, 208);
-    assert.equal(model.observationSize, 210);
+    assert.equal(model.physicsObservationSize, widthsFor(model.format).physics);
+    assert.equal(model.observationSize, widthsFor(model.format).observation);
     assert.equal(model.actionSize, 6);
     assert.equal(model.qualified ?? model.localPreview?.qualified, false);
     assert.equal((model.provenance ?? model.localPreview).checkpointSHA256, entry.checkpointSHA256);

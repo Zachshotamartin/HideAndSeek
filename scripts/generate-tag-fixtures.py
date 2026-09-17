@@ -19,33 +19,17 @@ sys.path.insert(0, str(ROOT / 'training_v5'))
 from capture import captured                                     # noqa: E402
 from entity_actor import EntityActor, TAG_FORMAT, export_actor   # noqa: E402
 from game import NOISE, PHYSICAL_OBSERVATIONS, SCHEMA, extras, observe, preparation_steps  # noqa: E402
-from persistent_evaluate import sample                           # noqa: E402
+from parity_fixtures import policy_rollouts as native_rollouts     # noqa: E402
 from physics import PhysicsEnv, generate_arena                   # noqa: E402
 
 torch.set_num_threads(1)
-SOURCES = ['physics.py', 'game.py', 'capture.py', 'entity_actor.py', 'persistent_actor.py', 'persistent_evaluate.py']
-STEPS = 132
-PREP = 24
-RESET_TICKS = (44, 88)
+SOURCES = ['physics.py', 'game.py', 'capture.py', 'entity_actor.py', 'persistent_actor.py', 'persistent_evaluate.py', 'parity_fixtures.py']
 NOISE_RHO = .7
 OUTPUT = ROOT / 'tests/fixtures/tag-rounds-native.json'
 
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-class Tape:
-    """Uniform tape recorded so the browser can replay the identical draws."""
-
-    def __init__(self, seed):
-        self.rng = np.random.default_rng(seed)
-        self.values = []
-
-    def random(self, count):
-        values = self.rng.random(count)
-        self.values = values.tolist()
-        return values
 
 
 def scripted_action(tick, caught):
@@ -95,39 +79,7 @@ def policy_rollouts(actors):
                  physicsObservationSize=PHYSICAL_OBSERVATIONS, noiseRho=NOISE_RHO, actionSize=6,
                  commands=['keep', 'press', 'release'], actors=[export_actor(actor) for actor in actors],
                  auditLabel='Synthetic v6 parity fixture; not trained or selected')
-    rollouts = []
-    counts = dict(rows=0, blind=0, resets=0)
-    with torch.no_grad():
-        for deterministic in (False, True):
-            play = STEPS - PREP
-            env = PhysicsEnv(seed=1723, scenario='rooms', size=8, n_boxes=3, n_ramps=1, prep=PREP, play=play)
-            physical = observe(env)
-            memory = [torch.zeros(1, 64), torch.zeros(1, 64)]
-            buttons = np.zeros((2, 2), np.float32)
-            noises = np.zeros((2, NOISE), np.float32)
-            tapes = [Tape(500 + role + 10 * deterministic) for role in range(2)]
-            rows = []
-            for tick in range(STEPS):
-                actions = np.zeros((2, 6), np.float32)
-                for role, actor in enumerate(actors):
-                    reset = tick in RESET_TICKS
-                    if reset:
-                        memory[role].zero_()
-                        buttons[role] = 0
-                        noises[role] = 0
-                        counts['resets'] += 1
-                    row = dict(role=role, reset=reset, observation=physical[role].tolist(), noiseIn=noises[role].tolist())
-                    actions[role], memory[role], buttons[role], commands, noises[role] = sample(
-                        actor, physical[role], memory[role], buttons[role], tapes[role], deterministic, noises[role])
-                    row.update(tape=tapes[role].values, action=actions[role].tolist(), memory=memory[role][0].tolist(),
-                               mean=actor.movement(memory[role])[0].tolist(), toolLogits=actor.tools(memory[role])[0].tolist(),
-                               commands=[int(x) for x in commands], buttons=buttons[role].tolist(), noiseOut=noises[role].tolist())
-                    rows.append(row)
-                    counts['rows'] += 1
-                    counts['blind'] += int(physical[role][7] < .5 and physical[role][5] < 1)
-                env.step(actions)
-                physical = observe(env)
-            rollouts.append(dict(deterministic=deterministic, rows=rows))
+    rollouts, counts = native_rollouts(actors)
     return model, rollouts, counts
 
 

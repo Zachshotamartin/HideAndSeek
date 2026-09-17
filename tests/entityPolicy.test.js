@@ -137,8 +137,8 @@ test('live entity pair dispatches through the application controller', () => {
   const model = JSON.parse(readFileSync(new URL(manifest.file, directory)));
   const direct = createRelationalPolicies(model), routed = createPolicyControllers(model);
   for (let role = 0; role < 2; role++) {
-    assert.equal(routed[role].physicsObservationSize, 208);
-    const physical = new Float32Array(208); physical[5] = 1; physical[7] = 1-role;
+    assert.equal(routed[role].physicsObservationSize, model.physicsObservationSize);
+    const physical = new Float32Array(model.physicsObservationSize); physical[5] = 1; physical[7] = 1-role;
     const a = direct[role].act(physical,direct[role].initialState(),{ deterministic: true });
     const b = routed[role].act(physical,routed[role].initialState(),{ deterministic: true });
     assert.deepEqual(a,b);

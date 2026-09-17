@@ -25,7 +25,7 @@ from level_replay import LevelReplay
 from entity_actor import ENTITY, FORMAT, TAG_FORMAT, LEGACY, EntityActor, load_pair, restore_league
 from env_pool import PhysicsEnvPool
 from fit_central_value import REWARD_SCALE
-from game import NOISE, SCHEMA, SEEKER_SPEED_ABLATION, scale_actions, seeker_found
+from game import NOISE, SCHEMA as GAME_SCHEMA, SEEKER_SPEED_ABLATION, scale_actions, seeker_found
 from league_ppo import act_grouped, active_masks, actor_update
 from persistent_train import file_hash
 from matchmaking import SeekerMatchmaker
@@ -520,7 +520,7 @@ class Trainer:
         widened = model.observation_size != LEGACY_OBSERVATION_SIZE
         return dict(
             format=TAG_FORMAT if widened else FORMAT, encoderTypes=parent['encoderTypes'], observationSize=model.observation_size,
-            physicsObservationSize=model.physical_size, noiseRho=model.noise_rho, schema=SCHEMA if widened else None,
+            physicsObservationSize=model.physical_size, noiseRho=model.noise_rho, schema=GAME_SCHEMA if widened else None,
             trainingMethod=method, rolloutState=rollout_state,
             leagueEncoderTypes=[[ENTITY if isinstance(m,EntityActor) else LEGACY for m in pair] for pair in self.histories],
             leagueNoiseRho=[pair[0].noise_rho for pair in self.histories],

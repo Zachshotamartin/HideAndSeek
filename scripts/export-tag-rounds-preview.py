@@ -18,6 +18,12 @@ sys.path.insert(0, str(ROOT / 'training_v5'))
 from capture import CAPTURE_DISTANCE                                   # noqa: E402
 from entity_actor import TAG_FORMAT, export_actor, load_pair          # noqa: E402
 from game import CLOCK, MEMORY_AGE, MINIMUM_PREP, PREP_FRACTION, SCHEMA  # noqa: E402
+from parity_fixtures import policy_rollouts                            # noqa: E402
+from persistent_train import file_hash                                 # noqa: E402
+
+PARITY_SOURCES = ['physics.py', 'game.py', 'capture.py', 'entity_actor.py', 'persistent_actor.py', 'persistent_evaluate.py',
+                  'parity_fixtures.py']
+PARITY_FORMAT = 'tag-rounds-native-v6'
 
 COMMANDS = ['keep', 'press', 'release']
 COUNTERS = ['decisions', 'totalPolicyInteractions', 'currentPolicyDecisions', 'activePolicySamples', 'seconds']
@@ -39,7 +45,10 @@ def load_best(registry):
 
 
 def model_document(actors, record, best):
-    if record['format'] != TAG_FORMAT or record.get('schema') != SCHEMA:
+    # Checkpoints written before the schema-key fix carry the critic schema
+    # under ``schema``; the actor layout below is what identifies a v6 pair.
+    widths = {actor.observation_size for actor in actors} | {record.get('observationSize')}
+    if record['format'] != TAG_FORMAT or widths != {214 + 2 + 4} or not 0 < record.get('noiseRho', 0) < 1:
         raise ValueError('Only a tag-round (v6) pair can be exported with this script')
     training = {key: record.get(key, 0) for key in COUNTERS}
     return dict(
@@ -57,6 +66,19 @@ def manifest_entry(name, raw, model, best, label):
                 checkpointSHA256=best['sha256'])
 
 
+def write_parity_fixture(actors, name, digest, fixtures):
+    """Native decisions of the exported pair, replayed bit-for-bit by tests/tagRounds and runtime parity."""
+    rollouts, counts = policy_rollouts(actors)
+    fixture = dict(format=PARITY_FORMAT, modelSHA256=digest, schema=SCHEMA,
+                   sources={source: file_hash(ROOT / 'training_v5' / source) for source in PARITY_SOURCES},
+                   rollouts=rollouts, counts=counts)
+    path = fixtures / name.replace('.json', '.parity-native.json')
+    fixtures.mkdir(parents=True, exist_ok=True)
+    raw = (json.dumps(fixture, separators=(',', ':'), allow_nan=False) + '\n').encode()
+    path.write_bytes(raw)
+    return dict(parityFixture=str(path.relative_to(ROOT)), parityFixtureSHA256=sha256(raw), parityFormat=PARITY_FORMAT)
+
+
 def details(best, model):
     steps = model['training'].get('totalPolicyInteractions', 0)
     return dict(
@@ -70,7 +92,7 @@ def details(best, model):
               'jump onto low objects.')
 
 
-def export(registry, public, asset_module, label):
+def export(registry, public, asset_module, label, fixtures=ROOT / 'tests/fixtures'):
     best, source = load_best(registry)
     actors, record = load_pair(source)
     model = model_document(actors, record, best)
@@ -82,7 +104,7 @@ def export(registry, public, asset_module, label):
     manifest_path = public / 'MANIFEST.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else dict(checkpoints=[])
     others = [entry for entry in manifest.get('checkpoints', []) if entry.get('id') != 'trained']
-    entry = manifest_entry(name, raw, model, best, label)
+    entry = dict(manifest_entry(name, raw, model, best, label), **write_parity_fixture(actors, name, digest, fixtures))
     manifest.update(format=TAG_FORMAT, observationSchema=SCHEMA, file=name, sha256=digest, bytes=len(raw),
                     observationSize=model['observationSize'], physicsObservationSize=model['physicsObservationSize'],
                     actionSize=6, training=model['training'], status='DEVELOPMENT', localPreview=dict(only=False, qualified=False),
@@ -108,9 +130,10 @@ def main():
     parser.add_argument('--public', default=str(ROOT / 'public/models'))
     parser.add_argument('--asset-module', default=str(ROOT / 'src/core/policyAsset.js'))
     parser.add_argument('--label', default='Best evaluated tag-round pair')
+    parser.add_argument('--fixtures', default=str(ROOT / 'tests/fixtures'))
     args = parser.parse_args()
     torch.set_num_threads(1)
-    result = export(Path(args.registry), Path(args.public), Path(args.asset_module), args.label)
+    result = export(Path(args.registry), Path(args.public), Path(args.asset_module), args.label, Path(args.fixtures))
     print(json.dumps(result, indent=2))
 
 
