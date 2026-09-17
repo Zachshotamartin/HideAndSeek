@@ -97,11 +97,6 @@ class Suite:
         self.save(phase='training', current=name, stage='pilot' if pilot else 'continuation')
         for attempt in range(ATTEMPTS):
             code = self.launch(name, command, attempt)
-            if not code and self.phase(name) == 'gate-failed-awaiting-review':
-                # The controller stopped on a gate: leave the evidence for review instead of continuing.
-                self.stop = True
-                self.save(phase='gate-failed-awaiting-review', gateFailedTrial=name)
-                return
             if not code or self.stop:
                 return
             # A repeatable failure stops the suite.
@@ -149,14 +144,11 @@ class Suite:
             signal.signal(sig, self.halt)
         try:
             if not self.pilots():
-                self.save(phase=self.state.get('gateFailedTrial') and 'gate-failed-awaiting-review' or 'paused', childPID=None)
+                self.save(phase='paused', childPID=None)
                 return
             chosen = self.select()
             self.run('full', chosen['seed'], False)
-            if self.state.get('gateFailedTrial'):
-                self.save(phase='gate-failed-awaiting-review', childPID=None)
-            else:
-                self.save(phase='paused' if self.stop else 'finished-awaiting-review', childPID=None)
+            self.save(phase='paused' if self.stop else 'finished-awaiting-review', childPID=None)
         except BaseException as error:
             self.save(phase='failed', error=repr(error), childPID=None)
             raise

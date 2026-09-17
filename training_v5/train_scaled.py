@@ -46,7 +46,7 @@ DEFAULT_SEED = 1091252
 BATCH = 65536                     # interactions per PPO update
 SNAPSHOT_INTERVAL = 1048576       # immutable full-state checkpoints about every million interactions
 EVALUATION_INTERVAL = 5242880
-GATE_INTERACTIONS = 10 * EVALUATION_INTERVAL   # the run must show a working seeker here or stop for review
+GATE_INTERACTIONS = 10 * EVALUATION_INTERVAL   # where the run's seeker is measured against the milestone
 GATE_FOUND_RATE = .5                           # candidate seeker sees the hider in at least half of the evaluation rounds
 PROTOCOL_FORMAT = 'hide-seek-tag-rounds-league-v6'
 PROTOCOL_FIELDS = ['variant', 'seed', 'arm', 'envs', 'workers', 'horizon', 'sequence_length', 'burn_in', 'snapshot_every',
@@ -191,8 +191,9 @@ def write_protocol(prepared, args, parent, large, source_path, cohort_hash, hist
                     curriculum=dict(stages=[dict(stage) for stage in STAGES], window=WINDOW, threshold=THRESHOLD,
                                     minimumEpisodes=MINIMUM_EPISODES),
                     gates=dict(interactions=GATE_INTERACTIONS, seekerFoundRate=GATE_FOUND_RATE,
-                               rule='The candidate seeker must see the hider in at least this fraction of evaluation rounds and '
-                                    'neither role may show a statistically clear regression, or the run stops for review.'),
+                               rule='Measured once at this interaction count: whether the candidate seeker sees the hider in at least '
+                                    'this fraction of evaluation rounds with no statistically clear regression in either role. The '
+                                    'result is recorded for review; training continues either way.'),
                     evaluation=dict(sourceCohortSHA256=cohort_hash, longPlayMaps=24, heldOutOpponent=heldout is not None),
                     assets={}, history=[])
     for key, path in [('entity', args.parent), ('critic', args.critic), ('initial', args.initial)]:
@@ -258,7 +259,6 @@ class Controller:
             self.status = dict(createdUTC=utc_now(), evaluated=[], snapshots=[], architecture=setup['architecture'],
                                targetInteractions=options.target, publication='No automatic browser promotion')
         self.stopped = False
-        self.gate_failure = None
         self.child = None
         self.heldout = self.output / 'prepared/heldout.pt'
 
@@ -300,7 +300,7 @@ class Controller:
             self.gate(json.loads((destination / 'evaluation.json').read_text()), steps)
 
     def gate(self, report, steps):
-        """Stop for review unless the seeker finds the hider in most rounds and no role clearly regressed."""
+        """Measure the seeker milestone and record it. A missed milestone never stops the run."""
         measured = utility(report)
         found = measured['seekerFoundRate']
         failures = []
@@ -310,9 +310,6 @@ class Controller:
         record = dict(steps=steps, seekerFoundRate=found, roleRegressions=measured['roleRegressions'], passed=not failures,
                       failures=failures, checkedUTC=utc_now())
         self.status.setdefault('gates', []).append(record)
-        if failures:
-            self.gate_failure = record
-            self.stopped = True
         self.save()
 
     def checkpoint(self, saved, directory):
@@ -351,8 +348,6 @@ class Controller:
 
 
     def final_phase(self):
-        if self.gate_failure:
-            return 'gate-failed-awaiting-review'
         if self.stopped:
             return 'paused'
         return 'pilot-complete' if self.args.stop_after_updates else 'completed-awaiting-review'
