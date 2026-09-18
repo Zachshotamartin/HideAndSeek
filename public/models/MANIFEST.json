@@ -31,16 +31,21 @@
     },
     {
       "id": "initial",
-      "label": "Before training \u00b7 jump enabled",
-      "file": "physical-policy-initial-42b3a76e6a98.json",
+      "label": "Before training \u00b7 tag rounds",
+      "file": "physical-policy-tag-initial-206282e37f03.json",
+      "bytes": 22902533,
+      "sha256": "206282e37f034c4842e423cf27e308189351e3aaff8076ee4270808208473bf2",
       "training": {
-        "decisions": 0
+        "decisions": 0,
+        "totalPolicyInteractions": 0,
+        "currentPolicyDecisions": 0,
+        "activePolicySamples": 0,
+        "seconds": 0.0
       },
-      "bytes": 22743572,
-      "sha256": "42b3a76e6a98b9028e14b22f891ce0a958064c7645190893183bd84cd4ee07aa",
-      "checkpointSHA256": "2d76cde339d056f2a41f3b606ef0062bfece194531b54a471f5e5d87bf335660",
-      "parityFixture": "tests/fixtures/policy-initial-native.json",
-      "parityFixtureSHA256": "8df487fd8882ffc4e38eb90ccddaa7e5973d02495e4232aa3ade85870f992b8d"
+      "checkpointSHA256": "7d1ef7fc4e8efb1ddd1fb7fc9b1a0b5fc3068d3676d788370994092187238247",
+      "parityFixture": "tests/fixtures/physical-policy-tag-initial-206282e37f03.parity-native.json",
+      "parityFixtureSHA256": "0f6cc9f8c69706aacfdb0249738f6ad0949da9269d2937b47347535850c69ccb",
+      "parityFormat": "tag-rounds-native-v6"
     }
   ],
   "training": {

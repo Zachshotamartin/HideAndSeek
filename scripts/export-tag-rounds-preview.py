@@ -34,6 +34,14 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def zero_experience(path):
+    """The prepared zero-experience pair of the same run: the before-training comparison."""
+    actors, record = load_pair(path)
+    if record.get('decisions'):
+        raise ValueError('The before-training comparison must have no experience')
+    return actors, record
+
+
 def load_best(registry):
     best = json.loads((registry / 'best-evaluated.json').read_text())
     source = registry / best['file']
@@ -92,7 +100,22 @@ def details(best, model):
               'jump onto low objects.')
 
 
-def export(registry, public, asset_module, label, fixtures=ROOT / 'tests/fixtures'):
+def write_model(actors, record, best, public, fixtures, prefix, entry_id, label, training=None):
+    """Write one actor-only model file plus its native parity fixture, and return the manifest entry."""
+    model = model_document(actors, record, best)
+    if training is not None:
+        model['training'] = training
+    raw = (json.dumps(model, separators=(',', ':')) + '\n').encode()
+    digest = sha256(raw)
+    name = f'{prefix}-{digest[:12]}.json'
+    public.mkdir(parents=True, exist_ok=True)
+    (public / name).write_bytes(raw)
+    entry = dict(id=entry_id, label=label, file=name, bytes=len(raw), sha256=digest, training=model['training'],
+                 checkpointSHA256=model['provenance']['checkpointSHA256'])
+    return dict(entry, **write_parity_fixture(actors, name, digest, fixtures)), model, name, digest
+
+
+def export(registry, public, asset_module, label, fixtures=ROOT / 'tests/fixtures', initial=None):
     best, source = load_best(registry)
     actors, record = load_pair(source)
     model = model_document(actors, record, best)
@@ -103,8 +126,20 @@ def export(registry, public, asset_module, label, fixtures=ROOT / 'tests/fixture
     (public / name).write_bytes(raw)
     manifest_path = public / 'MANIFEST.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else dict(checkpoints=[])
-    others = [entry for entry in manifest.get('checkpoints', []) if entry.get('id') != 'trained']
+    others = [entry for entry in manifest.get('checkpoints', []) if entry.get('id') not in ('trained', 'initial')]
     entry = dict(manifest_entry(name, raw, model, best, label), **write_parity_fixture(actors, name, digest, fixtures))
+    if initial is not None:
+        # The before-training comparison must play the same game as the shipped
+        # pair; a pair from an older schema would run different rules entirely.
+        untrained, untrained_record = zero_experience(initial)
+        provenance = dict(checkpointSHA256=sha256(Path(initial).read_bytes()),
+                          selection='Prepared zero-experience pair of this run; no training.', evidence=None)
+        untrained_entry, _, _, _ = write_model(
+            untrained, dict(untrained_record, provenance=provenance), dict(best, sha256=provenance['checkpointSHA256'],
+            selection=provenance['selection'], evidence=None), public, fixtures, 'physical-policy-tag-initial', 'initial',
+            'Before training · tag rounds',
+            training={key: 0 if key != 'seconds' else 0. for key in COUNTERS})
+        others = [untrained_entry, *others]
     manifest.update(format=TAG_FORMAT, observationSchema=SCHEMA, file=name, sha256=digest, bytes=len(raw),
                     observationSize=model['observationSize'], physicsObservationSize=model['physicsObservationSize'],
                     actionSize=6, training=model['training'], status='DEVELOPMENT', localPreview=dict(only=False, qualified=False),
@@ -131,9 +166,11 @@ def main():
     parser.add_argument('--asset-module', default=str(ROOT / 'src/core/policyAsset.js'))
     parser.add_argument('--label', default='Best evaluated tag-round pair')
     parser.add_argument('--fixtures', default=str(ROOT / 'tests/fixtures'))
+    parser.add_argument('--initial', help='Prepared zero-experience pair of the same run, shipped as the before-training comparison')
     args = parser.parse_args()
     torch.set_num_threads(1)
-    result = export(Path(args.registry), Path(args.public), Path(args.asset_module), args.label, Path(args.fixtures))
+    result = export(Path(args.registry), Path(args.public), Path(args.asset_module), args.label, Path(args.fixtures),
+                    Path(args.initial) if args.initial else None)
     print(json.dumps(result, indent=2))
 
 
