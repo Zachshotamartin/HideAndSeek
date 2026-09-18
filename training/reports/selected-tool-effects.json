@@ -1,0 +1,220 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "selected-tool-effects",
+  "sourceReportSHA256": "c8b68e0e221c7eb8b655968b514b38379f00de23200a7aacc68e1abe80bd0dfc",
+  "sourceReportRelativePath": "selected-tools/evaluation.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "selected-pair-tools-and-action-modes-v1",
+    "candidateSHA256": "ca9462e9cd3f084a2df687defc4de23513f15df700826a3a4524d0676bc74117",
+    "modeReportSHA256": "5ab9c32836d16da44b01fec93c599575ba68c5a8ed7e1f1afe4f215d7829157c",
+    "cacheSHA256": "63876f1981051ce5ba095e45c7360d69e2e13bfdf48c5971994fa22c02f382f7",
+    "baselineSHA256": "a8fc5a4a9b10a23ea5561d405ee28028e8c83d18517a58258a19573435bb9d3b",
+    "sources": {
+      "evaluate_selected_tools.py": "579231fc1bd0c205c357a3f939c9aacb41c450b0a093b7883e4b720977ca3866",
+      "evaluate_policy_modes.py": "2c0a81c62da1c60f6071502aa379d7154cec5bf874d393587fad772abf748efa",
+      "persistent_evaluate.py": "c2f0cf0c4410662b5a38f8c407192c18f72a94cab9966e878646beafc8567996",
+      "persistent_actor.py": "b0e490adeae4b2c339e1c287e936f4229913adb46d7e409243fc0d176cb13aa3",
+      "persistent_train.py": "f6354a4e0614d7a80ce80838601361abdcaad1f311eaed9b2162ed125e1ea855",
+      "actor.py": "6a31e52ac1ce51578fa16c3e240264cb70df3c2af48f9b0b1c9222247a8e71db",
+      "physics.py": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+    },
+    "scope": "Exact selected pair on 96 repeated development maps; final test seeds remain untouched.",
+    "intervention": "Only physical grab/lock controls disabled for the named roles. Requested buttons and ordinary pushing persist. Joint removal is not an isolated role-learning effect.",
+    "newEvaluationActorDecisions": 276480,
+    "cachedGamesReused": 192,
+    "summary": {
+      "sample_learned": {
+        "hiddenFraction": 0.5341145833333333,
+        "completeSearchMisses": 16,
+        "propShieldedFraction": 0.06067708333333333,
+        "meanPropDisplacement": 0.7447892617546333,
+        "roles": [
+          {
+            "grips": 229,
+            "medianGripSeconds": 0.16,
+            "maxGripSeconds": 1.12
+          },
+          {
+            "grips": 134,
+            "medianGripSeconds": 0.16,
+            "maxGripSeconds": 0.8
+          }
+        ]
+      },
+      "mean_learned": {
+        "hiddenFraction": 0.3974609375,
+        "completeSearchMisses": 14,
+        "propShieldedFraction": 0.040364583333333336,
+        "meanPropDisplacement": 0.6020480224572021,
+        "roles": [
+          {
+            "grips": 20,
+            "medianGripSeconds": 0.08,
+            "maxGripSeconds": 4.88
+          },
+          {
+            "grips": 19,
+            "medianGripSeconds": 2.96,
+            "maxGripSeconds": 10.8
+          }
+        ]
+      },
+      "sample_no_hider_tools": {
+        "hiddenFraction": 0.5365234375000001,
+        "completeSearchMisses": 17,
+        "propShieldedFraction": 0.06263020833333333,
+        "meanPropDisplacement": 0.8679916502790617,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          },
+          {
+            "grips": 119,
+            "medianGripSeconds": 0.16,
+            "maxGripSeconds": 0.8
+          }
+        ]
+      },
+      "sample_no_seeker_tools": {
+        "hiddenFraction": 0.5255208333333333,
+        "completeSearchMisses": 17,
+        "propShieldedFraction": 0.06588541666666667,
+        "meanPropDisplacement": 0.745082294839161,
+        "roles": [
+          {
+            "grips": 230,
+            "medianGripSeconds": 0.16,
+            "maxGripSeconds": 1.12
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          }
+        ]
+      },
+      "sample_push_only": {
+        "hiddenFraction": 0.5320963541666667,
+        "completeSearchMisses": 15,
+        "propShieldedFraction": 0.06178385416666667,
+        "meanPropDisplacement": 0.8630014462734165,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          }
+        ]
+      },
+      "mean_no_hider_tools": {
+        "hiddenFraction": 0.41445312500000003,
+        "completeSearchMisses": 14,
+        "propShieldedFraction": 0.04290364583333334,
+        "meanPropDisplacement": 0.7564350659037026,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          },
+          {
+            "grips": 15,
+            "medianGripSeconds": 2.96,
+            "maxGripSeconds": 10.8
+          }
+        ]
+      },
+      "mean_no_seeker_tools": {
+        "hiddenFraction": 0.3962239583333333,
+        "completeSearchMisses": 14,
+        "propShieldedFraction": 0.04003906249999999,
+        "meanPropDisplacement": 0.6240318050374059,
+        "roles": [
+          {
+            "grips": 20,
+            "medianGripSeconds": 0.08,
+            "maxGripSeconds": 4.88
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          }
+        ]
+      },
+      "mean_push_only": {
+        "hiddenFraction": 0.4078125000000001,
+        "completeSearchMisses": 14,
+        "propShieldedFraction": 0.042317708333333336,
+        "meanPropDisplacement": 0.7634465296058547,
+        "roles": [
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          },
+          {
+            "grips": 0,
+            "medianGripSeconds": 0,
+            "maxGripSeconds": 0
+          }
+        ]
+      }
+    },
+    "contrasts": {
+      "sample: hider grab/lock benefit": {
+        "mean": -0.002408854166666668,
+        "bootstrap95Percent": [
+          -0.01855631510416667,
+          0.013997395833333329
+        ]
+      },
+      "sample: seeker grab/lock benefit": {
+        "mean": -0.008593749999999999,
+        "bootstrap95Percent": [
+          -0.0353515625,
+          0.014388020833333334
+        ]
+      },
+      "sample: joint tools hidden-fraction change": {
+        "mean": 0.0020182291666666677,
+        "bootstrap95Percent": [
+          -0.0224609375,
+          0.02708333333333333
+        ]
+      },
+      "mean: hider grab/lock benefit": {
+        "mean": -0.016992187500000002,
+        "bootstrap95Percent": [
+          -0.03320312499999999,
+          -0.001886393229166689
+        ]
+      },
+      "mean: seeker grab/lock benefit": {
+        "mean": -0.001236979166666668,
+        "bootstrap95Percent": [
+          -0.012239583333333333,
+          0.009049479166666664
+        ]
+      },
+      "mean: joint tools hidden-fraction change": {
+        "mean": -0.0103515625,
+        "bootstrap95Percent": [
+          -0.02779947916666667,
+          0.007031249999999999
+        ]
+      }
+    },
+    "optimizerUpdates": 0,
+    "automaticPromotion": false
+  }
+}

@@ -1,0 +1,560 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "search-memory-diagnostic",
+  "sourceReportSHA256": "32324b05f3ecab9fbc2a9f52d5c3522dc6808a5d47eea322ac781f38c65f8fab",
+  "sourceReportRelativePath": "search-audit/report.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "format": "read-only-search-memory-diagnostic-v1",
+    "beforeCheckpointSHA256": "fc952225c62edf20ced22a784c860c642906166a55cd30294cb17ae8d65557da",
+    "afterCheckpointSHA256": "1bebbf01cb44390e43c3f0aeeb4e46d8bee6de4748bc6be4e9cf56548c8ec34f",
+    "beforeUpdate": 224,
+    "afterUpdate": 225,
+    "optimizerStepsMadeByAudit": 0,
+    "cachedDiagnosticActorDecisions": 16384,
+    "roles": [
+      {
+        "maxStoredVersusRebuiltMemoryError": 0.0,
+        "truncatedObservationHistory": {
+          "1": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 1.3983511924743652,
+              "median": 1.078277826309204,
+              "p95": 3.4654839038848877,
+              "maximum": 7.879171371459961
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.2900790870189667,
+              "median": 0.2895226776599884,
+              "p95": 0.4494721293449402,
+              "maximum": 0.5821617245674133
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.04284939169883728,
+              "median": 0.039998702704906464,
+              "p95": 0.07255110144615173,
+              "maximum": 0.13989046216011047
+            }
+          },
+          "4": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.9813977479934692,
+              "median": 0.7880531549453735,
+              "p95": 2.406738042831421,
+              "maximum": 6.168363094329834
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.22389155626296997,
+              "median": 0.22192536294460297,
+              "p95": 0.34324705600738525,
+              "maximum": 0.4861207902431488
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.03724777325987816,
+              "median": 0.03379981219768524,
+              "p95": 0.06603257358074188,
+              "maximum": 0.13921472430229187
+            }
+          },
+          "8": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.7195622324943542,
+              "median": 0.5406321883201599,
+              "p95": 1.8900374174118042,
+              "maximum": 4.0814008712768555
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.1729479879140854,
+              "median": 0.1667511761188507,
+              "p95": 0.2746956944465637,
+              "maximum": 0.47902658581733704
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.03335971012711525,
+              "median": 0.029353592544794083,
+              "p95": 0.06087267026305199,
+              "maximum": 0.1318926215171814
+            }
+          },
+          "16": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.45869481563568115,
+              "median": 0.26308751106262207,
+              "p95": 1.3423717021942139,
+              "maximum": 2.677713632583618
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.12141746282577515,
+              "median": 0.1156533807516098,
+              "p95": 0.21524657309055328,
+              "maximum": 0.44687992334365845
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.0285887960344553,
+              "median": 0.024095013737678528,
+              "p95": 0.05736096203327179,
+              "maximum": 0.10712762176990509
+            }
+          },
+          "32": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.24597589671611786,
+              "median": 0.09795939177274704,
+              "p95": 0.8668191432952881,
+              "maximum": 2.2060434818267822
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.08392084389925003,
+              "median": 0.07579439878463745,
+              "p95": 0.1567928045988083,
+              "maximum": 0.38522037863731384
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.02281280793249607,
+              "median": 0.01809447631239891,
+              "p95": 0.050856027752161026,
+              "maximum": 0.059614717960357666
+            }
+          },
+          "64": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.09980403631925583,
+              "median": 0.029443398118019104,
+              "p95": 0.43523678183555603,
+              "maximum": 1.687960147857666
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.05684279650449753,
+              "median": 0.04946749657392502,
+              "p95": 0.12300451099872589,
+              "maximum": 0.31214675307273865
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.014817756600677967,
+              "median": 0.011164329946041107,
+              "p95": 0.0373520664870739,
+              "maximum": 0.053942177444696426
+            }
+          },
+          "128": {
+            "jointKLnats": {
+              "count": 629,
+              "mean": 0.03936411067843437,
+              "median": 0.006127397529780865,
+              "p95": 0.13931187987327576,
+              "maximum": 1.2969282865524292
+            },
+            "deterministicMovementRMS": {
+              "count": 629,
+              "mean": 0.028276298195123672,
+              "median": 0.019528111442923546,
+              "p95": 0.07767042517662048,
+              "maximum": 0.2697660028934479
+            },
+            "toolTotalVariation": {
+              "count": 629,
+              "mean": 0.006552421022206545,
+              "median": 0.0042883604764938354,
+              "p95": 0.02100309729576111,
+              "maximum": 0.0429520383477211
+            }
+          }
+        },
+        "adjacentCheckpointStoredChunkState": {
+          "jointKLnats": {
+            "count": 3631,
+            "mean": 0.0007713800296187401,
+            "median": 0.0003871346125379205,
+            "p95": 0.0026074908673763275,
+            "maximum": 0.00802664179354906
+          },
+          "deterministicMovementRMS": {
+            "count": 3631,
+            "mean": 0.005421844311058521,
+            "median": 0.0038177447859197855,
+            "p95": 0.015373175032436848,
+            "maximum": 0.026692595332860947
+          },
+          "toolTotalVariation": {
+            "count": 3631,
+            "mean": 0.0008258952293545008,
+            "median": 0.0005942992866039276,
+            "p95": 0.0023350194096565247,
+            "maximum": 0.004461020231246948
+          }
+        },
+        "adjacentCheckpointMemoryRMS": {
+          "count": 7680,
+          "mean": 0.003924542106688023,
+          "median": 0.0036760028451681137,
+          "p95": 0.009103997610509396,
+          "maximum": 0.01979302056133747
+        },
+        "sameEntitySetDifferentSlotOrder": {
+          "allVisiblePairs": {
+            "jointKLnats": {
+              "count": 1563,
+              "mean": 0.008921927772462368,
+              "median": 0.003891213797032833,
+              "p95": 0.03218403086066246,
+              "maximum": 0.13081903755664825
+            },
+            "deterministicMovementRMS": {
+              "count": 1563,
+              "mean": 0.022908013314008713,
+              "median": 0.018437646329402924,
+              "p95": 0.05436673387885094,
+              "maximum": 0.09626367688179016
+            },
+            "toolTotalVariation": {
+              "count": 1563,
+              "mean": 0.003950079903006554,
+              "median": 0.0029327310621738434,
+              "p95": 0.01117930468171835,
+              "maximum": 0.020257867872714996
+            }
+          },
+          "pairsWithinFiveCentimetresOfEqualDistance": {
+            "jointKLnats": {
+              "count": 28,
+              "mean": 0.011817063204944134,
+              "median": 0.006215969566255808,
+              "p95": 0.022656016051769257,
+              "maximum": 0.0423489548265934
+            },
+            "deterministicMovementRMS": {
+              "count": 28,
+              "mean": 0.03278381749987602,
+              "median": 0.033640313893556595,
+              "p95": 0.04458565264940262,
+              "maximum": 0.04461229592561722
+            },
+            "toolTotalVariation": {
+              "count": 28,
+              "mean": 0.0047984654083848,
+              "median": 0.005164753645658493,
+              "p95": 0.00652121240273118,
+              "maximum": 0.008192472159862518
+            }
+          },
+          "scope": "One-step representation sensitivity on recorded observations, not an evaluated alternative policy or a physical intervention."
+        }
+      },
+      {
+        "maxStoredVersusRebuiltMemoryError": 0.0,
+        "truncatedObservationHistory": {
+          "1": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.7168462872505188,
+              "median": 0.49400150775909424,
+              "p95": 2.2580394744873047,
+              "maximum": 5.777563571929932
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.19371558725833893,
+              "median": 0.18237246572971344,
+              "p95": 0.3608320653438568,
+              "maximum": 0.6739218831062317
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.0443679615855217,
+              "median": 0.04065125435590744,
+              "p95": 0.07923078536987305,
+              "maximum": 0.11823999136686325
+            }
+          },
+          "4": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.2998321056365967,
+              "median": 0.13532845675945282,
+              "p95": 1.1356476545333862,
+              "maximum": 5.9034037590026855
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.1340494006872177,
+              "median": 0.12066328525543213,
+              "p95": 0.2925874888896942,
+              "maximum": 0.6816988587379456
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.03434931859374046,
+              "median": 0.03085346519947052,
+              "p95": 0.06601197272539139,
+              "maximum": 0.12767823040485382
+            }
+          },
+          "8": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.20690643787384033,
+              "median": 0.10242787003517151,
+              "p95": 0.8014705181121826,
+              "maximum": 4.752915859222412
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.11239553242921829,
+              "median": 0.09963450580835342,
+              "p95": 0.22436246275901794,
+              "maximum": 0.6068235039710999
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.02776878885924816,
+              "median": 0.024931609630584717,
+              "p95": 0.055545348674058914,
+              "maximum": 0.12160749733448029
+            }
+          },
+          "16": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.11331403255462646,
+              "median": 0.060549259185791016,
+              "p95": 0.3328759968280792,
+              "maximum": 1.9206291437149048
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.08280251920223236,
+              "median": 0.07651124894618988,
+              "p95": 0.1640990823507309,
+              "maximum": 0.4073004424571991
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.01977921649813652,
+              "median": 0.019169367849826813,
+              "p95": 0.03528709337115288,
+              "maximum": 0.10435833036899567
+            }
+          },
+          "32": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.051540542393922806,
+              "median": 0.029034558683633804,
+              "p95": 0.1763318032026291,
+              "maximum": 0.41960054636001587
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.05481740087270737,
+              "median": 0.04905393719673157,
+              "p95": 0.12153847515583038,
+              "maximum": 0.21084348857402802
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.012498422525823116,
+              "median": 0.010968666523694992,
+              "p95": 0.02616940438747406,
+              "maximum": 0.044302187860012054
+            }
+          },
+          "64": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.012798270210623741,
+              "median": 0.002374578732997179,
+              "p95": 0.06093403324484825,
+              "maximum": 0.2505701184272766
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.021788904443383217,
+              "median": 0.012641455978155136,
+              "p95": 0.06983357667922974,
+              "maximum": 0.12681879103183746
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.004646720364689827,
+              "median": 0.0027462653815746307,
+              "p95": 0.015622226521372795,
+              "maximum": 0.029123472049832344
+            }
+          },
+          "128": {
+            "jointKLnats": {
+              "count": 350,
+              "mean": 0.0002269950055051595,
+              "median": 6.688751454930753e-07,
+              "p95": 0.0003279498778283596,
+              "maximum": 0.017348088324069977
+            },
+            "deterministicMovementRMS": {
+              "count": 350,
+              "mean": 0.0015496155247092247,
+              "median": 0.00019582806271500885,
+              "p95": 0.005960969254374504,
+              "maximum": 0.057972654700279236
+            },
+            "toolTotalVariation": {
+              "count": 350,
+              "mean": 0.0003698385553434491,
+              "median": 4.8998743295669556e-05,
+              "p95": 0.001805074862204492,
+              "maximum": 0.009044632315635681
+            }
+          }
+        },
+        "adjacentCheckpointStoredChunkState": {
+          "jointKLnats": {
+            "count": 2563,
+            "mean": 0.00023063291155267507,
+            "median": 4.9491736717754975e-05,
+            "p95": 0.0011183259775862098,
+            "maximum": 0.010116716846823692
+          },
+          "deterministicMovementRMS": {
+            "count": 2563,
+            "mean": 0.00312074669636786,
+            "median": 0.001876009744592011,
+            "p95": 0.011328564025461674,
+            "maximum": 0.030141672119498253
+          },
+          "toolTotalVariation": {
+            "count": 2563,
+            "mean": 0.00047753669787198305,
+            "median": 0.00033933669328689575,
+            "p95": 0.001556598348543048,
+            "maximum": 0.0031677372753620148
+          }
+        },
+        "adjacentCheckpointMemoryRMS": {
+          "count": 7680,
+          "mean": 0.0031261281110346317,
+          "median": 0.002518126042559743,
+          "p95": 0.00874509010463953,
+          "maximum": 0.02391795441508293
+        },
+        "sameEntitySetDifferentSlotOrder": {
+          "allVisiblePairs": {
+            "jointKLnats": {
+              "count": 1794,
+              "mean": 0.1438247561454773,
+              "median": 0.054206185042858124,
+              "p95": 0.6419906616210938,
+              "maximum": 2.0836071968078613
+            },
+            "deterministicMovementRMS": {
+              "count": 1794,
+              "mean": 0.09484399110078812,
+              "median": 0.07995805889368057,
+              "p95": 0.24672164022922516,
+              "maximum": 0.4723583161830902
+            },
+            "toolTotalVariation": {
+              "count": 1794,
+              "mean": 0.012735908851027489,
+              "median": 0.010108962655067444,
+              "p95": 0.03160572052001953,
+              "maximum": 0.08028721809387207
+            }
+          },
+          "pairsWithinFiveCentimetresOfEqualDistance": {
+            "jointKLnats": {
+              "count": 29,
+              "mean": 0.07939177751541138,
+              "median": 0.04843776300549507,
+              "p95": 0.23475611209869385,
+              "maximum": 0.2836371958255768
+            },
+            "deterministicMovementRMS": {
+              "count": 29,
+              "mean": 0.08415508270263672,
+              "median": 0.08591523766517639,
+              "p95": 0.13601738214492798,
+              "maximum": 0.14948874711990356
+            },
+            "toolTotalVariation": {
+              "count": 29,
+              "mean": 0.012872135266661644,
+              "median": 0.009039472788572311,
+              "p95": 0.029271772131323814,
+              "maximum": 0.029551304876804352
+            }
+          },
+          "scope": "One-step representation sensitivity on recorded observations, not an evaluated alternative policy or a physical intervention."
+        }
+      }
+    ],
+    "delayedCredit": {
+      "gamma": 0.998,
+      "gaeLambda": 0.98,
+      "bpttTicks": 32,
+      "bpttSeconds": 2.56,
+      "preparationTicks": 80,
+      "playTicks": 160,
+      "rolloutTicks": 256,
+      "directRewardGAEWeightAtDelay": {
+        "16": 0.7009803948018223,
+        "32": 0.4913735138965187,
+        "40": 0.4114003711798851,
+        "64": 0.24144793015901225,
+        "80": 0.1692502654069472,
+        "120": 0.06962962201071216,
+        "160": 0.028645652340322077
+      },
+      "discountedObjectiveWeightAfterPreparation": 0.8520072748321847,
+      "preparationStepsAcrossAlignmentCycle": 1280,
+      "preparationStepsWithFirstPlayBeyondRollout": 240,
+      "measuredPreparationAdvantage": {
+        "count": 2560,
+        "mean": 0.7600805759429932,
+        "median": 0.5625091195106506,
+        "p95": 2.225773572921753,
+        "maximum": 4.776888847351074
+      },
+      "note": "GAE supplies delayed scalar credit beyond BPTT. Pre-play actions whose first play reward falls outside a rollout depend on the critic bootstrap."
+    },
+    "naturalEntityOrdering": {
+      "newReadOnlyActorDecisions": 5760,
+      "roleTotals": [
+        {
+          "playFrames": 1920,
+          "multiObjectFrames": 819,
+          "sameVisibleSetRankSwaps": 5,
+          "persistentEntitySlotChanges": 49,
+          "visibleOpponentFrames": 45
+        },
+        {
+          "playFrames": 1920,
+          "multiObjectFrames": 1002,
+          "sameVisibleSetRankSwaps": 10,
+          "persistentEntitySlotChanges": 149,
+          "visibleOpponentFrames": 230
+        }
+      ]
+    },
+    "scope": "Frozen-policy representation probes and12 diagnostic room games. Counterfactual observation ordering/history is not a performance claim or a training change.",
+    "sourceSHA256": "7ffb42dc07e6449bc1caccdc2b95bfd7b1971da33a74cd66ec914bb860303d4a",
+    "physicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5"
+  }
+}

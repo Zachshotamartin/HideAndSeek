@@ -1,0 +1,53 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "sustained-16m-vs-32m",
+  "sourceReportSHA256": "c86a4ad148e03fad0e0ad8091cbdad25155dff12758126936978d02526d41066",
+  "sourceReportRelativePath": "comparison-16m-32m.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "contrasts": {
+      "Seeker 32M minus 16M vs fixed 37M hider": {
+        "mean": 0.0025390625000000014,
+        "bootstrap95Percent": [
+          -0.0536474609375,
+          0.05703287760416664
+        ],
+        "positiveCases": 42,
+        "negativeCases": 37,
+        "unchangedCases": 17
+      },
+      "Seeker 32M minus 16M vs initial hider": {
+        "mean": 0.010546874999999997,
+        "bootstrap95Percent": [
+          -0.03209798177083333,
+          0.054296875
+        ],
+        "positiveCases": 24,
+        "negativeCases": 41,
+        "unchangedCases": 31
+      },
+      "Seeker 32M minus 16M vs warm hider": {
+        "mean": -0.039257812499999996,
+        "bootstrap95Percent": [
+          -0.08861165364583334,
+          0.00931152343749998
+        ],
+        "positiveCases": 23,
+        "negativeCases": 47,
+        "unchangedCases": 26
+      },
+      "Seeker 32M minus 16M vs intermediate hider": {
+        "mean": -0.0455078125,
+        "bootstrap95Percent": [
+          -0.09381835937500001,
+          0.004492187499999997
+        ],
+        "positiveCases": 22,
+        "negativeCases": 46,
+        "unchangedCases": 28
+      }
+    },
+    "newEvaluationActorDecisions": 0
+  }
+}

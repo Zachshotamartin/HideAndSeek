@@ -1,0 +1,54 @@
+{
+  "format": "hide-seek-compact-development-report-v1",
+  "name": "sustained-completion",
+  "sourceReportSHA256": "9d93fdf7fa08f8bf1ec79b7442e8ef98ddb157d674bf4ee7cf7d5984caa73fb5",
+  "sourceReportRelativePath": "completion.json",
+  "packaging": "Metrics copied unchanged from the complete frozen report. Raw episode arrays are omitted; absolute local artifact paths are replaced with display-only basenames.",
+  "acceptedBrowserModelChanged": false,
+  "report": {
+    "finalCheckpointSHA256": "447c4a2661e35b96d26aa1fba3c25998299aa4ea02a2c305960ce20602469adc",
+    "bytes": 2038102,
+    "nativePhysicsSHA256": "1a0b54cdee8f7fc417f3b32bd901398501425f20e47aa17f06930745ca22faf5",
+    "finalTrainingRecord": {
+      "arm": "B",
+      "update": 488,
+      "totalPolicyInteractions": 31981568,
+      "currentPolicyDecisions": [
+        12006016,
+        11917840
+      ],
+      "historicalPolicyDecisions": [
+        3984768,
+        4072944
+      ],
+      "activePolicySamples": [
+        12006016,
+        7941680
+      ],
+      "episodes": 66560,
+      "seconds": 4121.793649915955,
+      "rolloutSeconds": 9.784166750032455,
+      "optimizerSeconds": 2.313388832961209,
+      "hider": {
+        "loss": -0.016968618447501815,
+        "approximateKL": 0.00016059391488683575,
+        "optimizerSteps": 8,
+        "activeSamples": 23808
+      },
+      "seeker": {
+        "loss": -0.014765111872361064,
+        "approximateKL": 0.000644175211499278,
+        "optimizerSteps": 8,
+        "activeSamples": 16976
+      },
+      "critic": {
+        "clippedValueMSE": 1.3158440552651882
+      },
+      "meanHiddenFraction": 0.54736328125,
+      "unscaledRewardSum": [
+        2494.0,
+        -2494.0
+      ]
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "format": "original-mujoco-relational-tag-rounds-pair-v6",
+  "file": "physical-policy-tag-e29481ff6f84.json",
+  "sha256": "e29481ff6f840057b1adc158a63afd1ec055bf4c4f25b87c79bd80785570fc25",
+  "observationSize": 220,
+  "physicsObservationSize": 214,
+  "checkpoints": [
+    {
+      "id": "trained",
+      "label": "Best evaluated tag-round pair \u00b7 41.9M new interactions",
+      "file": "physical-policy-tag-e29481ff6f84.json",
+      "bytes": 24172494,
+      "sha256": "e29481ff6f840057b1adc158a63afd1ec055bf4c4f25b87c79bd80785570fc25",
+      "training": {
+        "decisions": 241901568,
+        "totalPolicyInteractions": 41943040,
+        "currentPolicyDecisions": [
+          14872371,
+          20970273
+        ],
+        "activePolicySamples": [
+          14872371,
+          10990304
+        ],
+        "seconds": 22827.958472750004
+      },
+      "checkpointSHA256": "0fe193f0674e8d3aee6691297166082a3a2b82e8838c192f04cc98450c9446b8",
+      "parityFixture": "tests/fixtures/physical-policy-tag-e29481ff6f84.parity-native.json",
+      "parityFixtureSHA256": "29765e1b6cc76257fe23bbae82c95d81c79fdbe1214a3a20aa294dde769789e6",
+      "parityFormat": "tag-rounds-native-v6"
+    },
+    {
+      "id": "initial",
+      "label": "Before training \u00b7 jump enabled",
+      "file": "physical-policy-initial-42b3a76e6a98.json",
+      "training": {
+        "decisions": 0
+      },
+      "bytes": 22743572,
+      "sha256": "42b3a76e6a98b9028e14b22f891ce0a958064c7645190893183bd84cd4ee07aa",
+      "checkpointSHA256": "2d76cde339d056f2a41f3b606ef0062bfece194531b54a471f5e5d87bf335660",
+      "parityFixture": "tests/fixtures/policy-initial-native.json",
+      "parityFixtureSHA256": "8df487fd8882ffc4e38eb90ccddaa7e5973d02495e4232aa3ade85870f992b8d"
+    }
+  ],
+  "training": {
+    "decisions": 241901568,
+    "totalPolicyInteractions": 41943040,
+    "currentPolicyDecisions": [
+      14872371,
+      20970273
+    ],
+    "activePolicySamples": [
+      14872371,
+      10990304
+    ],
+    "seconds": 22827.958472750004
+  },
+  "status": "DEVELOPMENT",
+  "localPreview": {
+    "only": false,
+    "qualified": false
+  },
+  "actionSize": 6,
+  "evaluation": {
+    "file": "development-v6-evaluation.json",
+    "sha256": "ba26364137f7e7da820d8b8b8b2ae7a1cd8d993a1df8da449c736c83e6f5f787",
+    "shippedRole": "candidate",
+    "referenceSHA256": "6693bd99f8f9fb6ff257ef544792136f98e0b607ba490605a0f4e0165b66dfc5",
+    "candidateSHA256": "0fe193f0674e8d3aee6691297166082a3a2b82e8838c192f04cc98450c9446b8",
+    "maps": 168,
+    "episodes": 2016,
+    "note": "The shipped pair is the evaluated candidate; development evidence, not qualification."
+  },
+  "bytes": 24172494,
+  "observationSchema": "tag-rounds-last-seen-214-v6"
+}
